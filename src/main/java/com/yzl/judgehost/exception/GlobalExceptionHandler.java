@@ -1,6 +1,7 @@
 package com.yzl.judgehost.exception;
 
 import com.yzl.judgehost.core.UnifiedResponse;
+import com.yzl.judgehost.core.configuration.ExceptionCodeConfiguration;
 import com.yzl.judgehost.exception.http.HttpException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
