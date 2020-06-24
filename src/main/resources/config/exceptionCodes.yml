@@ -1,0 +1,3 @@
+judgehost-exceptions:
+  codes:
+    1000: 服务器错误
