@@ -5,12 +5,16 @@ import com.yzl.judgehost.core.configuration.ExceptionCodeConfiguration;
 import com.yzl.judgehost.exception.http.HttpException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
+import java.util.List;
 
 /**
  * @author yuzhanglong
@@ -50,7 +54,6 @@ public class GlobalExceptionHandler {
      * @author yzl
      * @description 拦截自定义的异常处理（例如数据不存在等）
      */
-
     @ExceptionHandler(HttpException.class)
     @ResponseBody
     public ResponseEntity<UnifiedResponse> handleHttpException(HttpServletRequest request, HttpException exception) {
@@ -68,12 +71,76 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(unifiedResponse, null, httpStatus);
     }
 
+    /**
+     * @param request   请求参数
+     * @param exception 抛出的异常
+     * @author yzl
+     * @description 拦截参数验证的异常
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public UnifiedResponse handleArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException exception) {
+        String requestUrl = request.getRequestURI();
+        String method = request.getMethod();
 
+        // 获取验证失败的信息
+        List<ObjectError> errorList = exception.getBindingResult().getAllErrors();
+        String message = getMessageStringByValidateExceptionList(errorList);
+
+        // 初始化unifyresponse
+        return new UnifiedResponse(1000, message, getRequestUrlString(method, requestUrl));
+    }
+
+    /**
+     * @param request   请求参数
+     * @param exception 抛出的异常
+     * @author yzl
+     * @description 拦截参数验证的异常
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public UnifiedResponse handleConstraintViolationException(HttpServletRequest request, ConstraintViolationException exception) {
+        String requestUrl = request.getRequestURI();
+        String method = request.getMethod();
+
+        // 获取验证失败的信息
+        String message = exception.getMessage();
+
+        // 初始化unifyresponse
+        return new UnifiedResponse(1000, message, getRequestUrlString(method, requestUrl));
+    }
+
+    /**
+     * @param method 请求方法
+     * @param url    请求的接口链接
+     * @author yzl
+     * @description 拼接requesturl字符串，以供返回到前端
+     */
     private String getRequestUrlString(String method, String url) {
         return method + " " + url;
     }
 
+    /**
+     * @param code 自定义的错误代码
+     * @author yzl
+     * @description 通过自定义的错误代码，来获取其对应的信息，以供返回给前端，这些信息来源于配置文件
+     * 对于所有的错误信息请参考：resources/config/exception-codes
+     */
     private String getMessageByExceptionCode(Integer code) {
         return exceptionCodeConfiguration.getMessage(code);
+    }
+
+    /**
+     * @param errorList List<ObjectError> 错误信息list
+     * @author yzl
+     * @description 传入一个 参数验证的错误信息list，将错误信息拼接成字符串，以供返回给前端
+     * 对于所有的错误信息请参考：resources/config/exception-codes
+     */
+    private String getMessageStringByValidateExceptionList(List<ObjectError> errorList) {
+        StringBuffer errorMessage = new StringBuffer();
+        errorList.forEach(error -> {
+            errorMessage.append(error.getDefaultMessage()).append(", ");
+        });
+        return errorMessage.toString();
     }
 }
