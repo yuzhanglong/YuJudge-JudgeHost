@@ -1,4 +1,4 @@
-package com.yzl.judgehost.core.enumerates;
+package com.yzl.judgehost.core.enumerations;
 
 /**
  * @author yuzhanglong
@@ -8,8 +8,11 @@ package com.yzl.judgehost.core.enumerates;
 
 public enum LanguageScriptEnum {
     // for python
-    PYTHON("echo '#!/bin/sh' > run\n" +
-            "echo 'python code.py' >> run", "py"),
+    PYTHON("#!/bin/sh\n" +
+            "\n" +
+            "echo '#!/bin/sh' > RUN_PATH" +
+            "\n" +
+            "echo 'python3 CODE_PATH' >> RUN_PATH", "py"),
 
     // for java
     JAVA("#!/bin/sh\n" +
@@ -27,6 +30,12 @@ public enum LanguageScriptEnum {
 
     public String getBuildScript() {
         return buildScript;
+    }
+
+    public String getBuildScriptByRunningPath(String codePath, String runningPath) {
+        String script = getBuildScript();
+        script = script.replace("RUN_PATH", runningPath).replace("CODE_PATH", codePath);
+        return script;
     }
 
 

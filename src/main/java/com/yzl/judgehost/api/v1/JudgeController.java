@@ -1,5 +1,6 @@
 package com.yzl.judgehost.api.v1;
 
+import com.alibaba.fastjson.JSON;
 import com.yzl.judgehost.service.JudgeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +23,9 @@ public class JudgeController {
 
 
     @GetMapping("/test")
-    public String runJudge() {
-        judgeService.initSubmisstionWorkingEnvironment();
-        judgeService.buildSubmission();
-        return "helloworld";
-//        System.out.println(judgeEnvironmentConfiguration.toString());
+    public Object runJudge() {
+        judgeService.runJudge();
+        String stringBuilder = judgeService.getResult().toString();
+        return JSON.parse(stringBuilder);
     }
 }

@@ -1,10 +1,14 @@
 package com.yzl.judgehost.service;
 
 import com.yzl.judgehost.core.configuration.JudgeEnvironmentConfiguration;
-import com.yzl.judgehost.core.enumerates.LanguageScriptEnum;
+import com.yzl.judgehost.core.enumerations.LanguageScriptEnum;
+import org.apache.tomcat.jni.Proc;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 /**
  * @author yuzhanglong
@@ -15,28 +19,67 @@ import java.io.IOException;
 @Service
 public class JudgeService {
     private final String submissionCode;
-    private final String subisstionId;
+    private final String submisstionId;
     private final String language;
     private final JudgeEnvironmentConfiguration judgeEnvironmentConfiguration;
+    private final Runtime runner;
+    private final String builderPath;
+    private final String runningPath;
+    private StringBuilder result;
+
+    public StringBuilder getResult() {
+        return result;
+    }
 
 
     public JudgeService(JudgeEnvironmentConfiguration judgeEnvironmentConfiguration) {
         this.judgeEnvironmentConfiguration = judgeEnvironmentConfiguration;
-        this.submissionCode = "test";
+        this.submissionCode = "print(\"hello world\")";
         this.language = "python";
-        this.subisstionId = "123213123123";
+        this.submisstionId = "123213123123";
+        this.runner = Runtime.getRuntime();
+        this.builderPath = getSubmitWorkingPath() + "/build.sh";
+        this.runningPath = getSubmitWorkingPath() + "/run";
     }
 
 
     /**
      * @return void
      * @author yuzhanglong
-     * @description 执行判题
+     * @description 调用判题核心，执行判题
      * @date 2020-6-24 12:10:43
      */
     public void runJudge() {
+        String judgeCoreScript = judgeEnvironmentConfiguration.getScriptPath() + "/y_judger";
+        String[] command = {
+                judgeCoreScript,
+                "-r", runningPath,
+                "-o", getSubmitWorkingPath() + "/1.out",
+                "-e", getSubmitWorkingPath() + "/err.out",
+                "-i", "/Users/yuzhanglong/Desktop/YuJudge-Core/tests/hello/hello-python/hello.in"
+        };
+        try {
+            Process process = runner.exec(command);
+            process.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
+            StringBuilder output = new StringBuilder();
+            String temp;
+            while ((temp = reader.readLine()) != null) {
+                output.append(temp);
+            }
+            while ((temp = errReader.readLine()) != null) {
+                output.append(temp);
+            }
+            result = output;
+
+        } catch (IOException | InterruptedException ioException) {
+            // TODO：异常处理
+            ioException.printStackTrace();
+        }
     }
+
 
     /**
      * @return void
@@ -45,12 +88,12 @@ public class JudgeService {
      * @date 2020-6-24 12:10:43
      */
     public void buildSubmission() {
-        String builderPath = getSubmitWorkingPath() + "/build.sh";
-        Runtime runner = Runtime.getRuntime();
         try {
-            runner.exec(builderPath);
-        } catch (IOException ioException) {
-            //TODO：异常处理
+            Process process = runner.exec(builderPath);
+            process.waitFor();
+        } catch (IOException | InterruptedException ioException) {
+            // TODO：异常处理
+            ioException.printStackTrace();
         }
     }
 
@@ -73,20 +116,17 @@ public class JudgeService {
         // 用户代码
         String codePath = submissionPath + "/code." + LanguageScriptEnum.PYTHON.getExtensionName();
 
-        // 编译脚本路径
-        String buildingScriptPath = submissionPath + "/build.sh";
-
         // 编译脚本
-        String buildScript = LanguageScriptEnum.PYTHON.getBuildScript();
+        String buildScript = LanguageScriptEnum.PYTHON.getBuildScriptByRunningPath(codePath, runningPath);
 
         // Runtime对象，准备执行生成脚本
-        Runtime runner = Runtime.getRuntime();
         try {
-            String[] command = {savingScrpit, submissionPath, codePath, submissionCode, buildingScriptPath, buildScript};
-            runner.exec(command);
-        } catch (IOException ioException) {
+            String[] command = {savingScrpit, getSubmitWorkingPath(), codePath, submissionCode, builderPath, buildScript};
+            Process process = runner.exec(command);
+            process.waitFor();
+        } catch (IOException | InterruptedException ioException) {
             //TODO：异常处理
-//            System.out.println(ioException);
+            ioException.printStackTrace();
         }
     }
 
@@ -97,6 +137,6 @@ public class JudgeService {
      * @description 返回本次提交的工作目录
      */
     private String getSubmitWorkingPath() {
-        return judgeEnvironmentConfiguration.getWorkPath() + "/submissions/" + subisstionId;
+        return judgeEnvironmentConfiguration.getWorkPath() + "/submissions/" + submisstionId;
     }
 }
