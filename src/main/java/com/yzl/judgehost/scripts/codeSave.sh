@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 SUBMISSION_PATH=$1;
@@ -10,7 +10,7 @@ BUILDING_SCRIPT=$5;
 
 mkdir $SUBMISSION_PATH;
 touch $CODE_PATH;
-echo $CODE > $CODE_PATH;
+echo -e "$CODE" >> $CODE_PATH;
 touch $BUILDING_SCRIPT_PATH;
-printf "$BUILDING_SCRIPT" >> $BUILDING_SCRIPT_PATH;
+echo -e "$BUILDING_SCRIPT" >> $BUILDING_SCRIPT_PATH;
 chmod 777 $BUILDING_SCRIPT_PATH;
