@@ -6,6 +6,7 @@ import com.yzl.judgehost.exception.http.HttpException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -75,9 +76,27 @@ public class GlobalExceptionHandler {
      * @param request   请求参数
      * @param exception 抛出的异常
      * @author yzl
+     * @description 拦截请求错误 MethodNotAllowed
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.METHOD_NOT_ALLOWED)
+    public UnifiedResponse handleMethodNotAllowedException(HttpServletRequest request, HttpRequestMethodNotSupportedException exception) {
+        String requestUrl = request.getRequestURI();
+        String method = request.getMethod();
+        String message = exception.getMessage();
+        // 初始化unifyresponse
+        return new UnifiedResponse(1000, message, getRequestUrlString(method, requestUrl));
+    }
+
+    /**
+     * @param request   请求参数
+     * @param exception 抛出的异常
+     * @author yzl
      * @description 拦截参数验证的异常
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public UnifiedResponse handleArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException exception) {
         String requestUrl = request.getRequestURI();
@@ -139,7 +158,7 @@ public class GlobalExceptionHandler {
     private String getMessageStringByValidateExceptionList(List<ObjectError> errorList) {
         StringBuffer errorMessage = new StringBuffer();
         errorList.forEach(error -> {
-            errorMessage.append(error.getDefaultMessage()).append(", ");
+            errorMessage.append(error.getDefaultMessage()).append(" ");
         });
         return errorMessage.toString();
     }

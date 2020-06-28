@@ -12,6 +12,7 @@ public class JudgeResultVO {
     private String stdoutPath;
     private String stderrPath;
 
+
     public String getRealTimeCost() {
         return realTimeCost;
     }

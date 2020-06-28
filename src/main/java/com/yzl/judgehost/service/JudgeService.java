@@ -2,13 +2,12 @@ package com.yzl.judgehost.service;
 
 import com.yzl.judgehost.core.configuration.JudgeEnvironmentConfiguration;
 import com.yzl.judgehost.core.enumerations.LanguageScriptEnum;
-import org.apache.tomcat.jni.Proc;
+import com.yzl.judgehost.dto.JudgeDTO;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 
 /**
  * @author yuzhanglong
@@ -18,13 +17,11 @@ import java.io.OutputStream;
 
 @Service
 public class JudgeService {
-    private final String submissionCode;
-    private final String submisstionId;
-    private final String language;
+    private String submisstionId;
+    private String builderPath;
+    private String runningPath;
     private final JudgeEnvironmentConfiguration judgeEnvironmentConfiguration;
     private final Runtime runner;
-    private final String builderPath;
-    private final String runningPath;
     private StringBuilder result;
 
     public StringBuilder getResult() {
@@ -34,12 +31,7 @@ public class JudgeService {
 
     public JudgeService(JudgeEnvironmentConfiguration judgeEnvironmentConfiguration) {
         this.judgeEnvironmentConfiguration = judgeEnvironmentConfiguration;
-        this.submissionCode = "print(\"hello world\")";
-        this.language = "python";
-        this.submisstionId = "123213123123";
         this.runner = Runtime.getRuntime();
-        this.builderPath = getSubmitWorkingPath() + "/build.sh";
-        this.runningPath = getSubmitWorkingPath() + "/run";
     }
 
 
@@ -49,7 +41,7 @@ public class JudgeService {
      * @description 调用判题核心，执行判题
      * @date 2020-6-24 12:10:43
      */
-    public void runJudge() {
+    private void runJudge() {
         String judgeCoreScript = judgeEnvironmentConfiguration.getScriptPath() + "/y_judger";
         String[] command = {
                 judgeCoreScript,
@@ -87,7 +79,7 @@ public class JudgeService {
      * @description 利用之前生成的build.sh来编译脚本
      * @date 2020-6-24 12:10:43
      */
-    public void buildSubmission() {
+    private void buildSubmission() {
         try {
             Process process = runner.exec(builderPath);
             process.waitFor();
@@ -98,6 +90,7 @@ public class JudgeService {
     }
 
     /**
+     * @param judgeDTO judgeDTO对象
      * @return void
      * @author yuzhanglong
      * @date 2020-6-24 12:10:43
@@ -106,7 +99,13 @@ public class JudgeService {
      * 2.在目标文件夹下写入用户的代码
      * 3.创建此代码编译/运行的脚本文件，供后续使用
      */
-    public void initSubmisstionWorkingEnvironment() {
+    private void initSubmisstionWorkingEnvironment(JudgeDTO judgeDTO) {
+        this.submisstionId = judgeDTO.getSubmissionId();
+        String submissionCode = judgeDTO.getSubmissionCode();
+        this.builderPath = getSubmitWorkingPath() + "/build.sh";
+        this.runningPath = getSubmitWorkingPath() + "/run";
+        LanguageScriptEnum language = LanguageScriptEnum.toLanguageType(judgeDTO.getLanguage());
+
         // 文件生成脚本
         String savingScrpit = this.judgeEnvironmentConfiguration.getScriptPath() + "/codeSave.sh";
 
@@ -114,10 +113,10 @@ public class JudgeService {
         String submissionPath = getSubmitWorkingPath();
 
         // 用户代码
-        String codePath = submissionPath + "/code." + LanguageScriptEnum.PYTHON.getExtensionName();
+        String codePath = submissionPath + "/Main." + language.getExtensionName();
 
         // 编译脚本
-        String buildScript = LanguageScriptEnum.PYTHON.getBuildScriptByRunningPath(codePath, runningPath);
+        String buildScript = language.getBuildScriptByRunningPath(codePath, runningPath);
 
         // Runtime对象，准备执行生成脚本
         try {
@@ -138,5 +137,19 @@ public class JudgeService {
      */
     private String getSubmitWorkingPath() {
         return judgeEnvironmentConfiguration.getWorkPath() + "/submissions/" + submisstionId;
+    }
+
+    /**
+     * @param judgeDTO judgeDTO对象
+     * @return void
+     * @author yuzhanglong
+     * @date 2020-6-27 12:21:43
+     * @description 执行判题
+     */
+    public String judge(JudgeDTO judgeDTO) {
+        this.initSubmisstionWorkingEnvironment(judgeDTO);
+        this.buildSubmission();
+        this.runJudge();
+        return this.getResult().toString();
     }
 }
