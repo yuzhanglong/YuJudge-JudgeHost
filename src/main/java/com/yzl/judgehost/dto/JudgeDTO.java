@@ -1,11 +1,16 @@
 package com.yzl.judgehost.dto;
 
+import com.sun.org.apache.regexp.internal.RE;
 import com.yzl.judgehost.validators.LanguageTypeAccepted;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.lang.reflect.Array;
+import java.util.List;
 
 /**
  * @author yuzhanglong
@@ -14,7 +19,9 @@ import javax.validation.constraints.NotNull;
  */
 @LanguageTypeAccepted
 public class JudgeDTO {
+    @NotNull(message = "代码不得为空")
     private String submissionCode;
+
     @NotNull(message = "id不得为空")
     @Length(min = 10, max = 10, message = "id长度错误")
     private String submissionId;
@@ -35,6 +42,12 @@ public class JudgeDTO {
 
     @NotNull(message = "语言不得为空")
     private String language;
+
+
+    @NotNull(message = "期望输入、输出不得为空")
+    @Size(message = "期望输入、输出长度最小为1、最大为7", min = 1, max = 10)
+    @Valid
+    private List<ResolutionDTO> resolutions;
 
     @Override
     public String toString() {
@@ -102,5 +115,13 @@ public class JudgeDTO {
 
     public void setOutputLimit(Integer outputLimit) {
         this.outputLimit = outputLimit;
+    }
+
+    public List<ResolutionDTO> getResolutions() {
+        return resolutions;
+    }
+
+    public void setResolutions(List<ResolutionDTO> resolutions) {
+        this.resolutions = resolutions;
     }
 }

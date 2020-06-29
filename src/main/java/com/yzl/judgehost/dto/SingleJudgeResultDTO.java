@@ -1,9 +1,9 @@
-package com.yzl.judgehost.vo;
+package com.yzl.judgehost.dto;
 
 /**
  * @author yuzhanglong
  */
-public class JudgeResultVO {
+public class SingleJudgeResultDTO {
     private String realTimeCost;
     private String memoryCost;
     private String cpuTimeCost;

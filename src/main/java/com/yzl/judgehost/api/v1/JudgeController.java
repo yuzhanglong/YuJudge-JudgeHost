@@ -1,9 +1,7 @@
 package com.yzl.judgehost.api.v1;
 
-import com.alibaba.fastjson.JSON;
 import com.yzl.judgehost.dto.JudgeDTO;
 import com.yzl.judgehost.service.JudgeService;
-import com.yzl.judgehost.vo.JudgeResultVO;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +23,7 @@ public class JudgeController {
 
     @PostMapping("/run")
     public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) {
-        String judgeResult = judgeService.judge(judgeDTO);
-        return JSON.parseObject(judgeResult, JudgeResultVO.class);
+        String judgeResult = judgeService.runJudge(judgeDTO);
+        return judgeDTO;
     }
 }

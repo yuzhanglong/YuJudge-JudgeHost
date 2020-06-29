@@ -1,14 +1,24 @@
 package com.yzl.judgehost.service;
 
+import com.alibaba.fastjson.JSON;
 import com.yzl.judgehost.core.configuration.JudgeEnvironmentConfiguration;
 import com.yzl.judgehost.core.enumerations.LanguageScriptEnum;
 import com.yzl.judgehost.dto.JudgeDTO;
+import com.yzl.judgehost.dto.ResolutionDTO;
+import com.yzl.judgehost.network.HttpRequest;
+import com.yzl.judgehost.dto.SingleJudgeResultDTO;
+import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author yuzhanglong
@@ -35,7 +45,6 @@ public class JudgeService {
         return result;
     }
 
-
     public JudgeService(JudgeEnvironmentConfiguration judgeEnvironmentConfiguration) {
         this.judgeEnvironmentConfiguration = judgeEnvironmentConfiguration;
         this.runner = Runtime.getRuntime();
@@ -43,24 +52,26 @@ public class JudgeService {
 
 
     /**
-     * @return void
+     * @param stdInPath 单个输入文件
+     * @return String 判题核心返回的输出
      * @author yuzhanglong
      * @description 调用判题核心，执行判题
      * @date 2020-6-24 12:10:43
      */
-    private void runJudge() {
+    private SingleJudgeResultDTO startJudging(String stdInPath) {
         String judgeCoreScript = judgeEnvironmentConfiguration.getScriptPath() + "/y_judger";
         String[] command = {
                 judgeCoreScript,
                 "-r", runningPath,
-                "-o", getSubmitWorkingPath() + "/1.out",
-//                "-t", String.valueOf(judgeConfig.getRealTimeLimit()),
-//                "-c", String.valueOf(judgeConfig.getCpuTimeLimit()),
-//                "-m", String.valueOf(judgeConfig.getMemoryLimit()),
-//                "-f", String.valueOf(judgeConfig.getOutputLimit()),
-                "-e", getSubmitWorkingPath() + "/err.out",
-                "-i", "/home/y-demos/judgeEnvironment/resolutions/101600000/1.in"
+                "-o", getSubmitWorkingPath() + "/" + UUID.randomUUID() + ".out",
+                "-t", String.valueOf(judgeConfig.getRealTimeLimit()),
+                "-c", String.valueOf(judgeConfig.getCpuTimeLimit()),
+                "-m", String.valueOf(judgeConfig.getMemoryLimit()),
+                "-f", String.valueOf(judgeConfig.getOutputLimit()),
+                "-e", getSubmitWorkingPath() + "/" + UUID.randomUUID() + ".err",
+                "-i", stdInPath
         };
+        StringBuilder output = new StringBuilder();
         try {
             System.out.println(Arrays.toString(command));
             Process process = runner.exec(command);
@@ -68,22 +79,22 @@ public class JudgeService {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
-            StringBuilder output = new StringBuilder();
             String temp;
             while ((temp = reader.readLine()) != null) {
                 output.append(temp);
             }
             while ((temp = errReader.readLine()) != null) {
+                // TODO:处理错误输出
                 output.append(temp);
             }
-            result = output;
 
         } catch (IOException | InterruptedException ioException) {
             // TODO：异常处理
             ioException.printStackTrace();
         }
+        // 将判题核心的stdout转换成数据传输对象
+        return JSON.parseObject(output.toString(), SingleJudgeResultDTO.class);
     }
-
 
     /**
      * @return void
@@ -152,21 +163,23 @@ public class JudgeService {
 
 
     /**
+     * @param submisstionOutput 用户提交的输出
+     * @param expectedOutput    用户期望输出
      * @return String
      * @author yuzhanglong
      * @date 2020-6-24 12:20:43
      * @description 比较用户输出和期望输出
      */
 
-    private Boolean compareOutputWithResolutions() {
+    private Boolean compareOutputWithResolutions(String submisstionOutput, String expectedOutput) {
         String exitCode = "0";
         try {
             String compareScript = judgeEnvironmentConfiguration.getScriptPath() + "/compare.sh";
 
             Process process = runner.exec(new String[]{
                     compareScript,
-                    getSubmitWorkingPath() + "/1.out",
-                    "/home/y-demos/judgeEnvironment/resolutions/101600000/1.out"
+                    submisstionOutput,
+                    expectedOutput
             });
             process.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -185,15 +198,52 @@ public class JudgeService {
      * @date 2020-6-27 12:21:43
      * @description 执行判题
      */
-    public String judge(JudgeDTO judgeDTO) {
-        this.setJudgeConfig(judgeDTO);
-        this.initSubmisstionWorkingEnvironment();
-        this.buildSubmission();
-        this.runJudge();
-        Boolean isPass = this.compareOutputWithResolutions();
-        if (isPass) {
-            System.out.println("=======CORRECT!!!=======");
+    public List<SingleJudgeResultDTO> runJudge(JudgeDTO judgeDTO) {
+        // 判题基础配置
+        setJudgeConfig(judgeDTO);
+        // 初始化判题环境
+        initSubmisstionWorkingEnvironment();
+        // 编译用户的提交
+        buildSubmission();
+        List<SingleJudgeResultDTO> result = new ArrayList<>();
+        judgeDTO.getResolutions().forEach(res -> {
+            ResolutionDTO resolution = getResolutionInputAndOutputFile(res);
+            SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.getInput());
+            Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), res.getExpectedOutput());
+            System.out.println("测试点====" + (isPass ? "通过" : "未通过"));
+            result.add(singleJudgeResult);
+        });
+        return result;
+    }
+
+    /**
+     * @param resolution 解决方案数据传输对象
+     * @return void
+     * @author yuzhanglong
+     * @date 2020-6-27 12:21:43
+     * @description 获取输入文件和期望的输出文件，供后续判题使用
+     */
+    public ResolutionDTO getResolutionInputAndOutputFile(ResolutionDTO resolution) {
+        String inputFile = resolution.getInput();
+        String outputFile = resolution.getExpectedOutput();
+
+        // 下载、获取输入和期望输出
+        Resource inputFileResource = HttpRequest.getFile(inputFile);
+        Resource outputFileResource = HttpRequest.getFile(outputFile);
+
+        // TODO: 将基础路径转移到配置文件中
+        String inPath = "C:\\Users\\yuzhanglong\\Desktop\\YuJudge-JudgeHost\\src\\test\\resolutions\\" + UUID.randomUUID() + ".in";
+        String outPath = "C:\\Users\\yuzhanglong\\Desktop\\YuJudge-JudgeHost\\src\\test\\resolutions\\" + UUID.randomUUID() + ".out";
+        try {
+            File inFile = new File(inPath);
+            FileUtils.copyInputStreamToFile(inputFileResource.getInputStream(), inFile);
+            File outFile = new File(outPath);
+            FileUtils.copyInputStreamToFile(outputFileResource.getInputStream(), outFile);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
-        return this.getResult().toString();
+        resolution.setInput(inPath);
+        resolution.setExpectedOutput(outPath);
+        return resolution;
     }
 }
