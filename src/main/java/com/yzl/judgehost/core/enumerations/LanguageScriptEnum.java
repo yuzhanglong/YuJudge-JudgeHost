@@ -21,7 +21,7 @@ public enum LanguageScriptEnum {
             "\n" +
             "javac CODE_PATH\n" +
             "echo '#!/bin/sh' > RUN_PATH\n" +
-            "echo 'java Main' >> RUN_PATH", "java"),
+            "echo 'java -cp CODE_PATH' >> RUN_PATH", "java"),
 
     // for c
     C("#!/bin/sh\n" +
@@ -62,5 +62,16 @@ public enum LanguageScriptEnum {
                 .filter(c -> c.toString().equals(language))
                 .findAny()
                 .orElse(null);
+    }
+
+    /**
+     * @param languageName 语言的名称，例如：JAVA
+     * @return Boolean 是否支持传入的语言
+     * @author yuzhanglong
+     * @date 2020-6-28 14:39:00
+     * @description 判断是否支持某个该语言
+     */
+    public static Boolean isLanguageAccepted(String languageName) {
+        return toLanguageType(languageName) != null;
     }
 }

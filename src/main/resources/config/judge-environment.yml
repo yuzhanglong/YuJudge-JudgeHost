@@ -1,3 +1,4 @@
 judge-environment:
   work-path: /Users/yuzhanglong/Desktop/YuJudge-JudgeHost/src/test/judgeEnvironment
   script-path: /Users/yuzhanglong/Desktop/YuJudge-JudgeHost/src/main/java/com/yzl/judgehost/scripts
+  resolution-path: /Users/yuzhanglong/Desktop/YuJudge-JudgeHost/src/test/judgeEnvironment/resolutions

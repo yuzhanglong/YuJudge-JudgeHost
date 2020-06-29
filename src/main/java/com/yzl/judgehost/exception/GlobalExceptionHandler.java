@@ -156,10 +156,6 @@ public class GlobalExceptionHandler {
      * 对于所有的错误信息请参考：resources/config/exception-codes
      */
     private String getMessageStringByValidateExceptionList(List<ObjectError> errorList) {
-        StringBuffer errorMessage = new StringBuffer();
-        errorList.forEach(error -> {
-            errorMessage.append(error.getDefaultMessage()).append(" ");
-        });
-        return errorMessage.toString();
+        return errorList.get(0).getDefaultMessage();
     }
 }

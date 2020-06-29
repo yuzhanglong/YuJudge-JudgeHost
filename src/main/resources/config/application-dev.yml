@@ -1,6 +1,7 @@
 server:
   port: 8080
 
+
 judge-authorization:
   secret-key: yzl
   expired-time: 86400000

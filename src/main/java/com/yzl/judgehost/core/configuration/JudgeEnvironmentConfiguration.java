@@ -19,6 +19,16 @@ import org.springframework.stereotype.Component;
 public class JudgeEnvironmentConfiguration {
     private String workPath;
     private String scriptPath;
+    private String resolutionPath;
+
+    public String getResolutionPath() {
+        return resolutionPath;
+    }
+
+    public void setResolutionPath(String resolutionPath) {
+        this.resolutionPath = resolutionPath;
+    }
+
 
     public String getScriptPath() {
         return scriptPath;

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 /**
  * @author yuzhanglong
@@ -23,6 +24,12 @@ public class JudgeService {
     private final JudgeEnvironmentConfiguration judgeEnvironmentConfiguration;
     private final Runtime runner;
     private StringBuilder result;
+
+    public void setJudgeConfig(JudgeDTO judgeConfig) {
+        this.judgeConfig = judgeConfig;
+    }
+
+    private JudgeDTO judgeConfig;
 
     public StringBuilder getResult() {
         return result;
@@ -47,10 +54,17 @@ public class JudgeService {
                 judgeCoreScript,
                 "-r", runningPath,
                 "-o", getSubmitWorkingPath() + "/1.out",
+                "-t", String.valueOf(judgeConfig.getRealTimeLimit()),
+                "-c", String.valueOf(judgeConfig.getCpuTimeLimit()),
+                "-m", String.valueOf(judgeConfig.getMemoryLimit()),
+                "-f", String.valueOf(judgeConfig.getOutputLimit()),
                 "-e", getSubmitWorkingPath() + "/err.out",
-                "-i", "/Users/yuzhanglong/Desktop/YuJudge-Core/tests/hello/hello-python/hello.in"
+                "-i", "/Users/yuzhanglong/Desktop/YuJudge-Judge" +
+                "Host/src/test/judgeEnvironment/resolutions/1" +
+                "01600000/1.in"
         };
         try {
+            System.out.println(Arrays.toString(command));
             Process process = runner.exec(command);
             process.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -90,7 +104,6 @@ public class JudgeService {
     }
 
     /**
-     * @param judgeDTO judgeDTO对象
      * @return void
      * @author yuzhanglong
      * @date 2020-6-24 12:10:43
@@ -99,12 +112,12 @@ public class JudgeService {
      * 2.在目标文件夹下写入用户的代码
      * 3.创建此代码编译/运行的脚本文件，供后续使用
      */
-    private void initSubmisstionWorkingEnvironment(JudgeDTO judgeDTO) {
-        this.submisstionId = judgeDTO.getSubmissionId();
-        String submissionCode = judgeDTO.getSubmissionCode();
+    private void initSubmisstionWorkingEnvironment() {
+        this.submisstionId = judgeConfig.getSubmissionId();
+        String submissionCode = judgeConfig.getSubmissionCode();
         this.builderPath = getSubmitWorkingPath() + "/build.sh";
         this.runningPath = getSubmitWorkingPath() + "/run";
-        LanguageScriptEnum language = LanguageScriptEnum.toLanguageType(judgeDTO.getLanguage());
+        LanguageScriptEnum language = LanguageScriptEnum.toLanguageType(judgeConfig.getLanguage());
 
         // 文件生成脚本
         String savingScrpit = this.judgeEnvironmentConfiguration.getScriptPath() + "/codeSave.sh";
@@ -139,6 +152,34 @@ public class JudgeService {
         return judgeEnvironmentConfiguration.getWorkPath() + "/submissions/" + submisstionId;
     }
 
+
+    /**
+     * @return String
+     * @author yuzhanglong
+     * @date 2020-6-24 12:20:43
+     * @description 比较用户输出和期望输出
+     */
+
+    private Boolean compareOutputWithResolutions() {
+        String exitCode = "0";
+        try {
+            String compareScript = judgeEnvironmentConfiguration.getScriptPath() + "/compare.sh";
+
+            Process process = runner.exec(new String[]{
+                    compareScript,
+                    getSubmitWorkingPath() + "/1.out",
+                    "/Users/yuzhanglong/Desktop/YuJudge-JudgeHost/src/test/judgeEnvironment/resolutions/101600000/1.out"
+            });
+            process.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            exitCode = reader.readLine();
+        } catch (IOException | InterruptedException ioException) {
+            // TODO：异常处理
+            ioException.printStackTrace();
+        }
+        return "0".equals(exitCode);
+    }
+
     /**
      * @param judgeDTO judgeDTO对象
      * @return void
@@ -147,9 +188,14 @@ public class JudgeService {
      * @description 执行判题
      */
     public String judge(JudgeDTO judgeDTO) {
-        this.initSubmisstionWorkingEnvironment(judgeDTO);
+        this.setJudgeConfig(judgeDTO);
+        this.initSubmisstionWorkingEnvironment();
         this.buildSubmission();
         this.runJudge();
+        Boolean isPass = this.compareOutputWithResolutions();
+        if (isPass) {
+            System.out.println("=======CORRECT!!!=======");
+        }
         return this.getResult().toString();
     }
 }

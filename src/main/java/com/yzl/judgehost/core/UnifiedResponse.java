@@ -27,7 +27,4 @@ public class UnifiedResponse {
         this.message = message;
         this.request = request;
     }
-
-
-
 }
