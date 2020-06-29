@@ -54,14 +54,12 @@ public class JudgeService {
                 judgeCoreScript,
                 "-r", runningPath,
                 "-o", getSubmitWorkingPath() + "/1.out",
-                "-t", String.valueOf(judgeConfig.getRealTimeLimit()),
-                "-c", String.valueOf(judgeConfig.getCpuTimeLimit()),
-                "-m", String.valueOf(judgeConfig.getMemoryLimit()),
-                "-f", String.valueOf(judgeConfig.getOutputLimit()),
+//                "-t", String.valueOf(judgeConfig.getRealTimeLimit()),
+//                "-c", String.valueOf(judgeConfig.getCpuTimeLimit()),
+//                "-m", String.valueOf(judgeConfig.getMemoryLimit()),
+//                "-f", String.valueOf(judgeConfig.getOutputLimit()),
                 "-e", getSubmitWorkingPath() + "/err.out",
-                "-i", "/Users/yuzhanglong/Desktop/YuJudge-Judge" +
-                "Host/src/test/judgeEnvironment/resolutions/1" +
-                "01600000/1.in"
+                "-i", "/home/y-demos/judgeEnvironment/resolutions/101600000/1.in"
         };
         try {
             System.out.println(Arrays.toString(command));
@@ -168,7 +166,7 @@ public class JudgeService {
             Process process = runner.exec(new String[]{
                     compareScript,
                     getSubmitWorkingPath() + "/1.out",
-                    "/Users/yuzhanglong/Desktop/YuJudge-JudgeHost/src/test/judgeEnvironment/resolutions/101600000/1.out"
+                    "/home/y-demos/judgeEnvironment/resolutions/101600000/1.out"
             });
             process.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
