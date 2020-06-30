@@ -1,15 +1,12 @@
 package com.yzl.judgehost.dto;
 
-import com.sun.org.apache.regexp.internal.RE;
 import com.yzl.judgehost.validators.LanguageTypeAccepted;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.lang.reflect.Array;
 import java.util.List;
 
 /**
@@ -21,10 +18,6 @@ import java.util.List;
 public class JudgeDTO {
     @NotNull(message = "代码不得为空")
     private String submissionCode;
-
-    @NotNull(message = "id不得为空")
-    @Length(min = 10, max = 10, message = "id长度错误")
-    private String submissionId;
 
     @DecimalMax(value = "10", message = "实际时间限制最大为10s")
     private Integer realTimeLimit;
@@ -53,11 +46,12 @@ public class JudgeDTO {
     public String toString() {
         return "JudgeDTO{" +
                 "submissionCode='" + submissionCode + '\'' +
-                ", submissionId='" + submissionId + '\'' +
-                ", realTimeLimit='" + realTimeLimit + '\'' +
-                ", memoryLimit='" + memoryLimit + '\'' +
-                ", cpuTimeLimit='" + cpuTimeLimit + '\'' +
-                ", outputLimit='" + outputLimit + '\'' +
+                ", realTimeLimit=" + realTimeLimit +
+                ", cpuTimeLimit=" + cpuTimeLimit +
+                ", memoryLimit=" + memoryLimit +
+                ", outputLimit=" + outputLimit +
+                ", language='" + language + '\'' +
+                ", resolutions=" + resolutions +
                 '}';
     }
 
@@ -75,14 +69,6 @@ public class JudgeDTO {
 
     public void setSubmissionCode(String submissionCode) {
         this.submissionCode = submissionCode;
-    }
-
-    public String getSubmissionId() {
-        return submissionId;
-    }
-
-    public void setSubmissionId(String submissionId) {
-        this.submissionId = submissionId;
     }
 
     public Integer getRealTimeLimit() {

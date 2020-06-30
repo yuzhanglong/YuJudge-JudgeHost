@@ -1,9 +1,13 @@
 package com.yzl.judgehost.api.v1;
 
 import com.yzl.judgehost.dto.JudgeDTO;
+import com.yzl.judgehost.dto.SingleJudgeResultDTO;
 import com.yzl.judgehost.service.JudgeService;
+import com.yzl.judgehost.vo.JudgeConditionVO;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author yuzhanglong
@@ -23,7 +27,7 @@ public class JudgeController {
 
     @PostMapping("/run")
     public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) {
-        String judgeResult = judgeService.runJudge(judgeDTO);
-        return judgeDTO;
+        List<SingleJudgeResultDTO> judgeResults = judgeService.runJudge(judgeDTO);
+        return new JudgeConditionVO(judgeResults, judgeService.getSubmisstionId());
     }
 }

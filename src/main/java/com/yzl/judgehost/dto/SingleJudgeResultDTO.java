@@ -1,7 +1,11 @@
 package com.yzl.judgehost.dto;
 
+import com.yzl.judgehost.core.enumerations.JudgeResultEnum;
+
 /**
  * @author yuzhanglong
+ * @date 2020-6-30 10:18:40
+ * @description 单次判题的数据传输对象
  */
 public class SingleJudgeResultDTO {
     private String realTimeCost;
@@ -10,7 +14,17 @@ public class SingleJudgeResultDTO {
     private Integer condition;
     private String stdinPath;
     private String stdoutPath;
-    private String stderrPath;
+
+    /**
+     * @author yuzhanglong
+     * @date 2020-6-29 22:54:47
+     * @description 设置message，根据condition的数值，
+     * 利用枚举类型转换成message以备返回给前端
+     */
+    public void setMessage() {
+        JudgeResultEnum type = JudgeResultEnum.toJudgeResultType(this.condition);
+        this.message = type.getMessage();
+    }
 
 
     public String getRealTimeCost() {
@@ -41,20 +55,12 @@ public class SingleJudgeResultDTO {
         return condition;
     }
 
-    public void setCondition(Integer condition) {
-        this.condition = condition;
-    }
-
     public String getStdinPath() {
         return stdinPath;
     }
 
     public void setStdinPath(String stdinPath) {
         this.stdinPath = stdinPath;
-    }
-
-    public String getStdoutPath() {
-        return stdoutPath;
     }
 
     public void setStdoutPath(String stdoutPath) {
@@ -69,9 +75,28 @@ public class SingleJudgeResultDTO {
         this.stderrPath = stderrPath;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    private String stderrPath;
+    private String message;
+
+    public void setCondition(Integer condition) {
+        this.condition = condition;
+    }
+
+    public String getStdoutPath() {
+        return stdoutPath;
+    }
+
     @Override
     public String toString() {
-        return "JudgeResultVO{" +
+        return "SingleJudgeResultDTO{" +
                 "realTimeCost='" + realTimeCost + '\'' +
                 ", memoryCost='" + memoryCost + '\'' +
                 ", cpuTimeCost='" + cpuTimeCost + '\'' +
@@ -79,6 +104,7 @@ public class SingleJudgeResultDTO {
                 ", stdinPath='" + stdinPath + '\'' +
                 ", stdoutPath='" + stdoutPath + '\'' +
                 ", stderrPath='" + stderrPath + '\'' +
+                ", message='" + message + '\'' +
                 '}';
     }
 }
