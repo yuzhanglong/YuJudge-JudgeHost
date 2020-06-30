@@ -64,10 +64,10 @@ public class JudgeService {
                 judgeCoreScript,
                 "-r", runningPath,
                 "-o", getSubmitWorkingPath() + "/" + UUID.randomUUID() + ".out",
-//                "-t", String.valueOf(judgeConfig.getRealTimeLimit()),
-//                "-c", String.valueOf(judgeConfig.getCpuTimeLimit()),
-//                "-m", String.valueOf(judgeConfig.getMemoryLimit()),
-//                "-f", String.valueOf(judgeConfig.getOutputLimit()),
+                "-t", String.valueOf(judgeConfig.getRealTimeLimit()),
+                "-c", String.valueOf(judgeConfig.getCpuTimeLimit()),
+                "-m", String.valueOf(judgeConfig.getMemoryLimit()),
+                "-f", String.valueOf(judgeConfig.getOutputLimit()),
                 "-e", getSubmitWorkingPath() + "/" + UUID.randomUUID() + ".err",
                 "-i", stdInPath
         };
@@ -121,8 +121,6 @@ public class JudgeService {
 
         // 对应语言的编译脚本
         String buildScript = language.getBuildScriptByRunningPath(codePath);
-
-
         try {
             Process process = runner.exec(
                     new String[]{
@@ -230,7 +228,7 @@ public class JudgeService {
     public List<SingleJudgeResultDTO> runJudge(JudgeDTO judgeDTO) {
         // 判断配置合法性
         this.judgeEnvironmentConfiguration.checkJudgeEnvironmentBaseFileIn();
-
+        // 为本次提交提供唯一id
         this.submisstionId = UUID.randomUUID().toString();
         // 判题基础配置
         setJudgeConfig(judgeDTO);
