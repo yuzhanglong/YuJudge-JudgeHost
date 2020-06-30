@@ -12,35 +12,35 @@ public enum LanguageScriptEnum {
     // for python
     PYTHON("#!/bin/sh\n" +
             "\n" +
-            "echo '#!/bin/sh' > RUN_PATH" +
+            "echo '#!/bin/sh' > run" +
             "\n" +
-            "echo 'python3 CODE_PATH' >> RUN_PATH", "py"),
+            "echo 'python3 CODE_PATH' >> run", "py"),
 
     // for java
     JAVA("#!/bin/sh\n" +
             "\n" +
             "javac CODE_PATH\n" +
-            "echo '#!/bin/sh' > RUN_PATH\n" +
-            "echo 'java -cp CODE_PATH' >> RUN_PATH", "java"),
+            "echo '#!/bin/sh' > run\n" +
+            "echo 'java -cp CODE_PATH' >> run", "java"),
 
     // for c
     C("#!/bin/sh\n" +
             "\n" +
-            "gcc -Wall -O2 -std=gnu11 CODE_PATH -o RUN_PATH -lm", "c"),
+            "gcc -Wall -O2 -std=gnu11 CODE_PATH -o run -lm", "c"),
 
 
     // for cpp
     C_PLUS_PLUS("#!/bin/sh\n" +
             "\n" +
-            "g++ -Wall -O2 -std=gnu++17 CODE_PATH -o RUN_PATH", "cpp");
+            "g++ -Wall -O2 CODE_PATH -o run", "cpp");
 
     public String getBuildScript() {
         return buildScript;
     }
 
-    public String getBuildScriptByRunningPath(String codePath, String runningPath) {
+    public String getBuildScriptByRunningPath(String codePath) {
         String script = getBuildScript();
-        script = script.replace("RUN_PATH", runningPath).replace("CODE_PATH", codePath);
+        script = script.replace("CODE_PATH", codePath);
         return script;
     }
 

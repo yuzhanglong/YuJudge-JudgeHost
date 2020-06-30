@@ -5,8 +5,10 @@ import com.yzl.judgehost.core.configuration.JudgeEnvironmentConfiguration;
 import com.yzl.judgehost.core.enumerations.LanguageScriptEnum;
 import com.yzl.judgehost.dto.JudgeDTO;
 import com.yzl.judgehost.dto.ResolutionDTO;
+import com.yzl.judgehost.exception.http.NotFoundException;
 import com.yzl.judgehost.network.HttpRequest;
 import com.yzl.judgehost.dto.SingleJudgeResultDTO;
+import com.yzl.judgehost.utils.FileHelper;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -27,14 +29,12 @@ import java.util.UUID;
 
 @Service
 public class JudgeService {
-    private String builderPath;
     private String runningPath;
 
 
     private String submisstionId;
     private final JudgeEnvironmentConfiguration judgeEnvironmentConfiguration;
     private final Runtime runner;
-
 
     private JudgeDTO judgeConfig;
 
@@ -101,54 +101,40 @@ public class JudgeService {
 
     /**
      * @return void
+     * @throws NotFoundException 编译脚本不存在时抛出异常
      * @author yuzhanglong
-     * @description 利用之前生成的build.sh来编译脚本
+     * @description 调用compile.sh 生成脚本
      * @date 2020-6-24 12:10:43
      */
-    private void buildSubmission() {
+    private void compileSubmission() {
+        // 编译脚本
+        String compileScript = this.judgeEnvironmentConfiguration.getScriptPath() + "/compile.sh";
+
+        if (!FileHelper.isFileIn(compileScript)) {
+            throw new NotFoundException("B1002");
+        }
+        // 获取编程语言
+        LanguageScriptEnum language = LanguageScriptEnum.toLanguageType(judgeConfig.getLanguage());
+
+        // 用户代码
+        String codePath = getSubmitWorkingPath() + "/Main." + language.getExtensionName();
+
+        // 对应语言的编译脚本
+        String buildScript = language.getBuildScriptByRunningPath(codePath);
+
+
         try {
-            Process process = runner.exec(builderPath);
+            Process process = runner.exec(
+                    new String[]{
+                            compileScript,
+                            getSubmitWorkingPath(),
+                            codePath,
+                            judgeConfig.getSubmissionCode(),
+                            buildScript
+                    });
             process.waitFor();
         } catch (IOException | InterruptedException ioException) {
             // TODO：异常处理
-            ioException.printStackTrace();
-        }
-    }
-
-    /**
-     * @return void
-     * @author yuzhanglong
-     * @date 2020-6-24 12:10:43
-     * @description 为提交的代码初始化运行环境，具体包括：
-     * 1.在judger工作目录下创建对应的文件夹，名称即本次提交的id
-     * 2.在目标文件夹下写入用户的代码
-     * 3.创建此代码编译/运行的脚本文件，供后续使用
-     */
-    private void initSubmisstionWorkingEnvironment() {
-        String submissionCode = judgeConfig.getSubmissionCode();
-        this.builderPath = getSubmitWorkingPath() + "/build.sh";
-        this.runningPath = getSubmitWorkingPath() + "/run";
-        LanguageScriptEnum language = LanguageScriptEnum.toLanguageType(judgeConfig.getLanguage());
-
-        // 文件生成脚本
-        String savingScrpit = this.judgeEnvironmentConfiguration.getScriptPath() + "/codeSave.sh";
-
-        // 代码文件包
-        String submissionPath = getSubmitWorkingPath();
-
-        // 用户代码
-        String codePath = submissionPath + "/Main." + language.getExtensionName();
-
-        // 编译脚本
-        String buildScript = language.getBuildScriptByRunningPath(codePath, runningPath);
-
-        // Runtime对象，准备执行生成脚本
-        try {
-            String[] command = {savingScrpit, getSubmitWorkingPath(), codePath, submissionCode, builderPath, buildScript};
-            Process process = runner.exec(command);
-            process.waitFor();
-        } catch (IOException | InterruptedException ioException) {
-            //TODO：异常处理
             ioException.printStackTrace();
         }
     }
@@ -172,7 +158,6 @@ public class JudgeService {
     private String getSubmitResolutionPath() {
         return judgeEnvironmentConfiguration.getResolutionPath() + "/" + submisstionId;
     }
-
 
     /**
      * @param submisstionOutput 用户提交的输出
@@ -203,38 +188,6 @@ public class JudgeService {
         return "0".equals(exitCode);
     }
 
-    /**
-     * @param judgeDTO judgeDTO对象
-     * @return void
-     * @author yuzhanglong
-     * @date 2020-6-27 12:21:43
-     * @description 执行判题
-     */
-    public List<SingleJudgeResultDTO> runJudge(JudgeDTO judgeDTO) {
-        // 判断配置合法性
-        this.judgeEnvironmentConfiguration.checkJudgeEnvironmentBaseFileIn();
-
-        this.submisstionId = UUID.randomUUID().toString();
-        // 判题基础配置
-        setJudgeConfig(judgeDTO);
-        // 初始化判题环境
-        initSubmisstionWorkingEnvironment();
-        // 编译用户的提交
-        buildSubmission();
-        List<SingleJudgeResultDTO> result = new ArrayList<>();
-        judgeDTO.getResolutions().forEach(res -> {
-            ResolutionDTO resolution = getResolutionInputAndOutputFile(res);
-            SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.getInput());
-            Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), res.getExpectedOutput());
-            // 如果通过，将condition设置为 0
-            if (isPass) {
-                singleJudgeResult.setCondition(0);
-            }
-            singleJudgeResult.setMessage();
-            result.add(singleJudgeResult);
-        });
-        return result;
-    }
 
     /**
      * @param resolution 解决方案数据传输对象
@@ -266,4 +219,38 @@ public class JudgeService {
         resolution.setExpectedOutput(outPath);
         return resolution;
     }
+
+    /**
+     * @param judgeDTO judgeDTO对象
+     * @return void
+     * @author yuzhanglong
+     * @date 2020-6-27 12:21:43
+     * @description 执行判题
+     */
+    public List<SingleJudgeResultDTO> runJudge(JudgeDTO judgeDTO) {
+        // 判断配置合法性
+        this.judgeEnvironmentConfiguration.checkJudgeEnvironmentBaseFileIn();
+
+        this.submisstionId = UUID.randomUUID().toString();
+        // 判题基础配置
+        setJudgeConfig(judgeDTO);
+        // 设置执行目录
+        runningPath = getSubmitWorkingPath() + "/run";
+        // 编译用户的提交
+        compileSubmission();
+        List<SingleJudgeResultDTO> result = new ArrayList<>();
+        judgeDTO.getResolutions().forEach(res -> {
+            ResolutionDTO resolution = getResolutionInputAndOutputFile(res);
+            SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.getInput());
+            Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), res.getExpectedOutput());
+            // 如果通过，将condition设置为 0
+            if (isPass) {
+                singleJudgeResult.setCondition(0);
+            }
+            singleJudgeResult.setMessage();
+            result.add(singleJudgeResult);
+        });
+        return result;
+    }
+
 }
