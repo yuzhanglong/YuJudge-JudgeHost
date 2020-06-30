@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
         String requestString = getRequestUrlString(method, requestUrl);
         exception.printStackTrace();
         //TODO: 日志记录
-        return new UnifiedResponse(1000, "SERVER_ERROR", requestString);
+        return new UnifiedResponse("B0001", "SERVER_ERROR", requestString);
     }
 
     /**
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<UnifiedResponse> handleHttpException(HttpServletRequest request, HttpException exception) {
         String requestUrl = request.getRequestURI();
         String method = request.getMethod();
-        Integer errorCode = exception.getCode();
+        String errorCode = exception.getCode();
         String message = getMessageByExceptionCode(errorCode);
 
         // 初始化unifyresponse
@@ -86,7 +86,7 @@ public class GlobalExceptionHandler {
         String method = request.getMethod();
         String message = exception.getMessage();
         // 初始化unifyresponse
-        return new UnifiedResponse(1000, message, getRequestUrlString(method, requestUrl));
+        return new UnifiedResponse(getMessageByExceptionCode("A0001"), message, getRequestUrlString(method, requestUrl));
     }
 
     /**
@@ -107,7 +107,7 @@ public class GlobalExceptionHandler {
         String message = getMessageStringByValidateExceptionList(errorList);
 
         // 初始化unifyresponse
-        return new UnifiedResponse(1000, message, getRequestUrlString(method, requestUrl));
+        return new UnifiedResponse("A0002", message, getRequestUrlString(method, requestUrl));
     }
 
     /**
@@ -126,7 +126,7 @@ public class GlobalExceptionHandler {
         String message = exception.getMessage();
 
         // 初始化unifyresponse
-        return new UnifiedResponse(1000, message, getRequestUrlString(method, requestUrl));
+        return new UnifiedResponse("A0002", message, getRequestUrlString(method, requestUrl));
     }
 
     /**
@@ -145,7 +145,7 @@ public class GlobalExceptionHandler {
      * @description 通过自定义的错误代码，来获取其对应的信息，以供返回给前端，这些信息来源于配置文件
      * 对于所有的错误信息请参考：resources/config/exception-codes
      */
-    private String getMessageByExceptionCode(Integer code) {
+    private String getMessageByExceptionCode(String code) {
         return exceptionCodeConfiguration.getMessage(code);
     }
 

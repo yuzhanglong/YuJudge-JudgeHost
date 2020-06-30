@@ -1,5 +1,7 @@
 package com.yzl.judgehost.core.configuration;
 
+import com.yzl.judgehost.exception.http.NotFoundException;
+import com.yzl.judgehost.utils.FileHelper;
 import com.yzl.judgehost.utils.YamlPropertySourceFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -8,9 +10,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author yuzhanglong
+ * @date 2020-6-30 11:24:04
  * @description 判题环境配置类
  */
-
 
 @ConfigurationProperties(prefix = "judge-environment")
 @Component
@@ -25,26 +27,46 @@ public class JudgeEnvironmentConfiguration {
         return resolutionPath;
     }
 
+    /**
+     * @throws RuntimeException 项目依赖的文件、文件夹路径不存在
+     * @author yuzhanglong
+     * @description 判断相关文件依赖是否存在
+     * @date 2020-6-30 11:24:04
+     */
+    public void checkJudgeEnvironmentBaseFileIn() {
+        if (!FileHelper.isDirectory(resolutionPath)) {
+//            "[YuJudge]resolutionPath(解决方案文件)目录不存在"
+            throw new NotFoundException("B1002");
+        }
+        if (!FileHelper.isDirectory(workPath)) {
+            throw new NotFoundException("B1002");
+        }
+        if (!FileHelper.isDirectory(scriptPath)) {
+            throw new NotFoundException("B1002");
+        }
+    }
+
+
     public void setResolutionPath(String resolutionPath) {
         this.resolutionPath = resolutionPath;
     }
 
-
-    public String getScriptPath() {
-        return scriptPath;
-    }
 
     public void setScriptPath(String scriptPath) {
         this.scriptPath = scriptPath;
     }
 
 
-    public String getWorkPath() {
-        return workPath;
-    }
-
     public void setWorkPath(String workPath) {
         this.workPath = workPath;
+    }
+
+    public String getScriptPath() {
+        return scriptPath;
+    }
+
+    public String getWorkPath() {
+        return workPath;
     }
 
     @Override

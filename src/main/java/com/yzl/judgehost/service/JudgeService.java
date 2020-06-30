@@ -91,9 +91,12 @@ public class JudgeService {
             // TODO：异常处理
             ioException.printStackTrace();
         }
-        System.out.println(output.toString());
         // 将判题核心的stdout转换成数据传输对象
-        return JSON.parseObject(output.toString(), SingleJudgeResultDTO.class);
+        SingleJudgeResultDTO singleJudgeResult = JSON.parseObject(output.toString(), SingleJudgeResultDTO.class);
+
+        // TODO: 打logger
+        System.out.println(singleJudgeResult);
+        return singleJudgeResult;
     }
 
     /**
@@ -208,6 +211,9 @@ public class JudgeService {
      * @description 执行判题
      */
     public List<SingleJudgeResultDTO> runJudge(JudgeDTO judgeDTO) {
+        // 判断配置合法性
+        this.judgeEnvironmentConfiguration.checkJudgeEnvironmentBaseFileIn();
+
         this.submisstionId = UUID.randomUUID().toString();
         // 判题基础配置
         setJudgeConfig(judgeDTO);
