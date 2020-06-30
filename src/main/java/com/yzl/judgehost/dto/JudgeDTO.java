@@ -1,5 +1,6 @@
 package com.yzl.judgehost.dto;
 
+import com.yzl.judgehost.core.enumerations.JudgeConfigEnum;
 import com.yzl.judgehost.validators.LanguageTypeAccepted;
 
 import javax.validation.Valid;
@@ -13,7 +14,14 @@ import java.util.List;
  * @author yuzhanglong
  * @date 2020-6-26 10:26
  * @description 判题数据传输对象
+ *
+ * 如果用户没有传入某些非必填的限制
+ * (例如时间限制、内存限制)时，我们会将这些内容置换成默认的配置
+ * 同时防止了NPE错误的发生。
+ *
+ * @see JudgeConfigEnum 默认配置的枚举类
  */
+
 @LanguageTypeAccepted
 public class JudgeDTO {
     @NotNull(message = "代码不得为空")
@@ -41,6 +49,18 @@ public class JudgeDTO {
     @Size(message = "期望输入、输出长度最小为1、最大为7", min = 1, max = 10)
     @Valid
     private List<ResolutionDTO> resolutions;
+
+    public Integer getRealTimeLimit() {
+        return realTimeLimit == null ? JudgeConfigEnum.TIME_LIMIT_DEFAULT.getData() : realTimeLimit;
+    }
+
+    public Integer getOutputLimit() {
+        return outputLimit == null ? JudgeConfigEnum.OUTPUT_LIMIT_DEFAULT.getData() : outputLimit;
+    }
+
+    public Integer getCpuTimeLimit() {
+        return cpuTimeLimit == null ? JudgeConfigEnum.WALL_TIME_DEFAULT.getData() : cpuTimeLimit;
+    }
 
     @Override
     public String toString() {
@@ -71,9 +91,6 @@ public class JudgeDTO {
         this.submissionCode = submissionCode;
     }
 
-    public Integer getRealTimeLimit() {
-        return realTimeLimit;
-    }
 
     public void setRealTimeLimit(Integer realTimeLimit) {
         this.realTimeLimit = realTimeLimit;
@@ -87,17 +104,11 @@ public class JudgeDTO {
         this.memoryLimit = memoryLimit;
     }
 
-    public Integer getCpuTimeLimit() {
-        return cpuTimeLimit;
-    }
 
     public void setCpuTimeLimit(Integer cpuTimeLimit) {
         this.cpuTimeLimit = cpuTimeLimit;
     }
 
-    public Integer getOutputLimit() {
-        return outputLimit;
-    }
 
     public void setOutputLimit(Integer outputLimit) {
         this.outputLimit = outputLimit;

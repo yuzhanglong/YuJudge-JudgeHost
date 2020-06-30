@@ -35,7 +35,6 @@ public class JudgeEnvironmentConfiguration {
      */
     public void checkJudgeEnvironmentBaseFileIn() {
         if (!FileHelper.isDirectory(resolutionPath)) {
-//            "[YuJudge]resolutionPath(解决方案文件)目录不存在"
             throw new NotFoundException("B1002");
         }
         if (!FileHelper.isDirectory(workPath)) {
