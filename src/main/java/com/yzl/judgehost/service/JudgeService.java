@@ -31,7 +31,7 @@ public class JudgeService {
     private String runningPath;
 
 
-    private final String submisstionId;
+    private String submisstionId;
     private final JudgeEnvironmentConfiguration judgeEnvironmentConfiguration;
     private final Runtime runner;
 
@@ -40,7 +40,6 @@ public class JudgeService {
 
     public JudgeService(JudgeEnvironmentConfiguration judgeEnvironmentConfiguration) {
         this.judgeEnvironmentConfiguration = judgeEnvironmentConfiguration;
-        this.submisstionId = UUID.randomUUID().toString();
         this.runner = Runtime.getRuntime();
     }
 
@@ -209,6 +208,7 @@ public class JudgeService {
      * @description 执行判题
      */
     public List<SingleJudgeResultDTO> runJudge(JudgeDTO judgeDTO) {
+        this.submisstionId = UUID.randomUUID().toString();
         // 判题基础配置
         setJudgeConfig(judgeDTO);
         // 初始化判题环境
