@@ -14,11 +14,10 @@ import java.util.List;
  * @author yuzhanglong
  * @date 2020-6-26 10:26
  * @description 判题数据传输对象
- *
+ * <p>
  * 如果用户没有传入某些非必填的限制
  * (例如时间限制、内存限制)时，我们会将这些内容置换成默认的配置
  * 同时防止了NPE错误的发生。
- *
  * @see JudgeConfigEnum 默认配置的枚举类
  */
 

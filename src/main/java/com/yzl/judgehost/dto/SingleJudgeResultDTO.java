@@ -21,9 +21,13 @@ public class SingleJudgeResultDTO {
      * @description 设置message，根据condition的数值，
      * 利用枚举类型转换成message以备返回给前端
      */
-    public void setMessage() {
+    public void setMessageWithCondition() {
         JudgeResultEnum type = JudgeResultEnum.toJudgeResultType(this.condition);
         this.message = type.getMessage();
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 
@@ -79,7 +83,7 @@ public class SingleJudgeResultDTO {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessageWithCondition(String message) {
         this.message = message;
     }
 

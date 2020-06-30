@@ -2,12 +2,14 @@ package com.yzl.judgehost.service;
 
 import com.alibaba.fastjson.JSON;
 import com.yzl.judgehost.core.configuration.JudgeEnvironmentConfiguration;
+import com.yzl.judgehost.core.enumerations.JudgeResultEnum;
 import com.yzl.judgehost.core.enumerations.LanguageScriptEnum;
 import com.yzl.judgehost.dto.JudgeDTO;
 import com.yzl.judgehost.dto.ResolutionDTO;
 import com.yzl.judgehost.exception.http.NotFoundException;
 import com.yzl.judgehost.network.HttpRequest;
 import com.yzl.judgehost.dto.SingleJudgeResultDTO;
+import com.yzl.judgehost.utils.DataReformat;
 import com.yzl.judgehost.utils.FileHelper;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.Resource;
@@ -71,28 +73,20 @@ public class JudgeService {
                 "-e", getSubmitWorkingPath() + "/" + UUID.randomUUID() + ".err",
                 "-i", stdInPath
         };
-        StringBuilder output = new StringBuilder();
+        List<String> result = new ArrayList<>();
         try {
             Process process = runner.exec(command);
             process.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-            String temp;
-            while ((temp = reader.readLine()) != null) {
-                output.append(temp);
-            }
-            while ((temp = errReader.readLine()) != null) {
-                // TODO:处理错误输出
-                output.append(temp);
-            }
-
+            result = readStdout(process);
         } catch (IOException | InterruptedException ioException) {
             // TODO：异常处理
             ioException.printStackTrace();
         }
         // 将判题核心的stdout转换成数据传输对象
-        SingleJudgeResultDTO singleJudgeResult = JSON.parseObject(output.toString(), SingleJudgeResultDTO.class);
+        SingleJudgeResultDTO singleJudgeResult = JSON.parseObject(
+                DataReformat.stringListToString(result),
+                SingleJudgeResultDTO.class
+        );
 
         // TODO: 打logger
         System.out.println(singleJudgeResult);
@@ -100,13 +94,13 @@ public class JudgeService {
     }
 
     /**
-     * @return void
+     * @return String 编译返回的信息，如果没有信息，则编译成功
      * @throws NotFoundException 编译脚本不存在时抛出异常
      * @author yuzhanglong
      * @description 调用compile.sh 生成脚本
      * @date 2020-6-24 12:10:43
      */
-    private void compileSubmission() {
+    private List<String> compileSubmission() {
         // 编译脚本
         String compileScript = this.judgeEnvironmentConfiguration.getScriptPath() + "/compile.sh";
 
@@ -120,7 +114,8 @@ public class JudgeService {
         String codePath = getSubmitWorkingPath() + "/Main." + language.getExtensionName();
 
         // 对应语言的编译脚本
-        String buildScript = language.getBuildScriptByRunningPath(codePath);
+        String buildScript = language.getBuildScriptByRunningPath(getSubmitWorkingPath(), codePath);
+        List<String> result = new ArrayList<>();
         try {
             Process process = runner.exec(
                     new String[]{
@@ -131,10 +126,12 @@ public class JudgeService {
                             buildScript
                     });
             process.waitFor();
+            result = readStdout(process);
         } catch (IOException | InterruptedException ioException) {
             // TODO：异常处理
             ioException.printStackTrace();
         }
+        return result;
     }
 
     /**
@@ -202,7 +199,6 @@ public class JudgeService {
         Resource inputFileResource = HttpRequest.getFile(inputFile);
         Resource outputFileResource = HttpRequest.getFile(outputFile);
 
-        // TODO: 将基础路径转移到配置文件中
         String inPath = getSubmitResolutionPath() + "/" + UUID.randomUUID() + ".in";
         String outPath = getSubmitResolutionPath() + "/" + UUID.randomUUID() + ".out";
         try {
@@ -235,20 +231,57 @@ public class JudgeService {
         // 设置执行目录
         runningPath = getSubmitWorkingPath() + "/run";
         // 编译用户的提交
-        compileSubmission();
+        List<String> compileResult = compileSubmission();
         List<SingleJudgeResultDTO> result = new ArrayList<>();
-        judgeDTO.getResolutions().forEach(res -> {
-            ResolutionDTO resolution = getResolutionInputAndOutputFile(res);
-            SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.getInput());
-            Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), res.getExpectedOutput());
-            // 如果通过，将condition设置为 0
-            if (isPass) {
-                singleJudgeResult.setCondition(0);
-            }
-            singleJudgeResult.setMessage();
-            result.add(singleJudgeResult);
-        });
+        if (isCompileSuccess(compileResult)) {
+            judgeDTO.getResolutions().forEach(res -> {
+
+                ResolutionDTO resolution = getResolutionInputAndOutputFile(res);
+                SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.getInput());
+                Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), res.getExpectedOutput());
+                // 如果通过，将condition设置为 0
+                if (isPass) {
+                    singleJudgeResult.setCondition(JudgeResultEnum.ACCEPTED.getNumber());
+                }
+                singleJudgeResult.setMessageWithCondition();
+                result.add(singleJudgeResult);
+            });
+        } else {
+            SingleJudgeResultDTO resolution = new SingleJudgeResultDTO();
+            resolution.setCondition(JudgeResultEnum.COMPILE_ERROR.getNumber());
+            resolution.setMessage(DataReformat.stringListToString(compileResult));
+            result.add(resolution);
+        }
         return result;
     }
 
+    /**
+     * @param process 运行的进程对象
+     * @return String 进程输出
+     * @throws IOException an I/O exception
+     * @author yuzhanglong
+     * @date 2020-6-30 21:21
+     * @description 获取运行的脚本/可执行文件的输出
+     */
+    private List<String> readStdout(Process process) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        List<String> stringList = new ArrayList<>();
+        String temp;
+        while ((temp = reader.readLine()) != null) {
+            stringList.add(temp);
+        }
+        // TODO:处理错误输出
+        return stringList;
+    }
+
+    /**
+     * @param compileResult 编译结果
+     * @return Boolean 编译是否成功
+     * @author yuzhanglong
+     * @date 2020-6-30 21:21
+     * @description 传入编译结果，根据语言特性来判断编译是否成功
+     */
+    private Boolean isCompileSuccess(List<String> compileResult) {
+        return true;
+    }
 }

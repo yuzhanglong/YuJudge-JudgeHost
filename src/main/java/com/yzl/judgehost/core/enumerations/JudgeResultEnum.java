@@ -55,8 +55,10 @@ public enum JudgeResultEnum {
     CREATE_THREAD_ERROR("CREATE_THREAD_ERROR", 14),
 
     //参数校验失败
-    VALIDATE_ERROR("VALIDATE_ERROR", 15);
+    VALIDATE_ERROR("VALIDATE_ERROR", 15),
 
+    //编译失败
+    COMPILE_ERROR("COMPILE_ERROR", 16);
 
     public String getMessage() {
         return message;

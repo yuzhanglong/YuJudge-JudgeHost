@@ -19,9 +19,13 @@ public enum LanguageScriptEnum {
     // for java
     JAVA("#!/bin/sh\n" +
             "\n" +
-            "javac CODE_PATH\n" +
-            "echo '#!/bin/sh' > run\n" +
-            "echo 'java -cp CODE_PATH' >> run", "java"),
+            "javac CODE_PATH" +
+            "\n" +
+            "echo '#!/bin/sh' > run" +
+            "\n" +
+            "echo 'cd SUBMISSION_PATH' >> run" +
+            "\n" +
+            "echo 'java Main' >> run", "java"),
 
     // for c
     C("#!/bin/sh\n" +
@@ -38,9 +42,9 @@ public enum LanguageScriptEnum {
         return buildScript;
     }
 
-    public String getBuildScriptByRunningPath(String codePath) {
+    public String getBuildScriptByRunningPath(String submissionPath, String codePath) {
         String script = getBuildScript();
-        script = script.replace("CODE_PATH", codePath);
+        script = script.replace("SUBMISSION_PATH", submissionPath).replace("CODE_PATH", codePath);
         return script;
     }
 
