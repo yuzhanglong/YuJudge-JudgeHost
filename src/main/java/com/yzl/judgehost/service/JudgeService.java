@@ -32,13 +32,12 @@ import java.util.UUID;
 @Service
 public class JudgeService {
     private String runningPath;
-
-
     private String submisstionId;
+    private List<String> compileResult;
+    private JudgeDTO judgeConfig;
     private final JudgeEnvironmentConfiguration judgeEnvironmentConfiguration;
     private final Runtime runner;
 
-    private JudgeDTO judgeConfig;
 
     public JudgeService(JudgeEnvironmentConfiguration judgeEnvironmentConfiguration) {
         this.judgeEnvironmentConfiguration = judgeEnvironmentConfiguration;
@@ -89,7 +88,6 @@ public class JudgeService {
         );
 
         // TODO: 打logger
-        System.out.println(singleJudgeResult);
         return singleJudgeResult;
     }
 
@@ -232,10 +230,10 @@ public class JudgeService {
         runningPath = getSubmitWorkingPath() + "/run";
         // 编译用户的提交
         List<String> compileResult = compileSubmission();
+        this.compileResult = compileResult;
         List<SingleJudgeResultDTO> result = new ArrayList<>();
         if (isCompileSuccess(compileResult)) {
             judgeDTO.getResolutions().forEach(res -> {
-
                 ResolutionDTO resolution = getResolutionInputAndOutputFile(res);
                 SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.getInput());
                 Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), res.getExpectedOutput());
@@ -249,7 +247,7 @@ public class JudgeService {
         } else {
             SingleJudgeResultDTO resolution = new SingleJudgeResultDTO();
             resolution.setCondition(JudgeResultEnum.COMPILE_ERROR.getNumber());
-            resolution.setMessage(DataReformat.stringListToString(compileResult));
+            resolution.setMessageWithCondition();
             result.add(resolution);
         }
         return result;
@@ -270,6 +268,11 @@ public class JudgeService {
         while ((temp = reader.readLine()) != null) {
             stringList.add(temp);
         }
+        BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        while ((temp = errReader.readLine()) != null) {
+            // TODO:处理错误输出
+            stringList.add(temp);
+        }
         // TODO:处理错误输出
         return stringList;
     }
@@ -283,5 +286,9 @@ public class JudgeService {
      */
     private Boolean isCompileSuccess(List<String> compileResult) {
         return true;
+    }
+
+    public List<String> getCompileResult() {
+        return compileResult;
     }
 }

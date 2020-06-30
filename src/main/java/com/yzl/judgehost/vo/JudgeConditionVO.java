@@ -13,6 +13,7 @@ public class JudgeConditionVO {
     private final List<SingleJudgeResultDTO> judgeResults;
     private final String submisstionId;
     private final Long judgeEndTime;
+    private final List<String> extraInfo;
 
 
     public List<SingleJudgeResultDTO> getJudgeResults() {
@@ -24,10 +25,15 @@ public class JudgeConditionVO {
     }
 
 
-    public JudgeConditionVO(List<SingleJudgeResultDTO> judgeResults, String submisstionId) {
+    public JudgeConditionVO(List<SingleJudgeResultDTO> judgeResults, List<String> compileResult, String submisstionId) {
         this.judgeResults = judgeResults;
         this.submisstionId = submisstionId;
+        this.extraInfo = compileResult;
         this.judgeEndTime = System.currentTimeMillis();
+    }
+
+    public List<String> getExtraInfo() {
+        return extraInfo;
     }
 
     public String getSubmisstionId() {

@@ -2,6 +2,8 @@ package com.yzl.judgehost.dto;
 
 import com.yzl.judgehost.core.enumerations.JudgeResultEnum;
 
+import java.util.List;
+
 /**
  * @author yuzhanglong
  * @date 2020-6-30 10:18:40
@@ -14,6 +16,8 @@ public class SingleJudgeResultDTO {
     private Integer condition;
     private String stdinPath;
     private String stdoutPath;
+    private String stderrPath;
+    private String message;
 
     /**
      * @author yuzhanglong
@@ -29,7 +33,6 @@ public class SingleJudgeResultDTO {
     public void setMessage(String message) {
         this.message = message;
     }
-
 
     public String getRealTimeCost() {
         return realTimeCost;
@@ -87,8 +90,6 @@ public class SingleJudgeResultDTO {
         this.message = message;
     }
 
-    private String stderrPath;
-    private String message;
 
     public void setCondition(Integer condition) {
         this.condition = condition;
