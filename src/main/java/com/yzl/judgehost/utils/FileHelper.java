@@ -34,6 +34,33 @@ public class FileHelper {
         return directory.isDirectory();
     }
 
+    /**
+     * @param zippedPath 压缩文件保存的目录
+     * @param targetPath 被压缩的目录
+     * @return Boolean 是否压缩成功
+     * @throws IOException an I/O exception
+     * @author yuzhanglong
+     * @description 压缩某个文件夹，并保存到目标位置
+     * @date 2020-6-30 11:03:47
+     */
+    public static Boolean zipDictionary(String zippedPath, String targetPath) throws InterruptedException, IOException {
+        if (!isDirectory(targetPath)) {
+            return false;
+        } else {
+            Runtime runtime = Runtime.getRuntime();
+            String[] zipCommand = {
+                    "zip",
+                    "-j",
+                    "-r",
+                    zippedPath,
+                    targetPath
+            };
+            Process process = runtime.exec(zipCommand);
+            process.waitFor();
+        }
+        return true;
+    }
+
 
     /**
      * @param filePath 需要读取的文件目录
