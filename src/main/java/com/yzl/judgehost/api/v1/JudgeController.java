@@ -28,7 +28,7 @@ public class JudgeController {
     @PostMapping("/run")
     public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) {
         List<SingleJudgeResultDTO> judgeResults = judgeService.runJudge(judgeDTO);
-        List<String> extraResult = judgeService.getCompileResult();
+        List<String> extraResult = judgeService.getExtraInfo();
         return new JudgeConditionVO(judgeResults, extraResult, judgeService.getSubmisstionId());
     }
 }

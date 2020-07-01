@@ -33,7 +33,7 @@ import java.util.UUID;
 public class JudgeService {
     private String runningPath;
     private String submisstionId;
-    private List<String> compileResult;
+    private List<String> extraInfo;
     private JudgeDTO judgeConfig;
     private final JudgeEnvironmentConfiguration judgeEnvironmentConfiguration;
     private final Runtime runner;
@@ -86,7 +86,6 @@ public class JudgeService {
                 DataReformat.stringListToString(result),
                 SingleJudgeResultDTO.class
         );
-
         // TODO: 打logger
         return singleJudgeResult;
     }
@@ -230,18 +229,12 @@ public class JudgeService {
         runningPath = getSubmitWorkingPath() + "/run";
         // 编译用户的提交
         List<String> compileResult = compileSubmission();
-        this.compileResult = compileResult;
+        this.extraInfo = compileResult;
         List<SingleJudgeResultDTO> result = new ArrayList<>();
+        // 编译阶段成功，开始运行用户代码
         if (isCompileSuccess(compileResult)) {
             judgeDTO.getResolutions().forEach(res -> {
-                ResolutionDTO resolution = getResolutionInputAndOutputFile(res);
-                SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.getInput());
-                Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), res.getExpectedOutput());
-                // 如果通过，将condition设置为 0
-                if (isPass) {
-                    singleJudgeResult.setCondition(JudgeResultEnum.ACCEPTED.getNumber());
-                }
-                singleJudgeResult.setMessageWithCondition();
+                SingleJudgeResultDTO singleJudgeResult = runForSingleJudge(res);
                 result.add(singleJudgeResult);
             });
         } else {
@@ -251,6 +244,34 @@ public class JudgeService {
             result.add(resolution);
         }
         return result;
+    }
+
+
+    /**
+     * @param singleResolution 用户传入的单次判题的正确解决方案，参见ResolutionDTO类
+     * @return void
+     * @author yuzhanglong
+     * @date 2020-7-1 9:47
+     * @description 根据期望数据来执行单次判题
+     * @see ResolutionDTO
+     */
+    private SingleJudgeResultDTO runForSingleJudge(ResolutionDTO singleResolution) {
+        ResolutionDTO resolution = getResolutionInputAndOutputFile(singleResolution);
+        SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.getInput());
+        List<String> judgeCoreStderr = getJudgeCoreStderr(singleJudgeResult.getStderrPath());
+        // 没有stderr输出时:
+        if (judgeCoreStderr.size() == 0) {
+            // 如果通过，将condition设置为 0
+            Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), singleResolution.getExpectedOutput());
+            if (isPass) {
+                singleJudgeResult.setCondition(JudgeResultEnum.ACCEPTED.getNumber());
+            }
+        } else {
+            this.extraInfo = judgeCoreStderr;
+            singleJudgeResult.setCondition(JudgeResultEnum.RUNTIME_ERROR.getNumber());
+        }
+        singleJudgeResult.setMessageWithCondition();
+        return singleJudgeResult;
     }
 
     /**
@@ -288,7 +309,25 @@ public class JudgeService {
         return true;
     }
 
-    public List<String> getCompileResult() {
-        return compileResult;
+    /**
+     * @return List<String> 错误内容，我们用数组存储，用下标来代表行
+     * @author yuzhanglong
+     * @date 2020-7-1 9:22
+     * @description 编译错误会返回错误，类似的，我们在运行判题核心时也可能产生错误
+     * 例如：python（解释性语言）的运行错误提示
+     */
+    private List<String> getJudgeCoreStderr(String stderrPath) {
+        List<String> judgeErrors = null;
+        try {
+            judgeErrors = FileHelper.readFileByLines(stderrPath);
+        } catch (IOException ioException) {
+            //TODO:找不到stderr的错误处理
+            ioException.printStackTrace();
+        }
+        return judgeErrors;
+    }
+
+    public List<String> getExtraInfo() {
+        return extraInfo;
     }
 }
