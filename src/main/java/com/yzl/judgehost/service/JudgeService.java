@@ -55,7 +55,7 @@ public class JudgeService {
 
     /**
      * @param stdInPath 单个输入文件
-     * @return String 判题核心返回的输出
+     * @return SingleJudgeResultDTO 单次判题结果
      * @author yuzhanglong
      * @description 调用判题核心，执行判题
      * @date 2020-6-24 12:10:43
@@ -93,7 +93,6 @@ public class JudgeService {
 
     /**
      * @return String 编译返回的信息，如果没有信息，则编译成功
-     * @throws NotFoundException 编译脚本不存在时抛出异常
      * @author yuzhanglong
      * @description 调用compile.sh 生成脚本
      * @date 2020-6-24 12:10:43
@@ -133,7 +132,7 @@ public class JudgeService {
     }
 
     /**
-     * @return String
+     * @return String 本次提交的工作目录
      * @author yuzhanglong
      * @date 2020-6-24 12:20:43
      * @description 返回本次提交的工作目录
@@ -143,7 +142,7 @@ public class JudgeService {
     }
 
     /**
-     * @return String
+     * @return String 本次提交解决方案的工作目录
      * @author yuzhanglong
      * @date 2020-6-29 22:14:57
      * @description 返回本次提交的解答目录(即期望输入输出存储的地方)
@@ -155,7 +154,7 @@ public class JudgeService {
     /**
      * @param submisstionOutput 用户提交的输出
      * @param expectedOutput    用户期望输出
-     * @return String
+     * @return Boolean 输出是否相同
      * @author yuzhanglong
      * @date 2020-6-24 12:20:43
      * @description 比较用户输出和期望输出
@@ -184,7 +183,7 @@ public class JudgeService {
 
     /**
      * @param resolution 解决方案数据传输对象
-     * @return void
+     * @return ResolutionDTO 解决方案的文件地址类
      * @author yuzhanglong
      * @date 2020-6-27 12:21:43
      * @description 获取输入文件和期望的输出文件，供后续判题使用
@@ -257,7 +256,7 @@ public class JudgeService {
 
     /**
      * @param singleResolution 用户传入的单次判题的正确解决方案，参见ResolutionDTO类
-     * @return void
+     * @return SingleJudgeResultDTO 单次判题结果
      * @author yuzhanglong
      * @date 2020-7-1 9:47
      * @description 根据期望数据来执行单次判题
@@ -318,15 +317,16 @@ public class JudgeService {
         // c语言家族（c && cpp）
         boolean isCppFamily = (language == LanguageScriptEnum.C || language == LanguageScriptEnum.C_PLUS_PLUS);
         // java
-        boolean isJava = language == LanguageScriptEnum.JAVA;
-        System.out.println(isCppFamily);
-        System.out.println(isCppFamily);
+        boolean isJava = (language == LanguageScriptEnum.JAVA);
         // 另外，python 属于解释性语言，不在此处考虑
         for (String str : compileResult) {
-            if (isCppFamily && str.contains("error:")) {
+            System.out.println("===" + str);
+            boolean isbad = str.contains("error:") || str.contains("错误：");
+            if (isCppFamily && isbad) {
                 return false;
             }
-            if (isJava && str.contains("Error:")) {
+            isbad = str.contains("Error:") || str.contains("错误:");
+            if (isJava && isbad) {
                 return false;
             }
         }
