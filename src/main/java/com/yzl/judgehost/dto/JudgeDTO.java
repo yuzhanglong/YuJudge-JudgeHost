@@ -1,6 +1,6 @@
 package com.yzl.judgehost.dto;
 
-import com.yzl.judgehost.core.enumerations.JudgeConfigEnum;
+import com.yzl.judgehost.core.enumerations.JudgeConfigDefaultEnum;
 import com.yzl.judgehost.validators.LanguageTypeAccepted;
 
 import javax.validation.Valid;
@@ -18,7 +18,7 @@ import java.util.List;
  * 如果用户没有传入某些非必填的限制
  * (例如时间限制、内存限制)时，我们会将这些内容置换成默认的配置
  * 同时防止了NPE错误的发生。
- * @see JudgeConfigEnum 默认配置的枚举类
+ * @see JudgeConfigDefaultEnum 默认配置的枚举类
  */
 
 @LanguageTypeAccepted
@@ -44,21 +44,24 @@ public class JudgeDTO {
     private String language;
 
 
+    private String judgeType;
+
+
     @NotNull(message = "期望输入、输出不得为空")
     @Size(message = "期望输入、输出长度最小为1、最大为7", min = 1, max = 10)
     @Valid
     private List<ResolutionDTO> resolutions;
 
     public Integer getRealTimeLimit() {
-        return realTimeLimit == null ? JudgeConfigEnum.TIME_LIMIT_DEFAULT.getData() : realTimeLimit;
+        return realTimeLimit == null ? JudgeConfigDefaultEnum.TIME_LIMIT_DEFAULT.getData() : realTimeLimit;
     }
 
     public Integer getOutputLimit() {
-        return outputLimit == null ? JudgeConfigEnum.OUTPUT_LIMIT_DEFAULT.getData() : outputLimit;
+        return outputLimit == null ? JudgeConfigDefaultEnum.OUTPUT_LIMIT_DEFAULT.getData() : outputLimit;
     }
 
     public Integer getCpuTimeLimit() {
-        return cpuTimeLimit == null ? JudgeConfigEnum.WALL_TIME_DEFAULT.getData() : cpuTimeLimit;
+        return cpuTimeLimit == null ? JudgeConfigDefaultEnum.WALL_TIME_DEFAULT.getData() : cpuTimeLimit;
     }
 
     @Override
@@ -119,5 +122,13 @@ public class JudgeDTO {
 
     public void setResolutions(List<ResolutionDTO> resolutions) {
         this.resolutions = resolutions;
+    }
+
+    public String getJudgeType() {
+        return judgeType;
+    }
+
+    public void setJudgeType(String judgeType) {
+        this.judgeType = judgeType;
     }
 }

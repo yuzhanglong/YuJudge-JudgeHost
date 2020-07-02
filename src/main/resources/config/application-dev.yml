@@ -3,5 +3,7 @@ server:
 
 
 judge-authorization:
-  secret-key: yzl
-  expired-time: 86400000
+  user-id: yzl
+  user-secret: yzl
+  expired-in: 14400
+  secret-key: secret

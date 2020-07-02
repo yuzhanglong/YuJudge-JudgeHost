@@ -1,4 +1,4 @@
-package com.yzl.judgehost.exception;
+package com.yzl.judgehost.core.handlers;
 
 import com.yzl.judgehost.core.common.UnifiedResponse;
 import com.yzl.judgehost.core.configuration.ExceptionCodeConfiguration;
@@ -86,7 +86,7 @@ public class GlobalExceptionHandler {
         String method = request.getMethod();
         String message = exception.getMessage();
         // 初始化unifyresponse
-        return new UnifiedResponse(getMessageByExceptionCode("A0001"), message, getRequestUrlString(method, requestUrl));
+        return new UnifiedResponse("A0001", message, getRequestUrlString(method, requestUrl));
     }
 
     /**

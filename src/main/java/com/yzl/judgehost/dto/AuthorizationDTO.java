@@ -1,26 +1,39 @@
 package com.yzl.judgehost.dto;
 
-import com.yzl.judgehost.validators.LoginValidated;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author yuzhanglong
+ * @date 2020-7-1 23:17
+ * @description 用户权限认证的数据传输对象
  */
-@LoginValidated
 public class AuthorizationDTO {
-    public String getToken() {
-        return token;
+    @NotNull(message = "用户id不得为空")
+    private String userId;
+    @NotNull(message = "用户secret不得为空")
+    private String userSecret;
+
+    public String getUserId() {
+        return userId;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    private String token;
+    public String getUserSecret() {
+        return userSecret;
+    }
+
+    public void setUserSecret(String userSecret) {
+        this.userSecret = userSecret;
+    }
 
     @Override
     public String toString() {
         return "AuthorizationDTO{" +
-                "token='" + token + '\'' +
+                "userId='" + userId + '\'' +
+                ", userSecret='" + userSecret + '\'' +
                 '}';
     }
 }

@@ -6,7 +6,7 @@ package com.yzl.judgehost.core.enumerations;
  * 一些判题配置的默认值，如果用户没有传入，则会使用这些默认值
  */
 
-public enum JudgeConfigEnum {
+public enum JudgeConfigDefaultEnum {
     // cpu时间限制
     TIME_LIMIT_DEFAULT(4),
 
@@ -24,7 +24,7 @@ public enum JudgeConfigEnum {
 
     private final Integer data;
 
-    JudgeConfigEnum(Integer data) {
+    JudgeConfigDefaultEnum(Integer data) {
         this.data = data;
     }
 

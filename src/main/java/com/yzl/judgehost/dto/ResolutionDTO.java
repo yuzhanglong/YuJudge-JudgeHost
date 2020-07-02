@@ -40,7 +40,6 @@ public class ResolutionDTO {
     }
 
 
-
     @Override
     public String toString() {
         return "ResolutionDTO{" +

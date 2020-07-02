@@ -1,6 +1,6 @@
 package com.yzl.judgehost.validators;
 
-import com.yzl.judgehost.dto.AuthorizationDTO;
+import com.yzl.judgehost.dto.AccessTokenDTO;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * @author yuzhanglong
  */
-public class LoginValidator implements ConstraintValidator<LoginValidated, AuthorizationDTO> {
+public class LoginValidator implements ConstraintValidator<LoginValidated, AccessTokenDTO> {
     @Override
     public void initialize(LoginValidated constraintAnnotation) {
 
@@ -16,8 +16,8 @@ public class LoginValidator implements ConstraintValidator<LoginValidated, Autho
 
 
     @Override
-    public boolean isValid(AuthorizationDTO authorizationDTO, ConstraintValidatorContext constraintValidatorContext) {
-        String test1 = authorizationDTO.getToken();
+    public boolean isValid(AccessTokenDTO accessTokenDTO, ConstraintValidatorContext constraintValidatorContext) {
+        String test1 = accessTokenDTO.getAccessToken();
         return false;
     }
 }
