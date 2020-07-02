@@ -3,7 +3,6 @@ package com.yzl.judgehost.core.authorization;
 import com.yzl.judgehost.core.configuration.AuthorizationConfiguration;
 import com.yzl.judgehost.exception.http.ForbiddenException;
 import com.yzl.judgehost.utils.TokenHelper;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -13,7 +12,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author yuzhanglong

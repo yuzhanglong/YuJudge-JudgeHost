@@ -1,5 +1,6 @@
 package com.yzl.judgehost.api.v1;
 
+import com.yzl.judgehost.core.authorization.AuthorizationRequired;
 import com.yzl.judgehost.dto.JudgeDTO;
 import com.yzl.judgehost.dto.SingleJudgeResultDTO;
 import com.yzl.judgehost.service.JudgeService;
@@ -26,6 +27,7 @@ public class JudgeController {
 
 
     @PostMapping("/run")
+    @AuthorizationRequired
     public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) {
         List<SingleJudgeResultDTO> judgeResults = judgeService.runJudge(judgeDTO);
         List<String> extraResult = judgeService.getExtraInfo();

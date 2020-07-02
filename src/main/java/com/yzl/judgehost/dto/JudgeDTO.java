@@ -35,10 +35,11 @@ public class JudgeDTO {
     @DecimalMax(value = "10", message = "cpu时间限制最大为10s")
     private Integer cpuTimeLimit;
 
-    @DecimalMin(value = "10", message = "cpu时间限制最小为200kb")
+    @DecimalMin(value = "3000", message = "内存限制最小为3000kb")
+    @DecimalMax(value = "65536", message = "内存限制最大为65536kb")
     private Integer memoryLimit;
 
-    @DecimalMin(value = "10", message = "输出限制最小为1000")
+    @DecimalMin(value = "10", message = "输出限制最小为10")
     @DecimalMax(value = "1000000", message = "输出限制最大为1000000")
     private Integer outputLimit;
 
@@ -64,6 +65,10 @@ public class JudgeDTO {
 
     public Integer getCpuTimeLimit() {
         return cpuTimeLimit == null ? JudgeConfigDefaultEnum.WALL_TIME_DEFAULT.getData() : cpuTimeLimit;
+    }
+
+    public Integer getMemoryLimit() {
+        return memoryLimit == null ? JudgeConfigDefaultEnum.MEMORY_LIMIT_DEFAULT.getData() : memoryLimit;
     }
 
     /**
@@ -118,9 +123,6 @@ public class JudgeDTO {
         this.realTimeLimit = realTimeLimit;
     }
 
-    public Integer getMemoryLimit() {
-        return memoryLimit;
-    }
 
     public void setMemoryLimit(Integer memoryLimit) {
         this.memoryLimit = memoryLimit;

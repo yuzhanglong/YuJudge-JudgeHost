@@ -12,6 +12,7 @@ import com.yzl.judgehost.dto.SingleJudgeResultDTO;
 import com.yzl.judgehost.utils.DataReformat;
 import com.yzl.judgehost.utils.FileHelper;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -213,7 +214,7 @@ public class JudgeService {
 
     /**
      * @param judgeDTO judgeDTO对象
-     * @return void
+     * @return List<SingleJudgeResultDTO> 由一个或多个单次判题结果组成的list
      * @author yuzhanglong
      * @date 2020-6-27 12:21:43
      * @description 执行判题
@@ -313,6 +314,22 @@ public class JudgeService {
      * @description 传入编译结果，根据语言特性来判断编译是否成功
      */
     private Boolean isCompileSuccess(List<String> compileResult) {
+        LanguageScriptEnum language = LanguageScriptEnum.toLanguageType(judgeConfig.getLanguage());
+        // c语言家族（c && cpp）
+        boolean isCppFamily = (language == LanguageScriptEnum.C || language == LanguageScriptEnum.C_PLUS_PLUS);
+        // java
+        boolean isJava = language == LanguageScriptEnum.JAVA;
+        System.out.println(isCppFamily);
+        System.out.println(isCppFamily);
+        // 另外，python 属于解释性语言，不在此处考虑
+        for (String str : compileResult) {
+            if (isCppFamily && str.contains("error:")) {
+                return false;
+            }
+            if (isJava && str.contains("Error:")) {
+                return false;
+            }
+        }
         return true;
     }
 

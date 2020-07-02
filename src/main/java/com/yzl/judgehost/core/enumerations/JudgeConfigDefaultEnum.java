@@ -10,8 +10,8 @@ public enum JudgeConfigDefaultEnum {
     // cpu时间限制
     TIME_LIMIT_DEFAULT(4),
 
-    // 内存限制 32mb
-    MEMORY_LIMIT_DEFAULT(1024 * 1024 * 32),
+    // 内存限制 1024 * 32 kb = 32mb
+    MEMORY_LIMIT_DEFAULT(1024 * 32),
 
     // 时间限制
     WALL_TIME_DEFAULT(4),
@@ -20,7 +20,7 @@ public enum JudgeConfigDefaultEnum {
     PROCESS_LIMIT_DEFAULT(1),
 
     // 输出限制
-    OUTPUT_LIMIT_DEFAULT(100000000);
+    OUTPUT_LIMIT_DEFAULT(1000000);
 
     private final Integer data;
 
