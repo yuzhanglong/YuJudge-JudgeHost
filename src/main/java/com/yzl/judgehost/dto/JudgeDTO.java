@@ -1,6 +1,8 @@
 package com.yzl.judgehost.dto;
 
 import com.yzl.judgehost.core.enumerations.JudgeConfigDefaultEnum;
+import com.yzl.judgehost.core.enumerations.JudgePreferenceEnum;
+import com.yzl.judgehost.exception.http.NotFoundException;
 import com.yzl.judgehost.validators.LanguageTypeAccepted;
 
 import javax.validation.Valid;
@@ -19,6 +21,7 @@ import java.util.List;
  * (例如时间限制、内存限制)时，我们会将这些内容置换成默认的配置
  * 同时防止了NPE错误的发生。
  * @see JudgeConfigDefaultEnum 默认配置的枚举类
+ * @see JudgePreferenceEnum 判题偏好配置
  */
 
 @LanguageTypeAccepted
@@ -43,8 +46,7 @@ public class JudgeDTO {
     @NotNull(message = "语言不得为空")
     private String language;
 
-
-    private String judgeType;
+    private String judgePreference;
 
 
     @NotNull(message = "期望输入、输出不得为空")
@@ -63,6 +65,24 @@ public class JudgeDTO {
     public Integer getCpuTimeLimit() {
         return cpuTimeLimit == null ? JudgeConfigDefaultEnum.WALL_TIME_DEFAULT.getData() : cpuTimeLimit;
     }
+
+    /**
+     * @return boolen 是否是acm模式
+     * @author yuzhanglong
+     * @date 2020-7-2 22:31
+     * @description 是否acm模式
+     */
+    public Boolean isAcmMode() {
+        if (JudgePreferenceEnum.toJudgePreference(judgePreference) == null) {
+            throw new NotFoundException("A0005");
+        }
+        return judgePreference.equals(JudgePreferenceEnum.ACM.getPreference());
+    }
+
+    public String getJudgePreference() {
+        return judgePreference == null ? JudgePreferenceEnum.ACM.getPreference() : judgePreference;
+    }
+
 
     @Override
     public String toString() {
@@ -124,11 +144,8 @@ public class JudgeDTO {
         this.resolutions = resolutions;
     }
 
-    public String getJudgeType() {
-        return judgeType;
-    }
 
-    public void setJudgeType(String judgeType) {
-        this.judgeType = judgeType;
+    public void setJudgePreference(String judgePreference) {
+        this.judgePreference = judgePreference;
     }
 }

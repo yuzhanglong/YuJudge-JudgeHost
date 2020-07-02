@@ -233,10 +233,17 @@ public class JudgeService {
         List<SingleJudgeResultDTO> result = new ArrayList<>();
         // 编译阶段成功，开始运行用户代码
         if (isCompileSuccess(compileResult)) {
-            judgeDTO.getResolutions().forEach(res -> {
-                SingleJudgeResultDTO singleJudgeResult = runForSingleJudge(res);
+            List<ResolutionDTO> totalResolution = judgeDTO.getResolutions();
+            for (ResolutionDTO resolutionDTO : totalResolution) {
+                SingleJudgeResultDTO singleJudgeResult = runForSingleJudge(resolutionDTO);
+                boolean isAccept = singleJudgeResult.getCondition().equals(JudgeResultEnum.ACCEPTED.getNumber());
+                // 这个测试点没有通过，并且是acm模式
                 result.add(singleJudgeResult);
-            });
+                if (!isAccept && judgeDTO.isAcmMode()) {
+                    break;
+                }
+                // oi模式，继续执行判题
+            }
         } else {
             SingleJudgeResultDTO resolution = new SingleJudgeResultDTO();
             resolution.setCondition(JudgeResultEnum.COMPILE_ERROR.getNumber());
