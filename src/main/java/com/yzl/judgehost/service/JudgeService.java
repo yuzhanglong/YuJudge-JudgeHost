@@ -12,7 +12,9 @@ import com.yzl.judgehost.dto.SingleJudgeResultDTO;
 import com.yzl.judgehost.utils.DataReformat;
 import com.yzl.judgehost.utils.FileHelper;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +34,7 @@ import java.util.UUID;
  */
 
 @Service
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JudgeService {
     private String runningPath;
     private String submisstionId;
@@ -43,6 +47,10 @@ public class JudgeService {
     public JudgeService(JudgeEnvironmentConfiguration judgeEnvironmentConfiguration) {
         this.judgeEnvironmentConfiguration = judgeEnvironmentConfiguration;
         this.runner = Runtime.getRuntime();
+    }
+
+    public void setSubmisstionId(String submisstionId) {
+        this.submisstionId = submisstionId;
     }
 
     public String getSubmisstionId() {
@@ -138,7 +146,7 @@ public class JudgeService {
      * @description 返回本次提交的工作目录
      */
     private String getSubmitWorkingPath() {
-        return judgeEnvironmentConfiguration.getWorkPath() + "/submissions/" + submisstionId;
+        return judgeEnvironmentConfiguration.getWorkPath() + "/submissions/" + getSubmisstionId();
     }
 
     /**
@@ -148,7 +156,7 @@ public class JudgeService {
      * @description 返回本次提交的解答目录(即期望输入输出存储的地方)
      */
     private String getSubmitResolutionPath() {
-        return judgeEnvironmentConfiguration.getResolutionPath() + "/" + submisstionId;
+        return judgeEnvironmentConfiguration.getResolutionPath() + "/" + getSubmisstionId();
     }
 
     /**
@@ -222,7 +230,7 @@ public class JudgeService {
         // 判断配置合法性
         this.judgeEnvironmentConfiguration.checkJudgeEnvironmentBaseFileIn();
         // 为本次提交提供唯一id
-        this.submisstionId = UUID.randomUUID().toString();
+        this.setSubmisstionId(UUID.randomUUID().toString());
         // 判题基础配置
         setJudgeConfig(judgeDTO);
         // 设置执行目录
@@ -320,7 +328,6 @@ public class JudgeService {
         boolean isJava = (language == LanguageScriptEnum.JAVA);
         // 另外，python 属于解释性语言，不在此处考虑
         for (String str : compileResult) {
-            System.out.println("===" + str);
             boolean isbad = str.contains("error:") || str.contains("错误：");
             if (isCppFamily && isbad) {
                 return false;
