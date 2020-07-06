@@ -20,7 +20,7 @@ public class YamlPropertySourceFactory extends DefaultPropertySourceFactory {
      * @param name 配置文件源名称
      * @param resource 配置文件源,如果没有给予name参数，则name会从这里得到
      * @author yuzhanglong
-     * @description YAML配置文件读取工厂类1
+     * @description YAML配置文件读取工厂类
      */
     @Override
     public PropertySource<?> createPropertySource(String name, EncodedResource resource) throws IOException {

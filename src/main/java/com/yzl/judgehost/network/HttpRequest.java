@@ -1,5 +1,6 @@
 package com.yzl.judgehost.network;
 
+import com.yzl.judgehost.exception.http.NotFoundException;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -23,6 +24,9 @@ public class HttpRequest {
                 .accept(MediaType.APPLICATION_OCTET_STREAM)
                 .exchange();
         ClientResponse response = responseMono.block();
+        if (response == null) {
+            throw new NotFoundException("B1004");
+        }
         return response.bodyToMono(Resource.class).block();
     }
 
