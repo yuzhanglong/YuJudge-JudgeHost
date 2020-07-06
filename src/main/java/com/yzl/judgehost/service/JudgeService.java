@@ -2,6 +2,7 @@ package com.yzl.judgehost.service;
 
 import com.alibaba.fastjson.JSON;
 import com.yzl.judgehost.core.configuration.JudgeEnvironmentConfiguration;
+import com.yzl.judgehost.core.configuration.JudgeExecutorConfiguration;
 import com.yzl.judgehost.core.enumerations.JudgeResultEnum;
 import com.yzl.judgehost.core.enumerations.LanguageScriptEnum;
 import com.yzl.judgehost.dto.JudgeDTO;
@@ -12,10 +13,10 @@ import com.yzl.judgehost.dto.SingleJudgeResultDTO;
 import com.yzl.judgehost.utils.DataReformat;
 import com.yzl.judgehost.utils.FileHelper;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -23,9 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author yuzhanglong
@@ -221,12 +222,14 @@ public class JudgeService {
 
     /**
      * @param judgeDTO judgeDTO对象
-     * @return List<SingleJudgeResultDTO> 由一个或多个单次判题结果组成的list
+     * @return CompletableFuture<List < SingleJudgeResultDTO>>由一个或多个单次判题结果组成的list，以CompletableFuture包装
      * @author yuzhanglong
      * @date 2020-6-27 12:21:43
      * @description 执行判题
      */
-    public List<SingleJudgeResultDTO> runJudge(JudgeDTO judgeDTO) {
+    @SuppressWarnings("DuplicatedCode")
+    @Async(value = "asyncServiceExecutor")
+    public CompletableFuture<List<SingleJudgeResultDTO>> runJudge(JudgeDTO judgeDTO) {
         // 判断配置合法性
         this.judgeEnvironmentConfiguration.checkJudgeEnvironmentBaseFileIn();
         // 为本次提交提供唯一id
@@ -251,6 +254,44 @@ public class JudgeService {
                     break;
                 }
                 // oi模式，继续执行判题
+            }
+        } else {
+            SingleJudgeResultDTO resolution = new SingleJudgeResultDTO();
+            resolution.setCondition(JudgeResultEnum.COMPILE_ERROR.getNumber());
+            resolution.setMessageWithCondition();
+            result.add(resolution);
+        }
+        return CompletableFuture.completedFuture(result);
+    }
+
+    /**
+     * @param judgeDTO judgeDTO对象
+     * @return List < SingleJudgeResultDTO>  由一个或多个单次判题结果组成的list
+     * @author yuzhanglong
+     * @date 2020-6-27 22:51
+     * @description 执行判题（供测试用）
+     * 此方法被用于并发测试
+     * 根据用户容忍的等待时间以及测试时单机任务执行平均时长来获取自定义的判题线程池的相关配置
+     * @see JudgeExecutorConfiguration 自定义判题相关的线程池
+     */
+    @SuppressWarnings("DuplicatedCode")
+    public List<SingleJudgeResultDTO> judgeWithoutThreadPoolForTest(JudgeDTO judgeDTO) {
+        this.judgeEnvironmentConfiguration.checkJudgeEnvironmentBaseFileIn();
+        this.setSubmisstionId(UUID.randomUUID().toString());
+        setJudgeConfig(judgeDTO);
+        runningPath = getSubmitWorkingPath() + "/run";
+        List<String> compileResult = compileSubmission();
+        this.extraInfo = compileResult;
+        List<SingleJudgeResultDTO> result = new ArrayList<>();
+        if (isCompileSuccess(compileResult)) {
+            List<ResolutionDTO> totalResolution = judgeDTO.getResolutions();
+            for (ResolutionDTO resolutionDTO : totalResolution) {
+                SingleJudgeResultDTO singleJudgeResult = runForSingleJudge(resolutionDTO);
+                boolean isAccept = singleJudgeResult.getCondition().equals(JudgeResultEnum.ACCEPTED.getNumber());
+                result.add(singleJudgeResult);
+                if (!isAccept && judgeDTO.isAcmMode()) {
+                    break;
+                }
             }
         } else {
             SingleJudgeResultDTO resolution = new SingleJudgeResultDTO();

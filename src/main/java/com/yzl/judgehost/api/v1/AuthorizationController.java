@@ -1,14 +1,16 @@
 package com.yzl.judgehost.api.v1;
 
-import com.yzl.judgehost.core.authorization.AuthorizationRequired;
 import com.yzl.judgehost.core.common.UnifiedResponse;
 import com.yzl.judgehost.dto.AuthorizationDTO;
 import com.yzl.judgehost.dto.AccessTokenDTO;
 import com.yzl.judgehost.exception.http.ForbiddenException;
 import com.yzl.judgehost.service.AuthorizationService;
 import com.yzl.judgehost.vo.AuthorizationVO;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author yuzhanglong
@@ -50,11 +52,5 @@ public class AuthorizationController {
             throw new ForbiddenException("A0003");
         }
         return new UnifiedResponse("00000", "ACCESS_TOKEN_PASS!", null);
-    }
-
-    @GetMapping("/test")
-    @AuthorizationRequired
-    public String helloWorld() {
-        return "hello world";
     }
 }

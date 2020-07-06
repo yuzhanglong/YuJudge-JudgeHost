@@ -3,6 +3,7 @@ package com.yzl.judgehost.api.v1;
 import com.yzl.judgehost.core.authorization.AuthorizationRequired;
 import com.yzl.judgehost.dto.JudgeDTO;
 import com.yzl.judgehost.dto.SingleJudgeResultDTO;
+import com.yzl.judgehost.exception.http.ForbiddenException;
 import com.yzl.judgehost.service.JudgeService;
 import com.yzl.judgehost.vo.JudgeConditionVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author yuzhanglong
  * @description 判题接口（Controller）
+ * @date 2020-7-6 21:57
  */
 @RestController
 @RequestMapping("/judge")
@@ -29,11 +33,35 @@ public class JudgeController {
         this.judgeService = judgeService;
     }
 
-
+    /**
+     * @author yuzhanglong
+     * @description 执行判题
+     * @date 2020-7-1 21:00
+     */
     @PostMapping("/run")
     @AuthorizationRequired
-    public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) {
-        List<SingleJudgeResultDTO> judgeResults = judgeService.runJudge(judgeDTO);
+    public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) throws ExecutionException, InterruptedException {
+        CompletableFuture<List<SingleJudgeResultDTO>> judgeResults;
+        try {
+            judgeResults = judgeService.runJudge(judgeDTO);
+        } catch (Exception e) {
+            throw new ForbiddenException("B1005");
+        }
+        List<String> extraResult = judgeService.getExtraInfo();
+        return new JudgeConditionVO(judgeResults.get(), extraResult, judgeService.getSubmisstionId());
+
+
+    }
+
+    /**
+     * @author yuzhanglong
+     * @description 执行判题(测试模式)
+     * @date 2020-7-6 23:57
+     */
+    @PostMapping("/run_for_test")
+    @AuthorizationRequired
+    public Object runJudgeWithoutThreadPoolForTest(@RequestBody @Validated JudgeDTO judgeDTO) {
+        List<SingleJudgeResultDTO> judgeResults = judgeService.judgeWithoutThreadPoolForTest(judgeDTO);
         List<String> extraResult = judgeService.getExtraInfo();
         return new JudgeConditionVO(judgeResults, extraResult, judgeService.getSubmisstionId());
     }
