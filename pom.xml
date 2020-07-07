@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.yzl</groupId>
-    <artifactId>judgehost</artifactId>
+    <artifactId>YuJudge-JudgeHost</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>judgehost</name>
+    <name>YuJudge-JudgeHost</name>
     <description>JudgeHost For YuJudge</description>
 
     <properties>
