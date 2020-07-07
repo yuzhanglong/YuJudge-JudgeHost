@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * @author yuzhanglong
@@ -42,9 +43,10 @@ public class JudgeController {
     @AuthorizationRequired
     public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) throws ExecutionException, InterruptedException {
         CompletableFuture<List<SingleJudgeResultDTO>> judgeResults;
+
         try {
             judgeResults = judgeService.runJudge(judgeDTO);
-        } catch (Exception e) {
+        } catch (RejectedExecutionException e) {
             throw new ForbiddenException("B1005");
         }
         List<String> extraResult = judgeService.getExtraInfo();

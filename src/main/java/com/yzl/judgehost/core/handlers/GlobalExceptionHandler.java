@@ -5,6 +5,7 @@ import com.yzl.judgehost.core.configuration.ExceptionCodeConfiguration;
 import com.yzl.judgehost.exception.http.HttpException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -127,6 +128,21 @@ public class GlobalExceptionHandler {
 
         // 初始化unifyresponse
         return new UnifiedResponse("A0002", message, getRequestUrlString(method, requestUrl));
+    }
+
+    /**
+     * @param request   请求参数
+     * @param exception 抛出的异常
+     * @author yzl
+     * @description 拦截post请求内容为空的异常
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public UnifiedResponse handleConstraintViolationException(HttpServletRequest request, HttpMessageNotReadableException exception) {
+        String requestUrl = request.getRequestURI();
+        String method = request.getMethod();
+        // 初始化unifyresponse
+        return new UnifiedResponse("A0006", "请求内容为空", getRequestUrlString(method, requestUrl));
     }
 
     /**

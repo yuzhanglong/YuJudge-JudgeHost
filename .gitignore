@@ -31,3 +31,5 @@ build/
 .vscode/
 
 /src/test/judgeEnvironment
+
+/build

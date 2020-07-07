@@ -1,4 +1,4 @@
 judge-environment:
-  work-path: /home/y-demos/judgeEnvironment
-  script-path: /home/y-demos/judgeEnvironment/scripts
-  resolution-path: /home/y-demos/judgeEnvironment/resolutions
+  work-path: /home/judgeEnvironment
+  script-path: /home/judgeEnvironment/scripts
+  resolution-path: /home/judgeEnvironment/resolutions
