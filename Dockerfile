@@ -12,8 +12,13 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && mkdir home/judgeEnvironment/resolutions \
     && mkdir home/judgeEnvironment/submissions \
     && yum -y upgrade \
-    && yum -y install java-1.8.0-openjdk.x86_64 python3 gcc gcc-c++ libseccomp \
-    && chmod 777 -R home/judgeEnvironment/scripts
+    && yum -y install java-1.8.0-openjdk.x86_64 python3 gcc gcc-c++ libseccomp-devel git cmake make \
+    && git clone https://github.com/yuzhanglong/YuJudge-Core.git \
+    && cd YuJudge-Core \
+    && cmake CMakeLists.txt \
+    && make \
+    && cp y_judger /home/judgeEnvironment/scripts \
+    && chmod 777 -R /home/judgeEnvironment/scripts
 
 # 暴露8080端口
 EXPOSE 8080
