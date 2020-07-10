@@ -12,7 +12,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && mkdir home/judgeEnvironment/resolutions \
     && mkdir home/judgeEnvironment/submissions \
     && yum -y upgrade \
-    && yum -y install java-1.8.0-openjdk.x86_64 python3 gcc gcc-c++ libseccomp-devel git cmake make \
+    && yum -y install java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel python3 gcc gcc-c++ libseccomp-devel git cmake make \
     && git clone https://github.com/yuzhanglong/YuJudge-Core.git \
     && cd YuJudge-Core \
     && cmake CMakeLists.txt \
