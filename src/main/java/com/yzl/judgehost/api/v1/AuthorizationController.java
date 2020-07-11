@@ -6,18 +6,15 @@ import com.yzl.judgehost.dto.AccessTokenDTO;
 import com.yzl.judgehost.exception.http.ForbiddenException;
 import com.yzl.judgehost.service.AuthorizationService;
 import com.yzl.judgehost.vo.AuthorizationVO;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author yuzhanglong
  * @date 2020-7-2 00:16
  * @description 权限处理相关接口
  */
-
 
 @RestController
 @RequestMapping("/auth")

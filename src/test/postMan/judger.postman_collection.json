@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "e69f3b81-58b4-41f9-b534-2258f92d1428",
+		"name": "judger",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "A + B Problem(JAVA)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accessToken",
+						"type": "text",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ5emwiLCJpYXQiOjE1OTM2OTE1Nzl9.6iXiQWK0l8ysGpjTutltZw1JJdOAjjHSaensgHY9kxE"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"JAVA\",\n    \"resolutions\": [\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_1.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_1.out\"\n        },\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_2.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_2.out\"\n        }\n    ],\n    \"submissionCode\":\"import java.util.Scanner;\\n\\npublic class Main {\\n    public static void main(String[] args) {\\n        Scanner in = new Scanner(System.in);\\n        int a = in.nextInt();\\n        int b = in.nextInt();\\n        System.out.println(a + b);\\n    }\\n}\"\n,\n    \"judgePreference\": \"OI\",\n    \"memoryLimit\":10000,\n    \"outputLimit\": 10000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "47.106.202.255:8080/judge/run",
+					"host": [
+						"47",
+						"106",
+						"202",
+						"255"
+					],
+					"port": "8080",
+					"path": [
+						"judge",
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "A + B Problem(C)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accessToken",
+						"type": "text",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ5emwiLCJpYXQiOjE1OTM2OTE1Nzl9.6iXiQWK0l8ysGpjTutltZw1JJdOAjjHSaensgHY9kxE"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"C\",\n    \"resolutions\": [\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_1.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_1.out\"\n        },\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_2.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_2.out\"\n        }\n    ],\n    \"submissionCode\": \"#include<stdio.h>\\nint main(void)\\n{\\n    int a, b;\\n    scanf(\\\"%d %d\\\", &a, &b);\\n    printf(\\\"%d\\\", a + b);\\n    return 0;\\n}\",\n    \"judgePreference\": \"OI\",\n    \"memoryLimit\": 10000,\n    \"outputLimit\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "47.106.202.255:8080/judge/run",
+					"host": [
+						"47",
+						"106",
+						"202",
+						"255"
+					],
+					"port": "8080",
+					"path": [
+						"judge",
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "A + B Problem(C_PLUS_PLUS)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accessToken",
+						"type": "text",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ5emwiLCJpYXQiOjE1OTM2OTE1Nzl9.6iXiQWK0l8ysGpjTutltZw1JJdOAjjHSaensgHY9kxE"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"C_PLUS_PLUS\",\n    \"resolutions\": [\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_1.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_1.out\"\n        },\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_2.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_2.out\"\n        }\n    ],\n    \"submissionCode\": \"#include<stdio.h>\\nint main(void)\\n{\\n    int a, b;\\n    scanf(\\\"%d %d\\\", &a, &b);\\n    printf(\\\"%d\\\", a + b);\\n    return 0;\\n}\",\n    \"judgePreference\": \"OI\",\n    \"outputLimit\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "47.106.202.255:8080/judge/run",
+					"host": [
+						"47",
+						"106",
+						"202",
+						"255"
+					],
+					"port": "8080",
+					"path": [
+						"judge",
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "A + B Problem(PYTHON)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accessToken",
+						"type": "text",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ5emwiLCJpYXQiOjE1OTM2OTE1Nzl9.6iXiQWK0l8ysGpjTutltZw1JJdOAjjHSaensgHY9kxE"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"PYTHON\",\n    \"resolutions\": [\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_1.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_1.out\"\n        },\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_2.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/a_add_b_2.out\"\n        }\n    ],\n    \"submissionCode\": \"raw = input()\\nprint(sum(map(int, raw.split())))\",\n    \"judgePreference\": \"OI\",\n    \"memoryLimit\": 65536,\n    \"outputLimit\": 1000000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "47.106.202.255:8080/judge/run",
+					"host": [
+						"47",
+						"106",
+						"202",
+						"255"
+					],
+					"port": "8080",
+					"path": [
+						"judge",
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "stl-map",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accessToken",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ5emwiLCJpYXQiOjE1OTM2OTE1Nzl9.6iXiQWK0l8ysGpjTutltZw1JJdOAjjHSaensgHY9kxE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"C_PLUS_PLUS\",\n    \"resolutions\": [\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/map_test_0.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/map_test_0.out\"\n        },\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/map_test_1.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/map_test_1.out\"\n        },\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/map_test_2.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/map_test_2.out\"\n        },\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/map_test_3.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/map_test_3.out\"\n        },\n        {\n            \"input\": \"http://qc8mhtkrp.bkt.clouddn.com/map_test_4.in\",\n            \"expectedOutput\": \"http://qc8mhtkrp.bkt.clouddn.com/map_test_4.out\"\n        }\n    ],\n    \"submissionCode\": \"#include <iostream>\\n#include<map>\\n#include <cstdio>\\nusing namespace std;\\n\\nint main()\\n{\\n    int n;\\n    scanf(\\\"%d\\\", &n);\\n    map<string, int>mp;\\n    string s;\\n    char c;\\n    getchar();\\n    getline(cin, s);\\n    for(int i = 0; i < s.length() - n + 1; i++) mp[s.substr(i, n)]++;\\n    map<string,int>::iterator pointer;\\n    string resolution;\\n    int max = 0;\\n    for(pointer = mp.begin(); pointer != mp.end(); pointer++)\\n    {\\n        if(pointer -> second > max)\\n        {\\n            max = pointer -> second;\\n            resolution = pointer -> first;\\n        }\\n    }\\n    printf(\\\"%s %d\\\", resolution.c_str(), max);\\n    return 0;\\n}\",\n    \"judgePreference\": \"OI\",\n    \"outputLimit\": 100000,\n    \"realTimeLimit\": 1,\n    \"memoryLimit\": 3500\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "47.106.202.255:8080/judge/run",
+					"host": [
+						"47",
+						"106",
+						"202",
+						"255"
+					],
+					"port": "8080",
+					"path": [
+						"judge",
+						"run"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

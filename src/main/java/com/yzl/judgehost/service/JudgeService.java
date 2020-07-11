@@ -317,7 +317,7 @@ public class JudgeService {
         List<String> judgeCoreStderr = getJudgeCoreStderr(singleJudgeResult.getStderrPath());
         // 没有stderr输出时:
         if (judgeCoreStderr.size() == 0) {
-            Boolean isRunSuccess = singleJudgeResult.getCondition() == 0;
+            Boolean isRunSuccess = singleJudgeResult.getCondition() == 1;
             // 对比
             Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), singleResolution.getExpectedOutput());
             // 如果通过，将condition设置为 0
