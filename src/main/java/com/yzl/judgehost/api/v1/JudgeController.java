@@ -43,16 +43,14 @@ public class JudgeController {
     @AuthorizationRequired
     public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) throws ExecutionException, InterruptedException {
         CompletableFuture<List<SingleJudgeResultDTO>> judgeResults;
-
         try {
             judgeResults = judgeService.runJudge(judgeDTO);
         } catch (RejectedExecutionException e) {
             throw new ForbiddenException("B1005");
         }
+        List<SingleJudgeResultDTO> res = judgeResults.get();
         List<String> extraResult = judgeService.getExtraInfo();
-        return new JudgeConditionVO(judgeResults.get(), extraResult, judgeService.getSubmisstionId());
-
-
+        return new JudgeConditionVO(res, extraResult, judgeService.getSubmisstionId());
     }
 
     /**

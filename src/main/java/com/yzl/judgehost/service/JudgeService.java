@@ -370,11 +370,10 @@ public class JudgeService {
         boolean isJava = (language == LanguageScriptEnum.JAVA);
         // 另外，python 属于解释性语言，不在此处考虑
         for (String str : compileResult) {
-            boolean isbad = str.contains("error:") || str.contains("错误：");
+            boolean isbad = str.contains("error:") || str.contains("错误：") || str.contains("Error:");
             if (isCppFamily && isbad) {
                 return false;
             }
-            isbad = str.contains("Error:") || str.contains("错误:");
             if (isJava && isbad) {
                 return false;
             }

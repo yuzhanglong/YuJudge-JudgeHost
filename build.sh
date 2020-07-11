@@ -1,4 +1,6 @@
 # 构建编译所需要的文件
+rm -rf build
+
 mkdir build
 
 cp -r src/main/java/com/yzl/judgehost/scripts build
