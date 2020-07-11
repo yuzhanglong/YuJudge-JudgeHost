@@ -32,7 +32,7 @@ public class TokenHelper {
         Map<String, Date> map = calculateExpiredInfo(expiredIn);
         return JWT.create()
                 .withClaim("userId", userId)
-                .withExpiresAt(map.get("expiredTime"))
+                .withExpiresAt(map.get("expiredIn"))
                 .withIssuedAt(map.get("now"))
                 .sign(algorithm);
     }

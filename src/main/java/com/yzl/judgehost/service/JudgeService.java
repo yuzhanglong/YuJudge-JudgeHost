@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -318,9 +317,11 @@ public class JudgeService {
         List<String> judgeCoreStderr = getJudgeCoreStderr(singleJudgeResult.getStderrPath());
         // 没有stderr输出时:
         if (judgeCoreStderr.size() == 0) {
-            // 如果通过，将condition设置为 0
+            Boolean isRunSuccess = singleJudgeResult.getCondition() == 0;
+            // 对比
             Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), singleResolution.getExpectedOutput());
-            if (isPass) {
+            // 如果通过，将condition设置为 0
+            if (isPass && isRunSuccess) {
                 singleJudgeResult.setCondition(JudgeResultEnum.ACCEPTED.getNumber());
             }
         } else {
