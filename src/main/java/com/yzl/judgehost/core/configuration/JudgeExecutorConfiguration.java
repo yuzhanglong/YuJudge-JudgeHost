@@ -28,13 +28,13 @@ public class JudgeExecutorConfiguration {
     final int CORE_POOL_SIZE = 1;
     final long KEEP_ALIVE_TIME = 5L;
     final int BLOCKING_QUEUE_CAPACITY = 4;
-    final String THREAD_NAME_PREFIX = "judger";
+    final String THREAD_NAME_PREFIX = "judge";
 
     @Bean
     public ThreadPoolExecutor asyncServiceExecutor() {
         // cpu密集型 池中允许的最大线程数 在判题这样的CPU密集型任务中，我们应该将其设置为 cpu核心数 + 1
         final int maximumPoolSize = Runtime.getRuntime().availableProcessors() + 1;
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+        return new ThreadPoolExecutor(
                 CORE_POOL_SIZE,
                 maximumPoolSize,
                 KEEP_ALIVE_TIME,
@@ -43,6 +43,5 @@ public class JudgeExecutorConfiguration {
                 new JudgeThreadFactory(THREAD_NAME_PREFIX),
                 new ThreadPoolExecutor.AbortPolicy()
         );
-        return executor;
     }
 }

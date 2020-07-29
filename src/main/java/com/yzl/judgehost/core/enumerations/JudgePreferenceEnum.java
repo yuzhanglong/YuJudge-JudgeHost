@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  * 或者提高判题的效率
  */
 public enum JudgePreferenceEnum {
-    //ACM 模式,期间有一个点出现非ACCETPT的情况则结束判题
+    //ACM 模式,期间有一个点出现非ACCEPT的情况则结束判题
     ACM("ACM"),
 
     //OI 模式, 每一个点都会被评测

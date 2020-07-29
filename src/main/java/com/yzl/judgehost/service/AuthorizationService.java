@@ -61,7 +61,7 @@ public class AuthorizationService {
      * @return Boolean 验证用户名或密码是否正确
      * @author yuzhanglong
      * @description 验证接口调用凭据合法性
-     * 由于此服务器(judgehost)专门用来执行判题，个人觉得无需在额外搞一个数据库用来存储用户信息
+     * 由于此服务器(JudgeHost)专门用来执行判题，个人觉得无需在额外搞一个数据库用来存储用户信息
      * 另外需要存储的数据也不多（可能就是用户名和密码了）
      * 规定的用户名和密码来自文件，你可以在配置文件中修改之（注意区分开发环境和生产环境）
      * @date 2020-7-2 00:33

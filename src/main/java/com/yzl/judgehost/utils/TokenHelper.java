@@ -25,7 +25,7 @@ public class TokenHelper {
      * @param secretKey 验证密钥
      * @return String 生成的token
      * @author yuzhanglong
-     * @description 传入userid。生成对应的token
+     * @description 传入userId。生成对应的token
      */
     public static String generateAuthToken(String userId, String secretKey, Integer expiredIn) {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);

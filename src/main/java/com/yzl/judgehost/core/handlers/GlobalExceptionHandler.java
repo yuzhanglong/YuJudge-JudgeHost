@@ -64,10 +64,10 @@ public class GlobalExceptionHandler {
         String errorCode = exception.getCode();
         String message = getMessageByExceptionCode(errorCode);
 
-        // 初始化unifyresponse
+        // 初始化unifyResponse
         UnifiedResponse unifiedResponse = new UnifiedResponse(errorCode, message, getRequestUrlString(method, requestUrl));
 
-        // statuscode 到 HttpStatus
+        // statusCode 到 HttpStatus
         HttpStatus httpStatus = HttpStatus.resolve(exception.getHttpStatusCode());
         assert httpStatus != null;
         return new ResponseEntity<>(unifiedResponse, null, httpStatus);
@@ -86,7 +86,7 @@ public class GlobalExceptionHandler {
         String requestUrl = request.getRequestURI();
         String method = request.getMethod();
         String message = exception.getMessage();
-        // 初始化unifyresponse
+        // 初始化unifyResponse
         return new UnifiedResponse("A0001", message, getRequestUrlString(method, requestUrl));
     }
 
@@ -107,7 +107,7 @@ public class GlobalExceptionHandler {
         List<ObjectError> errorList = exception.getBindingResult().getAllErrors();
         String message = getMessageStringByValidateExceptionList(errorList);
 
-        // 初始化unifyresponse
+        // 初始化unifyResponse
         return new UnifiedResponse("A0002", message, getRequestUrlString(method, requestUrl));
     }
 
@@ -126,7 +126,7 @@ public class GlobalExceptionHandler {
         // 获取验证失败的信息
         String message = exception.getMessage();
 
-        // 初始化unifyresponse
+        // 初始化unifyResponse
         return new UnifiedResponse("A0002", message, getRequestUrlString(method, requestUrl));
     }
 
@@ -141,7 +141,7 @@ public class GlobalExceptionHandler {
     public UnifiedResponse handleConstraintViolationException(HttpServletRequest request, HttpMessageNotReadableException exception) {
         String requestUrl = request.getRequestURI();
         String method = request.getMethod();
-        // 初始化unifyresponse
+        // 初始化unifyResponse
         return new UnifiedResponse("A0006", "请求内容为空", getRequestUrlString(method, requestUrl));
     }
 
@@ -149,7 +149,7 @@ public class GlobalExceptionHandler {
      * @param method 请求方法
      * @param url    请求的接口链接
      * @author yzl
-     * @description 拼接requesturl字符串，以供返回到前端
+     * @description 拼接RequestUrl字符串，以供返回到前端
      */
     private String getRequestUrlString(String method, String url) {
         return method + " " + url;

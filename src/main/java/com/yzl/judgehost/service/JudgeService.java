@@ -38,7 +38,7 @@ import java.util.concurrent.CompletableFuture;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JudgeService {
     private String runningPath;
-    private String submisstionId;
+    private String submissionId;
     private List<String> extraInfo;
     private JudgeDTO judgeConfig;
     private final JudgeEnvironmentConfiguration judgeEnvironmentConfiguration;
@@ -50,12 +50,12 @@ public class JudgeService {
         this.runner = Runtime.getRuntime();
     }
 
-    public void setSubmisstionId(String submisstionId) {
-        this.submisstionId = submisstionId;
+    public void setSubmissionId(String submissionId) {
+        this.submissionId = submissionId;
     }
 
-    public String getSubmisstionId() {
-        return submisstionId;
+    public String getSubmissionId() {
+        return submissionId;
     }
 
     public void setJudgeConfig(JudgeDTO judgeConfig) {
@@ -92,12 +92,11 @@ public class JudgeService {
             ioException.printStackTrace();
         }
         // 将判题核心的stdout转换成数据传输对象
-        SingleJudgeResultDTO singleJudgeResult = JSON.parseObject(
+        // TODO: 打logger
+        return JSON.parseObject(
                 DataReformat.stringListToString(result),
                 SingleJudgeResultDTO.class
         );
-        // TODO: 打logger
-        return singleJudgeResult;
     }
 
     /**
@@ -147,7 +146,7 @@ public class JudgeService {
      * @description 返回本次提交的工作目录
      */
     private String getSubmitWorkingPath() {
-        return judgeEnvironmentConfiguration.getWorkPath() + "/submissions/" + getSubmisstionId();
+        return judgeEnvironmentConfiguration.getWorkPath() + "/submissions/" + getSubmissionId();
     }
 
     /**
@@ -157,11 +156,11 @@ public class JudgeService {
      * @description 返回本次提交的解答目录(即期望输入输出存储的地方)
      */
     private String getSubmitResolutionPath() {
-        return judgeEnvironmentConfiguration.getResolutionPath() + "/" + getSubmisstionId();
+        return judgeEnvironmentConfiguration.getResolutionPath() + "/" + getSubmissionId();
     }
 
     /**
-     * @param submisstionOutput 用户提交的输出
+     * @param submissionOutput 用户提交的输出
      * @param expectedOutput    用户期望输出
      * @return Boolean 输出是否相同
      * @author yuzhanglong
@@ -169,14 +168,14 @@ public class JudgeService {
      * @description 比较用户输出和期望输出
      */
 
-    private Boolean compareOutputWithResolutions(String submisstionOutput, String expectedOutput) {
+    private Boolean compareOutputWithResolutions(String submissionOutput, String expectedOutput) {
         String exitCode = "0";
         try {
             String compareScript = judgeEnvironmentConfiguration.getScriptPath() + "/compare.sh";
 
             Process process = runner.exec(new String[]{
                     compareScript,
-                    submisstionOutput,
+                    submissionOutput,
                     expectedOutput
             });
             process.waitFor();
@@ -233,7 +232,7 @@ public class JudgeService {
         // 判断配置合法性
         this.judgeEnvironmentConfiguration.checkJudgeEnvironmentBaseFileIn();
         // 为本次提交提供唯一id
-        this.setSubmisstionId(UUID.randomUUID().toString());
+        this.setSubmissionId(UUID.randomUUID().toString());
         // 判题基础配置
         setJudgeConfig(judgeDTO);
         // 设置执行目录
@@ -277,7 +276,7 @@ public class JudgeService {
     @SuppressWarnings("DuplicatedCode")
     public List<SingleJudgeResultDTO> judgeWithoutThreadPoolForTest(JudgeDTO judgeDTO) {
         this.judgeEnvironmentConfiguration.checkJudgeEnvironmentBaseFileIn();
-        this.setSubmisstionId(UUID.randomUUID().toString());
+        this.setSubmissionId(UUID.randomUUID().toString());
         setJudgeConfig(judgeDTO);
         runningPath = getSubmitWorkingPath() + "/run";
         List<String> compileResult = compileSubmission();
@@ -371,11 +370,11 @@ public class JudgeService {
         boolean isJava = (language == LanguageScriptEnum.JAVA);
         // 另外，python 属于解释性语言，不在此处考虑
         for (String str : compileResult) {
-            boolean isbad = str.contains("error:") || str.contains("错误：") || str.contains("Error:");
-            if (isCppFamily && isbad) {
+            boolean isBad = str.contains("error:") || str.contains("错误：") || str.contains("Error:");
+            if (isCppFamily && isBad) {
                 return false;
             }
-            if (isJava && isbad) {
+            if (isJava && isBad) {
                 return false;
             }
         }

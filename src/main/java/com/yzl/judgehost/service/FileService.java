@@ -29,9 +29,9 @@ public class FileService {
      * @date 2020-7-1 17:32
      */
     public String getSubmissionDataById(String submissionId) {
-        String submisstionPath = getSubmissionPathById(submissionId);
+        String submissionPath = getSubmissionPathById(submissionId);
         // 压缩目标文件
-        return zipSubmissionFolder(submisstionPath);
+        return zipSubmissionFolder(submissionPath);
     }
 
     /**

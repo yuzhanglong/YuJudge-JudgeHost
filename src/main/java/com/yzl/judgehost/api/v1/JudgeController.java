@@ -50,7 +50,7 @@ public class JudgeController {
         }
         List<SingleJudgeResultDTO> res = judgeResults.get();
         List<String> extraResult = judgeService.getExtraInfo();
-        return new JudgeConditionVO(res, extraResult, judgeService.getSubmisstionId());
+        return new JudgeConditionVO(res, extraResult, judgeService.getSubmissionId());
     }
 
     /**
@@ -63,6 +63,6 @@ public class JudgeController {
     public Object runJudgeWithoutThreadPoolForTest(@RequestBody @Validated JudgeDTO judgeDTO) {
         List<SingleJudgeResultDTO> judgeResults = judgeService.judgeWithoutThreadPoolForTest(judgeDTO);
         List<String> extraResult = judgeService.getExtraInfo();
-        return new JudgeConditionVO(judgeResults, extraResult, judgeService.getSubmisstionId());
+        return new JudgeConditionVO(judgeResults, extraResult, judgeService.getSubmissionId());
     }
 }

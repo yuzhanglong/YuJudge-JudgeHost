@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @author yuzhanglong
- * @description accesstoken数据传输对象
+ * @description AccessToken数据传输对象
  * @date 2020-7-2 00:35
  */
 @LoginValidated

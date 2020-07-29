@@ -72,7 +72,7 @@ public class JudgeDTO {
     }
 
     /**
-     * @return boolen 是否是acm模式
+     * @return boolean 是否是acm模式
      * @author yuzhanglong
      * @date 2020-7-2 22:31
      * @description 是否acm模式
