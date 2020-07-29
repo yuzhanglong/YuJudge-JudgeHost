@@ -6,7 +6,7 @@ import com.yzl.judgehost.core.configuration.JudgeExecutorConfiguration;
 import com.yzl.judgehost.core.enumerations.JudgeResultEnum;
 import com.yzl.judgehost.core.enumerations.LanguageScriptEnum;
 import com.yzl.judgehost.dto.JudgeDTO;
-import com.yzl.judgehost.dto.ResolutionDTO;
+import com.yzl.judgehost.dto.SolutionDTO;
 import com.yzl.judgehost.exception.http.NotFoundException;
 import com.yzl.judgehost.network.HttpRequest;
 import com.yzl.judgehost.dto.SingleJudgeResultDTO;
@@ -197,9 +197,9 @@ public class JudgeService {
      * @date 2020-6-27 12:21:43
      * @description 获取输入文件和期望的输出文件，供后续判题使用
      */
-    private ResolutionDTO getResolutionInputAndOutputFile(ResolutionDTO resolution) {
-        String inputFile = resolution.getInput();
-        String outputFile = resolution.getExpectedOutput();
+    private SolutionDTO getResolutionInputAndOutputFile(SolutionDTO resolution) {
+        String inputFile = resolution.getStdIn();
+        String outputFile = resolution.getExpectedStdOut();
 
         // 下载、获取输入和期望输出
         Resource inputFileResource = HttpRequest.getFile(inputFile);
@@ -215,8 +215,8 @@ public class JudgeService {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-        resolution.setInput(inPath);
-        resolution.setExpectedOutput(outPath);
+        resolution.setStdIn(inPath);
+        resolution.setExpectedStdOut(outPath);
         return resolution;
     }
 
@@ -244,9 +244,9 @@ public class JudgeService {
         List<SingleJudgeResultDTO> result = new ArrayList<>();
         // 编译阶段成功，开始运行用户代码
         if (isCompileSuccess(compileResult)) {
-            List<ResolutionDTO> totalResolution = judgeDTO.getResolutions();
-            for (ResolutionDTO resolutionDTO : totalResolution) {
-                SingleJudgeResultDTO singleJudgeResult = runForSingleJudge(resolutionDTO);
+            List<SolutionDTO> totalResolution = judgeDTO.getSolutions();
+            for (SolutionDTO solutionDTO : totalResolution) {
+                SingleJudgeResultDTO singleJudgeResult = runForSingleJudge(solutionDTO);
                 boolean isAccept = singleJudgeResult.getCondition().equals(JudgeResultEnum.ACCEPTED.getNumber());
                 // 这个测试点没有通过，并且是acm模式
                 result.add(singleJudgeResult);
@@ -284,9 +284,9 @@ public class JudgeService {
         this.extraInfo = compileResult;
         List<SingleJudgeResultDTO> result = new ArrayList<>();
         if (isCompileSuccess(compileResult)) {
-            List<ResolutionDTO> totalResolution = judgeDTO.getResolutions();
-            for (ResolutionDTO resolutionDTO : totalResolution) {
-                SingleJudgeResultDTO singleJudgeResult = runForSingleJudge(resolutionDTO);
+            List<SolutionDTO> totalResolution = judgeDTO.getSolutions();
+            for (SolutionDTO solutionDTO : totalResolution) {
+                SingleJudgeResultDTO singleJudgeResult = runForSingleJudge(solutionDTO);
                 boolean isAccept = singleJudgeResult.getCondition().equals(JudgeResultEnum.ACCEPTED.getNumber());
                 result.add(singleJudgeResult);
                 if (!isAccept && judgeDTO.isAcmMode()) {
@@ -309,17 +309,17 @@ public class JudgeService {
      * @author yuzhanglong
      * @date 2020-7-1 9:47
      * @description 根据期望数据来执行单次判题
-     * @see ResolutionDTO
+     * @see SolutionDTO
      */
-    private SingleJudgeResultDTO runForSingleJudge(ResolutionDTO singleResolution) {
-        ResolutionDTO resolution = getResolutionInputAndOutputFile(singleResolution);
-        SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.getInput());
+    private SingleJudgeResultDTO runForSingleJudge(SolutionDTO singleResolution) {
+        SolutionDTO resolution = getResolutionInputAndOutputFile(singleResolution);
+        SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.getStdIn());
         List<String> judgeCoreStderr = getJudgeCoreStderr(singleJudgeResult.getStderrPath());
         // 没有stderr输出时:
         if (judgeCoreStderr.size() == 0) {
             Boolean isRunSuccess = singleJudgeResult.getCondition() == 1;
             // 对比
-            Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), singleResolution.getExpectedOutput());
+            Boolean isPass = compareOutputWithResolutions(singleJudgeResult.getStdoutPath(), singleResolution.getExpectedStdOut());
             // 如果通过，将condition设置为 0
             if (isPass && isRunSuccess) {
                 singleJudgeResult.setCondition(JudgeResultEnum.ACCEPTED.getNumber());

@@ -1,4 +1,4 @@
-package com.yzl.judgehost.core.common;
+package com.yzl.judgehost.core.factory;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;

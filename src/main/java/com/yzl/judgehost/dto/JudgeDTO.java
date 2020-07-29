@@ -53,7 +53,7 @@ public class JudgeDTO {
     @NotNull(message = "期望输入、输出不得为空")
     @Size(message = "期望输入、输出长度最小为1、最大为10", min = 1, max = 10)
     @Valid
-    private List<ResolutionDTO> resolutions;
+    private List<SolutionDTO> solutions;
 
     public Integer getRealTimeLimit() {
         return realTimeLimit == null ? JudgeConfigDefaultEnum.TIME_LIMIT_DEFAULT.getData() : realTimeLimit;
@@ -98,7 +98,7 @@ public class JudgeDTO {
                 ", memoryLimit=" + memoryLimit +
                 ", outputLimit=" + outputLimit +
                 ", language='" + language + '\'' +
-                ", resolutions=" + resolutions +
+                ", resolutions=" + solutions +
                 '}';
     }
 
@@ -138,12 +138,12 @@ public class JudgeDTO {
         this.outputLimit = outputLimit;
     }
 
-    public List<ResolutionDTO> getResolutions() {
-        return resolutions;
+    public List<SolutionDTO> getSolutions() {
+        return solutions;
     }
 
-    public void setResolutions(List<ResolutionDTO> resolutions) {
-        this.resolutions = resolutions;
+    public void setSolutions(List<SolutionDTO> solutions) {
+        this.solutions = solutions;
     }
 
 

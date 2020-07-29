@@ -1,6 +1,6 @@
 package com.yzl.judgehost.core.configuration;
 
-import com.yzl.judgehost.core.common.JudgeThreadFactory;
+import com.yzl.judgehost.core.factory.JudgeThreadFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
