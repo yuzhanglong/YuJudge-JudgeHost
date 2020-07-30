@@ -16,7 +16,7 @@ import java.util.concurrent.*;
  * <p>
  * 其中：
  * KEEP_ALIVE_TIME 当线程数大于核心时，这是多余的空闲线程在终止之前等待新任务的最长时间。
- * CORE_POOL_SIZE 保留在池中的线​​程数，即使处于空闲状态
+ * CORE_POOL_SIZE 保留在池中的线程数，即使处于空闲状态
  * BLOCKING_QUEUE_CAPACITY 允许排队的用户（请求）数量
  * 这些值应该根据用户容忍的等待时间以及测试时单机任务执行平均时长来获取自定义的判题线程池的相关配置
  * @date 2020-7-8 21:58

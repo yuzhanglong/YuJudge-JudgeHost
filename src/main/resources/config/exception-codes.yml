@@ -1,5 +1,6 @@
 judgehost-exceptions:
   codes:
+    00000: 一切正常
     A0001: 用户错误
     A0002: 用户表单错误
     A0003: 用户名或密码错误
