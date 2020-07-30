@@ -24,7 +24,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     private AuthorizationConfiguration authorizationConfiguration;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         //  如果不是反射到方法
         if (!(handler instanceof HandlerMethod)) {
             return true;

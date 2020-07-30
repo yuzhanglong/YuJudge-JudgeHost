@@ -78,10 +78,10 @@ public class JudgeDTO {
      * @description 是否acm模式
      */
     public Boolean isAcmMode() {
-        if (JudgePreferenceEnum.toJudgePreference(judgePreference) == null) {
+        if (JudgePreferenceEnum.toJudgePreference(getJudgePreference()) == null) {
             throw new NotFoundException("A0005");
         }
-        return judgePreference.equals(JudgePreferenceEnum.ACM.getPreference());
+        return getJudgePreference().equals(JudgePreferenceEnum.ACM.getPreference());
     }
 
     public String getJudgePreference() {

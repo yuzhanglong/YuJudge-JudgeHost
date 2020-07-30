@@ -19,8 +19,7 @@ public class JudgeThreadFactory implements ThreadFactory {
     @Override
     public Thread newThread(Runnable task) {
         String name = namePrefix + nextId.getAndIncrement();
-        Thread thread = new Thread(null, task, name, 0);
-        return thread;
+        return new Thread(null, task, name, 0);
     }
 
 

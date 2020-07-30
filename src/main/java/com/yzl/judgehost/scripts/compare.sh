@@ -18,5 +18,5 @@ fi
 
 # 文件对比
 diff -q -b "$SUBMISSION_OUTPUT_PATH" "$RESOLUTION_PATH"
-EXITCODE=$?
-echo $EXITCODE
+EXIT_CODE=$?
+echo $EXIT_CODE

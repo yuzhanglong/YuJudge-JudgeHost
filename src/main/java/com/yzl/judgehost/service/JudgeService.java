@@ -229,6 +229,7 @@ public class JudgeService {
     @SuppressWarnings("DuplicatedCode")
     @Async(value = "asyncServiceExecutor")
     public CompletableFuture<List<SingleJudgeResultDTO>> runJudge(JudgeDTO judgeDTO) {
+        System.out.println("====" + judgeDTO.getJudgePreference() + "====");
         // 判断配置合法性
         this.judgeEnvironmentConfiguration.checkJudgeEnvironmentBaseFileIn();
         // 为本次提交提供唯一id

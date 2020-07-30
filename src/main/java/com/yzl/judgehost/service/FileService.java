@@ -5,7 +5,6 @@ import com.yzl.judgehost.exception.http.NotFoundException;
 import com.yzl.judgehost.utils.FileHelper;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 

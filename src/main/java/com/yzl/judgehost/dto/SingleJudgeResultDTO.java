@@ -2,7 +2,6 @@ package com.yzl.judgehost.dto;
 
 import com.yzl.judgehost.core.enumerations.JudgeResultEnum;
 
-import java.util.List;
 
 /**
  * @author yuzhanglong

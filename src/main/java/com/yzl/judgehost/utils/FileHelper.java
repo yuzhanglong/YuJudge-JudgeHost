@@ -72,8 +72,7 @@ public class FileHelper {
      */
     public static List<String> readFileByLines(String filePath) throws IOException {
         File file = new File(filePath);
-        BufferedReader bufferedReader = null;
-        bufferedReader = new BufferedReader(new FileReader(file));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         String tempStr;
         List<String> stringList = new ArrayList<>();
         while ((tempStr = bufferedReader.readLine()) != null) {
