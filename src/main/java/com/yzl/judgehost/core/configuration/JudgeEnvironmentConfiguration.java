@@ -1,8 +1,8 @@
 package com.yzl.judgehost.core.configuration;
 
 import com.yzl.judgehost.exception.http.NotFoundException;
-import com.yzl.judgehost.utils.FileHelper;
-import com.yzl.judgehost.utils.YamlPropertySourceFactory;
+import com.yzl.judgehost.utils.FileUtil;
+import com.yzl.judgehost.core.factory.YamlPropertySourceFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -34,13 +34,13 @@ public class JudgeEnvironmentConfiguration {
      * @date 2020-6-30 11:24:04
      */
     public void checkJudgeEnvironmentBaseFileIn() {
-        if (!FileHelper.isDirectory(resolutionPath)) {
+        if (!FileUtil.isDirectory(resolutionPath)) {
             throw new NotFoundException("B1002");
         }
-        if (!FileHelper.isDirectory(workPath)) {
+        if (!FileUtil.isDirectory(workPath)) {
             throw new NotFoundException("B1002");
         }
-        if (!FileHelper.isDirectory(scriptPath)) {
+        if (!FileUtil.isDirectory(scriptPath)) {
             throw new NotFoundException("B1002");
         }
     }

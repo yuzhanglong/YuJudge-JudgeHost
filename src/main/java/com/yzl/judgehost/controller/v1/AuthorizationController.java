@@ -1,4 +1,4 @@
-package com.yzl.judgehost.api.v1;
+package com.yzl.judgehost.controller.v1;
 
 import com.yzl.judgehost.core.common.UnifiedResponse;
 import com.yzl.judgehost.dto.AuthorizationDTO;

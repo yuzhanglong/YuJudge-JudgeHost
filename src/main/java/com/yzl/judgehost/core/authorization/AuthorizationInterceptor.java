@@ -2,7 +2,7 @@ package com.yzl.judgehost.core.authorization;
 
 import com.yzl.judgehost.core.configuration.AuthorizationConfiguration;
 import com.yzl.judgehost.exception.http.ForbiddenException;
-import com.yzl.judgehost.utils.TokenHelper;
+import com.yzl.judgehost.utils.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -42,7 +42,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             }
             String uid = authorizationConfiguration.getUserId();
             String secret = authorizationConfiguration.getSecretKey();
-            Boolean isPass = TokenHelper.checkAuthToken(accessToken, uid, secret);
+            Boolean isPass = TokenUtil.checkAuthToken(accessToken, uid, secret);
             if (!isPass) {
                 throw new ForbiddenException("A0004");
             }

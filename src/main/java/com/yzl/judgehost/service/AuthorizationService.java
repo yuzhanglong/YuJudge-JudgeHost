@@ -4,7 +4,7 @@ import com.yzl.judgehost.core.configuration.AuthorizationConfiguration;
 import com.yzl.judgehost.dto.AuthorizationDTO;
 import com.yzl.judgehost.dto.AccessTokenDTO;
 import com.yzl.judgehost.exception.http.ForbiddenException;
-import com.yzl.judgehost.utils.TokenHelper;
+import com.yzl.judgehost.utils.TokenUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -38,7 +38,7 @@ public class AuthorizationService {
         }
         Integer expiredIn = authorizationConfiguration.getExpiredIn();
         String secretKey = authorizationConfiguration.getSecretKey();
-        return TokenHelper.generateAuthToken(userId, secretKey, expiredIn);
+        return TokenUtil.generateAuthToken(userId, secretKey, expiredIn);
     }
 
     /**
@@ -52,7 +52,7 @@ public class AuthorizationService {
         String accessToken = accessTokenDTO.getAccessToken();
         String userId = authorizationConfiguration.getUserId();
         String secretKey = authorizationConfiguration.getSecretKey();
-        return TokenHelper.checkAuthToken(accessToken, userId, secretKey);
+        return TokenUtil.checkAuthToken(accessToken, userId, secretKey);
     }
 
     /**

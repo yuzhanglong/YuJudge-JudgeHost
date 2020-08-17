@@ -17,7 +17,7 @@ import java.util.Map;
  * @description token生成的工具类
  */
 
-public class TokenHelper {
+public class TokenUtil {
 
     /**
      * @param userId    用户id

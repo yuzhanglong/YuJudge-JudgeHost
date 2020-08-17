@@ -1,4 +1,4 @@
-package com.yzl.judgehost.api.v1;
+package com.yzl.judgehost.controller.v1;
 
 import com.yzl.judgehost.core.authorization.AuthorizationRequired;
 import com.yzl.judgehost.dto.JudgeDTO;
@@ -35,6 +35,7 @@ public class JudgeController {
     }
 
     /**
+     * @param judgeDTO 判题相关数据传输对象
      * @author yuzhanglong
      * @description 执行判题
      * @date 2020-7-1 21:00
@@ -54,6 +55,7 @@ public class JudgeController {
     }
 
     /**
+     * @param judgeDTO 判题相关数据传输对象
      * @author yuzhanglong
      * @description 执行判题(测试模式)
      * @date 2020-7-6 23:57

@@ -2,10 +2,11 @@ package com.yzl.judgehost.service;
 
 import com.yzl.judgehost.core.configuration.JudgeEnvironmentConfiguration;
 import com.yzl.judgehost.exception.http.NotFoundException;
-import com.yzl.judgehost.utils.FileHelper;
+import com.yzl.judgehost.utils.FileUtil;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.UUID;
 
 /**
@@ -50,13 +51,13 @@ public class FileService {
      * @date 2020-7-1 18:11
      */
     private String zipSubmissionFolder(String submissionPath) {
-        if (!FileHelper.isDirectory(submissionPath)) {
+        if (!FileUtil.isDirectory(submissionPath)) {
             throw new NotFoundException("B1003");
         }
         String zippedPath = submissionPath + "/" + UUID.randomUUID() + ".zip";
         boolean isZipped = false;
         try {
-            isZipped = FileHelper.zipDictionary(zippedPath, submissionPath);
+            isZipped = FileUtil.zipDictionary(zippedPath, submissionPath);
         } catch (IOException | InterruptedException exception) {
             exception.printStackTrace();
         }
@@ -64,5 +65,28 @@ public class FileService {
             throw new NotFoundException("B1003");
         }
         return zippedPath;
+    }
+
+    /**
+     * @param filePath 文件路径
+     * @author yuzhanglong
+     * @description 文件转化输出流
+     * @date 2020-8-17 20:51:33
+     */
+    public void writeOutputStream(String filePath, HttpServletResponse response){
+        File file = new File(filePath);
+        byte[] buffer = new byte[1024];
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+            OutputStream outputStream = response.getOutputStream();
+            int i = bufferedInputStream.read(buffer);
+            while (i != -1) {
+                outputStream.write(buffer, 0, i);
+                i = bufferedInputStream.read(buffer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

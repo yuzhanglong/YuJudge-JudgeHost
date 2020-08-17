@@ -9,7 +9,7 @@ import java.util.List;
  * @description 文件处理相关工具类
  * @date 2020-6-30 11:03:47
  */
-public class FileHelper {
+public class FileUtil {
     /**
      * @param filePath 需要判断的文件目录
      * @return Boolean 文件是否存在

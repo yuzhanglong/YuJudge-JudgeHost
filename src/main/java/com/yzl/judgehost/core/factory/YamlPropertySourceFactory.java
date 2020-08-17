@@ -1,4 +1,4 @@
-package com.yzl.judgehost.utils;
+package com.yzl.judgehost.core.factory;
 
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.env.PropertySource;

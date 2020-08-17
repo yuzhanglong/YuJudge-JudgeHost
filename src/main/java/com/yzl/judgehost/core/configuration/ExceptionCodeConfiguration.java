@@ -1,6 +1,6 @@
 package com.yzl.judgehost.core.configuration;
 
-import com.yzl.judgehost.utils.YamlPropertySourceFactory;
+import com.yzl.judgehost.core.factory.YamlPropertySourceFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;

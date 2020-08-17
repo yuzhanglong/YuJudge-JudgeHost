@@ -10,8 +10,8 @@ import com.yzl.judgehost.dto.SolutionDTO;
 import com.yzl.judgehost.exception.http.NotFoundException;
 import com.yzl.judgehost.network.HttpRequest;
 import com.yzl.judgehost.dto.SingleJudgeResultDTO;
-import com.yzl.judgehost.utils.DataReformat;
-import com.yzl.judgehost.utils.FileHelper;
+import com.yzl.judgehost.utils.DataTransform;
+import com.yzl.judgehost.utils.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -94,7 +94,7 @@ public class JudgeService {
         // 将判题核心的stdout转换成数据传输对象
         // TODO: 打logger
         return JSON.parseObject(
-                DataReformat.stringListToString(result),
+                DataTransform.stringListToString(result),
                 SingleJudgeResultDTO.class
         );
     }
@@ -109,7 +109,7 @@ public class JudgeService {
         // 编译脚本
         String compileScript = this.judgeEnvironmentConfiguration.getScriptPath() + "/compile.sh";
 
-        if (!FileHelper.isFileIn(compileScript)) {
+        if (!FileUtil.isFileIn(compileScript)) {
             throw new NotFoundException("B1002");
         }
         // 获取编程语言
@@ -227,7 +227,7 @@ public class JudgeService {
      * @description 执行判题
      */
     @SuppressWarnings("DuplicatedCode")
-    @Async(value = "asyncServiceExecutor")
+    @Async(value = "judgeHostServiceExecutor")
     public CompletableFuture<List<SingleJudgeResultDTO>> runJudge(JudgeDTO judgeDTO) {
         System.out.println("====" + judgeDTO.getJudgePreference() + "====");
         // 判断配置合法性
@@ -392,7 +392,7 @@ public class JudgeService {
     private List<String> getJudgeCoreStderr(String stderrPath) {
         List<String> judgeErrors = null;
         try {
-            judgeErrors = FileHelper.readFileByLines(stderrPath);
+            judgeErrors = FileUtil.readFileByLines(stderrPath);
         } catch (IOException ioException) {
             //TODO:找不到stderr的错误处理
             ioException.printStackTrace();

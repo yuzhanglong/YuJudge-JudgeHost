@@ -1,4 +1,4 @@
-package com.yzl.judgehost.core.handlers;
+package com.yzl.judgehost.core.handler;
 
 import com.yzl.judgehost.core.common.UnifiedResponse;
 import com.yzl.judgehost.core.configuration.ExceptionCodeConfiguration;
