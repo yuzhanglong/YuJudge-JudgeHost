@@ -1,9 +1,9 @@
 package com.yzl.judgehost.dto;
 
-import com.yzl.judgehost.core.enumerations.JudgeConfigDefaultEnum;
-import com.yzl.judgehost.core.enumerations.JudgePreferenceEnum;
+import com.yzl.judgehost.core.enumeration.JudgeConfigDefaultEnum;
+import com.yzl.judgehost.core.enumeration.JudgePreferenceEnum;
 import com.yzl.judgehost.exception.http.NotFoundException;
-import com.yzl.judgehost.validators.LanguageTypeAccepted;
+import com.yzl.judgehost.utils.validator.LanguageTypeAccepted;
 
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
@@ -13,13 +13,13 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
- * @author yuzhanglong
- * @date 2020-6-26 10:26
- * @description 判题数据传输对象
- * <p>
+ * 判题数据传输对象
  * 如果用户没有传入某些非必填的限制
  * (例如时间限制、内存限制)时，我们会将这些内容置换成默认的配置
  * 同时防止了NPE错误的发生。
+ *
+ * @author yuzhanglong
+ * @date 2020-6-26 10:26
  * @see JudgeConfigDefaultEnum 默认配置的枚举类
  * @see JudgePreferenceEnum 判题偏好配置
  */
@@ -29,10 +29,10 @@ public class JudgeDTO {
     @NotNull(message = "代码不得为空")
     private String submissionCode;
 
-    @DecimalMax(value = "10", message = "实际时间限制最大为10s")
+    @DecimalMax(value = "10000", message = "实际时间限制最大为10 * 1000ms")
     private Integer realTimeLimit;
 
-    @DecimalMax(value = "10", message = "cpu时间限制最大为10s")
+    @DecimalMax(value = "10000", message = "cpu时间限制最大为10 * 1000ms")
     private Integer cpuTimeLimit;
 
     @DecimalMin(value = "3000", message = "内存限制最小为3000kb")
