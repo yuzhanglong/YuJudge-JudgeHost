@@ -1,9 +1,11 @@
-package com.yzl.judgehost.core.enumerations;
+package com.yzl.judgehost.core.enumeration;
 
 /**
- * @author yuzhanglong
- * @description 判题配置枚举类
+ * 判题配置枚举类
  * 一些判题配置的默认值，如果用户没有传入，则会使用这些默认值
+ *
+ * @author yuzhanglong
+ * @date 2020-8-22 00:44:19
  */
 
 public enum JudgeConfigDefaultEnum {

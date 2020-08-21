@@ -1,11 +1,12 @@
-package com.yzl.judgehost.core.enumerations;
+package com.yzl.judgehost.core.enumeration;
 
 import java.util.stream.Stream;
 
 /**
+ * 编译脚本的枚举类
+ *
  * @author yuzhanglong
  * @date 2020-6-24 19:10:43
- * @description 编译脚本的枚举类
  */
 
 public enum LanguageScriptEnum {

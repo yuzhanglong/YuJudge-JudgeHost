@@ -1,6 +1,6 @@
 package com.yzl.judgehost.dto;
 
-import com.yzl.judgehost.core.enumerations.JudgeResultEnum;
+import com.yzl.judgehost.core.enumeration.JudgeResultEnum;
 
 
 /**

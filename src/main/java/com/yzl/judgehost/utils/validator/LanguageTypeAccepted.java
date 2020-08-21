@@ -1,12 +1,13 @@
-package com.yzl.judgehost.validators;
+package com.yzl.judgehost.utils.validator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
 /**
+ * 语言类型验证
+ *
  * @author yuzhanglong
- * @description 语言类型验证
  * @date 2020-6-22 15:44
  */
 @Documented

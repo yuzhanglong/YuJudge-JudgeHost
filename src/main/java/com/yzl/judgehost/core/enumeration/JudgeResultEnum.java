@@ -1,11 +1,12 @@
-package com.yzl.judgehost.core.enumerations;
+package com.yzl.judgehost.core.enumeration;
 
 import java.util.stream.Stream;
 
 /**
+ * 一次判题结果的枚举类
+ *
  * @author yuzhanglong
  * @date 2020-6-29 22:54:47
- * @description 一次判题结果的枚举类
  */
 
 public enum JudgeResultEnum {
