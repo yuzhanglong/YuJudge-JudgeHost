@@ -29,8 +29,9 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * 判题服务模块
+ *
  * @author yuzhanglong
- * @description 判题服务模块
  * @date 2020-6-24 12:10:43
  */
 
@@ -63,14 +64,15 @@ public class JudgeService {
     }
 
     /**
+     * 调用判题核心，执行判题
+     *
      * @param stdInPath 单个输入文件
      * @return SingleJudgeResultDTO 单次判题结果
      * @author yuzhanglong
-     * @description 调用判题核心，执行判题
      * @date 2020-6-24 12:10:43
      */
     private SingleJudgeResultDTO startJudging(String stdInPath) {
-        String judgeCoreScript = judgeEnvironmentConfiguration.getScriptPath() + "/y_judger";
+        String judgeCoreScript = judgeEnvironmentConfiguration.getScriptPath() + "/y_judge";
         String[] command = {
                 judgeCoreScript,
                 "-r", runningPath,
@@ -100,9 +102,10 @@ public class JudgeService {
     }
 
     /**
+     * 调用compile.sh 生成脚本
+     *
      * @return String 编译返回的信息，如果没有信息，则编译成功
      * @author yuzhanglong
-     * @description 调用compile.sh 生成脚本
      * @date 2020-6-24 12:10:43
      */
     private List<String> compileSubmission() {
@@ -140,32 +143,35 @@ public class JudgeService {
     }
 
     /**
+     * 返回本次提交的工作目录
+     *
      * @return String 本次提交的工作目录
      * @author yuzhanglong
      * @date 2020-6-24 12:20:43
-     * @description 返回本次提交的工作目录
      */
     private String getSubmitWorkingPath() {
         return judgeEnvironmentConfiguration.getWorkPath() + "/submissions/" + getSubmissionId();
     }
 
     /**
+     * 返回本次提交的解答目录(即期望输入输出存储的地方)
+     *
      * @return String 本次提交解决方案的工作目录
      * @author yuzhanglong
      * @date 2020-6-29 22:14:57
-     * @description 返回本次提交的解答目录(即期望输入输出存储的地方)
      */
     private String getSubmitResolutionPath() {
         return judgeEnvironmentConfiguration.getResolutionPath() + "/" + getSubmissionId();
     }
 
     /**
+     * 比较用户输出和期望输出
+     *
      * @param submissionOutput 用户提交的输出
-     * @param expectedOutput    用户期望输出
+     * @param expectedOutput   用户期望输出
      * @return Boolean 输出是否相同
      * @author yuzhanglong
      * @date 2020-6-24 12:20:43
-     * @description 比较用户输出和期望输出
      */
 
     private Boolean compareOutputWithResolutions(String submissionOutput, String expectedOutput) {
@@ -190,11 +196,12 @@ public class JudgeService {
 
 
     /**
+     * 获取输入文件和期望的输出文件，供后续判题使用
+     *
      * @param resolution 解决方案数据传输对象
      * @return ResolutionDTO 解决方案的文件地址类
      * @author yuzhanglong
      * @date 2020-6-27 12:21:43
-     * @description 获取输入文件和期望的输出文件，供后续判题使用
      */
     private SolutionDTO getResolutionInputAndOutputFile(SolutionDTO resolution) {
         String inputFile = resolution.getStdIn();
@@ -220,11 +227,12 @@ public class JudgeService {
     }
 
     /**
+     * 执行判题
+     *
      * @param judgeDTO judgeDTO对象
      * @return CompletableFuture<List < SingleJudgeResultDTO>>由一个或多个单次判题结果组成的list，以CompletableFuture包装
      * @author yuzhanglong
      * @date 2020-6-27 12:21:43
-     * @description 执行判题
      */
     @SuppressWarnings("DuplicatedCode")
     @Async(value = "judgeHostServiceExecutor")
@@ -265,13 +273,14 @@ public class JudgeService {
     }
 
     /**
+     * 执行判题（供测试用）
+     * 此方法被用于并发测试
+     * 根据用户容忍的等待时间以及测试时单机任务执行平均时长来获取自定义的判题线程池的相关配置
+     *
      * @param judgeDTO judgeDTO对象
      * @return List < SingleJudgeResultDTO>  由一个或多个单次判题结果组成的list
      * @author yuzhanglong
      * @date 2020-6-27 22:51
-     * @description 执行判题（供测试用）
-     * 此方法被用于并发测试
-     * 根据用户容忍的等待时间以及测试时单机任务执行平均时长来获取自定义的判题线程池的相关配置
      * @see JudgeExecutorConfiguration 自定义判题相关的线程池
      */
     @SuppressWarnings("DuplicatedCode")
@@ -304,11 +313,12 @@ public class JudgeService {
 
 
     /**
+     * 根据期望数据来执行单次判题
+     *
      * @param singleResolution 用户传入的单次判题的正确解决方案，参见ResolutionDTO类
      * @return SingleJudgeResultDTO 单次判题结果
      * @author yuzhanglong
      * @date 2020-7-1 9:47
-     * @description 根据期望数据来执行单次判题
      * @see SolutionDTO
      */
     private SingleJudgeResultDTO runForSingleJudge(SolutionDTO singleResolution) {
@@ -333,12 +343,13 @@ public class JudgeService {
     }
 
     /**
+     * 获取运行的脚本/可执行文件的输出
+     *
      * @param process 运行的进程对象
      * @return String 进程输出
      * @throws IOException an I/O exception
      * @author yuzhanglong
      * @date 2020-6-30 21:21
-     * @description 获取运行的脚本/可执行文件的输出
      */
     private List<String> readStdout(Process process) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -357,11 +368,12 @@ public class JudgeService {
     }
 
     /**
+     * 传入编译结果，根据语言特性来判断编译是否成功
+     *
      * @param compileResult 编译结果
      * @return Boolean 编译是否成功
      * @author yuzhanglong
      * @date 2020-6-30 21:21
-     * @description 传入编译结果，根据语言特性来判断编译是否成功
      */
     private Boolean isCompileSuccess(List<String> compileResult) {
         LanguageScriptEnum language = LanguageScriptEnum.toLanguageType(judgeConfig.getLanguage());
@@ -383,11 +395,12 @@ public class JudgeService {
     }
 
     /**
+     * 编译错误会返回错误，类似的，我们在运行判题核心时也可能产生错误
+     * 例如：python（解释性语言）的运行错误提示
+     *
      * @return List<String> 错误内容，我们用数组存储，用下标来代表行
      * @author yuzhanglong
      * @date 2020-7-1 9:22
-     * @description 编译错误会返回错误，类似的，我们在运行判题核心时也可能产生错误
-     * 例如：python（解释性语言）的运行错误提示
      */
     private List<String> getJudgeCoreStderr(String stderrPath) {
         List<String> judgeErrors = null;

@@ -18,8 +18,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
+ * 判题接口（Controller）
+ *
  * @author yuzhanglong
- * @description 判题接口（Controller）
  * @date 2020-7-6 21:57
  */
 @RestController
@@ -35,9 +36,10 @@ public class JudgeController {
     }
 
     /**
+     * 执行判题
+     *
      * @param judgeDTO 判题相关数据传输对象
      * @author yuzhanglong
-     * @description 执行判题
      * @date 2020-7-1 21:00
      */
     @PostMapping("/run")
@@ -55,9 +57,10 @@ public class JudgeController {
     }
 
     /**
+     * 执行判题(测试模式)
+     *
      * @param judgeDTO 判题相关数据传输对象
      * @author yuzhanglong
-     * @description 执行判题(测试模式)
      * @date 2020-7-6 23:57
      */
     @PostMapping("/run_for_test")

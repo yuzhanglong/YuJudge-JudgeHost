@@ -17,7 +17,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && cd YuJudge-Core \
     && cmake CMakeLists.txt \
     && make \
-    && cp y_judger /home/judgeEnvironment/scripts \
+    && cp y_judge /home/judgeEnvironment/scripts \
     && chmod 777 -R /home/judgeEnvironment/scripts
 
 # 暴露8080端口
