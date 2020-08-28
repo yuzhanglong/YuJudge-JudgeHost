@@ -10,8 +10,9 @@ import reactor.core.publisher.Mono;
 
 
 /**
+ * 网络请求的封装
+ *
  * @author yuzhanglong
- * @description 网络请求的封装
  * @date 2020-6-29 19:52:26
  */
 public class HttpRequest {

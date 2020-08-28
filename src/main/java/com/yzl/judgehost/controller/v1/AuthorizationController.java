@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
+ * 权限处理相关接口
+ *
  * @author yuzhanglong
  * @date 2020-7-2 00:16
- * @description 权限处理相关接口
  */
 
 @RestController
@@ -27,8 +28,9 @@ public class AuthorizationController {
     }
 
     /**
+     * 获取判题服务器接口调用凭据，以供后续接口调用使用
+     *
      * @author yuzhanglong
-     * @description 获取判题服务器接口调用凭据，以供后续接口调用使用
      * @date 2020-7-1 11:24
      */
     @PostMapping("/get_access_token")
@@ -38,8 +40,9 @@ public class AuthorizationController {
     }
 
     /**
+     * 验证判题服务器接口调用凭据
+     *
      * @author yuzhanglong
-     * @description 验证判题服务器接口调用凭据
      * @date 2020-7-1 11:24
      */
     @PostMapping("/check")

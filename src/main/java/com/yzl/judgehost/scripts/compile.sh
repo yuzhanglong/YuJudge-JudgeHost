@@ -12,23 +12,26 @@ CODE="$3";
 BUILDING_SCRIPT="$4";
 
 # 创建提交工作目录
-mkdir $SUBMISSION_PATH;
+mkdir "$SUBMISSION_PATH";
 
 # 创建代码路径，写入用户代码
-touch $CODE_PATH;
+touch "$CODE_PATH";
+# shellcheck disable=SC2086
 echo -e "$CODE" >> $CODE_PATH;
 
-BUILDING_SCRIPT_PATH=""$SUBMISSION_PATH"/build.sh"
+BUILDING_SCRIPT_PATH="$SUBMISSION_PATH/build.sh"
 
 # 创建编译脚本目录
-touch $BUILDING_SCRIPT_PATH;
+touch "$BUILDING_SCRIPT_PATH";
 
 # cd 到本次提交的工作目录
-echo -e "$BUILDING_SCRIPT" >> $BUILDING_SCRIPT_PATH;
-chmod 777 $BUILDING_SCRIPT_PATH;
+echo -e "$BUILDING_SCRIPT" >> "$BUILDING_SCRIPT_PATH";
+
+chmod 777 "$BUILDING_SCRIPT_PATH";
 
 # 执行编译
-cd $SUBMISSION_PATH
+cd "$SUBMISSION_PATH"
+
 $BUILDING_SCRIPT_PATH
 
 # 初始化runner

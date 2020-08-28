@@ -1,9 +1,10 @@
 package com.yzl.judgehost.bo;
 
 /**
+ * 判题服务器配置bo对象
+ *
  * @author yuzhanglong
  * @date 2020-7-30 20:15
- * @description 判题服务器配置bo对象
  */
 public class JudgeHostConfigurationBO {
     private String workPath;

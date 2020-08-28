@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 一般功能性接口
+ *
  * @author yuzhanglong
  * @date 2020-7-30 19:47
- * @description 一般功能性接口
  */
 
 @RestController
@@ -29,9 +30,10 @@ public class CommonController {
     }
 
     /**
+     * 测试连接，并返回判题机相关信息和状态
+     *
      * @author yuzhanglong
      * @date 2020-8-17 19:40:42
-     * @description 测试连接，并返回判题机相关信息和状态
      */
     @GetMapping("/test_connection")
     private UnifiedResponse testConnection() {

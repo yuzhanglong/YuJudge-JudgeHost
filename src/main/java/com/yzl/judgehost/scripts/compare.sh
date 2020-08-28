@@ -8,10 +8,10 @@ SUBMISSION_OUTPUT_PATH="$1"
 RESOLUTION_PATH="$2"
 
 # 判断文件是否存在
-if [ ! -f $SUBMISSION_OUTPUT_PATH ]; then
+if [ ! -f "$SUBMISSION_OUTPUT_PATH" ]; then
   echo 2
   exit 0
-elif [ ! -f $RESOLUTION_PATH ]; then
+elif [ ! -f "$RESOLUTION_PATH" ]; then
   echo 2
   exit 0
 fi

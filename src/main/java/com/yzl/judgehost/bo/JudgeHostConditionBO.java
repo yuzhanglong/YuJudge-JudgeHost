@@ -1,8 +1,9 @@
 package com.yzl.judgehost.bo;
 
 /**
+ * 描述判题服务器状态的业务对象
+ *
  * @author yuzhanglong
- * @description 描述判题服务器状态的业务对象
  * @date 2020-8-17 19:54:53
  */
 public class JudgeHostConditionBO {
