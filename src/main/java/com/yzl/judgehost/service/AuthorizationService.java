@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 /**
+ * 权限、认证相关业务模块
+ *
  * @author yuzhanglong
- * @description 权限、认证相关业务模块
  * @date 2020-7-1 23:31
  */
 
@@ -24,10 +25,11 @@ public class AuthorizationService {
 
 
     /**
+     * 获取判题服务器接口调用凭据
+     *
      * @param authorizationDTO 用户权限认证的数据传输对象
      * @return String access_token
      * @author yuzhanglong
-     * @description 获取判题服务器接口调用凭据
      * @date 2020-7-1 23:31
      */
     public String getAccessToken(AuthorizationDTO authorizationDTO) {
@@ -42,10 +44,11 @@ public class AuthorizationService {
     }
 
     /**
+     * 验证接口调用凭据合法性
+     *
      * @param accessTokenDTO token的数据传输对象
      * @return Boolean 验证是否通过
      * @author yuzhanglong
-     * @description 验证接口调用凭据合法性
      * @date 2020-7-2 00:26
      */
     public Boolean checkAccessToken(@Validated AccessTokenDTO accessTokenDTO) {
@@ -56,14 +59,15 @@ public class AuthorizationService {
     }
 
     /**
+     * 验证接口调用凭据合法性
+     * 由于此服务器(JudgeHost)专门用来执行判题，个人觉得无需在额外搞一个数据库用来存储用户信息
+     * 另外需要存储的数据也不多（可能就是用户名和密码了）
+     * 规定的用户名和密码来自文件，你可以在配置文件中修改之（注意区分开发环境和生产环境）
+     *
      * @param userId     用户名
      * @param userSecret 用户密码
      * @return Boolean 验证用户名或密码是否正确
      * @author yuzhanglong
-     * @description 验证接口调用凭据合法性
-     * 由于此服务器(JudgeHost)专门用来执行判题，个人觉得无需在额外搞一个数据库用来存储用户信息
-     * 另外需要存储的数据也不多（可能就是用户名和密码了）
-     * 规定的用户名和密码来自文件，你可以在配置文件中修改之（注意区分开发环境和生产环境）
      * @date 2020-7-2 00:33
      */
     private Boolean isUserSecretChecked(String userId, String userSecret) {

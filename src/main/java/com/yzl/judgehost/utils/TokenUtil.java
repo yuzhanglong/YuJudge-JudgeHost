@@ -12,20 +12,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * token生成的工具类
+ *
  * @author yuzhanglong
  * @date 2020-6-25 11:17
- * @description token生成的工具类
  */
 
 public class TokenUtil {
 
     /**
+     * 传入userId。生成对应的token
+     *
      * @param userId    用户id
      * @param expiredIn 在expiredIn秒后到期
      * @param secretKey 验证密钥
      * @return String 生成的token
      * @author yuzhanglong
-     * @description 传入userId。生成对应的token
      */
     public static String generateAuthToken(String userId, String secretKey, Integer expiredIn) {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
@@ -38,11 +40,12 @@ public class TokenUtil {
     }
 
     /**
-     * @return map 返回一系列kv对，具体内容查看 @description
-     * @author yuzhanglong
-     * @description 处理token中时间相关信息，这包括：
+     * 处理token中时间相关信息，这包括：
      * now: 当前时间
      * expiredIn: 过期时间
+     *
+     * @return map 返回一系列kv对，具体内容查看 @description
+     * @author yuzhanglong
      */
     public static Map<String, Date> calculateExpiredInfo(Integer expiredIn) {
         Map<String, Date> map = new HashMap<>(2);
@@ -55,12 +58,13 @@ public class TokenUtil {
     }
 
     /**
+     * 检测传入的token是否合法、正确
+     *
      * @param token     用户传入的token
      * @param secretKey 验证密钥
      * @param userId    用户名
      * @return boolean token是否验证通过
      * @author yuzhanglong
-     * @description 检测传入的token是否合法、正确
      */
     public static Boolean checkAuthToken(String token, String userId, String secretKey) {
         try {

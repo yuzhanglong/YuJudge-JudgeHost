@@ -9,14 +9,14 @@ package com.yzl.judgehost.core.enumeration;
  */
 
 public enum JudgeConfigDefaultEnum {
-    // cpu时间限制
-    TIME_LIMIT_DEFAULT(4),
+    // cpu时间限制 4000ms
+    TIME_LIMIT_DEFAULT(4000),
 
     // 内存限制 1024 * 32 kb = 32mb
     MEMORY_LIMIT_DEFAULT(1024 * 32),
 
-    // 时间限制
-    WALL_TIME_DEFAULT(4),
+    // 实际时间限制 4000ms
+    WALL_TIME_DEFAULT(4000),
 
     // 进程限制
     PROCESS_LIMIT_DEFAULT(1),

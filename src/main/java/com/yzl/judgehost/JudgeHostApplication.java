@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 考虑到判题的速度、短时间内可能需要大量判题，JudgeHost可能需要考虑多线程、集群相关
  *
  * @author yuzhanglong
- * @version demo-test
+ * @version V0.1
  * @email yuzl1123@163.com
  */
 

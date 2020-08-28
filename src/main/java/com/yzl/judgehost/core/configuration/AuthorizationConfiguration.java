@@ -6,8 +6,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
+ * 权限相关配置类
+ *
  * @author yuzhanglong
- * @description 权限相关配置类
  * @date 2020-7-1 23:44
  */
 

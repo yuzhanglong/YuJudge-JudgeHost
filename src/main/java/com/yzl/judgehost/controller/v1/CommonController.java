@@ -5,7 +5,6 @@ import com.yzl.judgehost.bo.JudgeHostConditionBO;
 import com.yzl.judgehost.bo.JudgeHostConfigurationBO;
 import com.yzl.judgehost.core.common.UnifiedResponse;
 import com.yzl.judgehost.service.CommonService;
-import com.yzl.judgehost.vo.JudgeConditionVO;
 import com.yzl.judgehost.vo.JudgeHostConditionVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

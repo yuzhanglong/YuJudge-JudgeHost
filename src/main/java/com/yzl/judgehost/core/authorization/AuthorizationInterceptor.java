@@ -14,9 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 /**
+ * 权限验证器类
+ *
  * @author yuzhanglong
  * @date 2020-7-2 8:34
- * @description 权限验证器类
  */
 @EnableConfigurationProperties({AuthorizationConfiguration.class})
 public class AuthorizationInterceptor implements HandlerInterceptor {

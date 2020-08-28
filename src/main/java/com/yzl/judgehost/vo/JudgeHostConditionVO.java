@@ -1,10 +1,10 @@
 package com.yzl.judgehost.vo;
 
-import com.yzl.judgehost.bo.JudgeHostConditionBO;
 
 /**
+ * 描述判题服务器状态的视图层对象
+ *
  * @author yuzhanglong
- * @description 描述判题服务器状态的视图层对象
  * @date 2020-8-17 19:42:07
  */
 public class JudgeHostConditionVO {

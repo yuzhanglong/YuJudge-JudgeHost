@@ -9,10 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 从配置文件中获取错误码对应的描述
+ * 最终这个描述会被返回到前端
+ *
  * @author yuzhanglong
  * @date 2020-6-30 12:27:20
- * @description 从配置文件中获取错误码对应的描述
- * 最终这个描述会被返回到前端
  */
 
 @Component

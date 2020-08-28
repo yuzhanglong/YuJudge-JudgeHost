@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
 
 /**
+ * 判题相关文件处理相关接口
+ *
  * @author yuzhanglong
  * @date 2020-7-1 10:13
- * @description 判题相关文件处理相关接口
  */
 
 @RestController
@@ -25,10 +25,11 @@ public class FileController {
     }
 
     /**
+     * 下载某次提交的相关信息
+     *
      * @param response     HttpServletResponse
      * @param submissionId 某次提交的id
      * @author yuzhanglong
-     * @description 下载某次提交的相关信息
      * @date 2020-8-17 20:48:17
      */
     @GetMapping("/download_submission/{submissionId}")

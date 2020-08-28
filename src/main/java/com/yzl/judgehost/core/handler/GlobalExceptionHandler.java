@@ -19,9 +19,10 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 /**
- * @author yuzhanglong
  * 实现全局异常处理
- * 统一返回值 errorcode method url 给前端
+ * 统一返回值 errorCode method url 给前端
+ *
+ * @author yuzhanglong
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -33,10 +34,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 拦截并处理程序内部发生的异常
+     *
      * @param request   请求参数
      * @param exception 抛出的异常
      * @author yzl
-     * @description 拦截并处理程序内部发生的异常
      */
     @ExceptionHandler(Exception.class)
     @ResponseBody
@@ -51,10 +53,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 拦截自定义的异常处理（例如数据不存在等）
+     *
      * @param request   请求参数
      * @param exception 抛出的异常
      * @author yzl
-     * @description 拦截自定义的异常处理（例如数据不存在等）
      */
     @ExceptionHandler(HttpException.class)
     @ResponseBody
@@ -74,10 +77,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 拦截请求错误 MethodNotAllowed
+     *
      * @param request   请求参数
      * @param exception 抛出的异常
      * @author yzl
-     * @description 拦截请求错误 MethodNotAllowed
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseBody
@@ -91,10 +95,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 拦截参数验证的异常
+     *
      * @param request   请求参数
      * @param exception 抛出的异常
      * @author yzl
-     * @description 拦截参数验证的异常
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
@@ -112,10 +117,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 拦截参数验证的异常
+     *
      * @param request   请求参数
      * @param exception 抛出的异常
      * @author yzl
-     * @description 拦截参数验证的异常
      */
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
@@ -131,10 +137,11 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 拦截post请求内容为空的异常
+     *
      * @param request   请求参数
      * @param exception 抛出的异常
      * @author yzl
-     * @description 拦截post请求内容为空的异常
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
@@ -146,30 +153,33 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 拼接RequestUrl字符串，以供返回到前端
+     *
      * @param method 请求方法
      * @param url    请求的接口链接
      * @author yzl
-     * @description 拼接RequestUrl字符串，以供返回到前端
      */
     private String getRequestUrlString(String method, String url) {
         return method + " " + url;
     }
 
     /**
+     * 通过自定义的错误代码，来获取其对应的信息，以供返回给前端，这些信息来源于配置文件
+     * 对于所有的错误信息请参考：resources/config/exception-codes
+     *
      * @param code 自定义的错误代码
      * @author yzl
-     * @description 通过自定义的错误代码，来获取其对应的信息，以供返回给前端，这些信息来源于配置文件
-     * 对于所有的错误信息请参考：resources/config/exception-codes
      */
     private String getMessageByExceptionCode(String code) {
         return exceptionCodeConfiguration.getMessage(code);
     }
 
     /**
+     * 传入一个 参数验证的错误信息list，将错误信息拼接成字符串，以供返回给前端
+     * 对于所有的错误信息请参考：resources/config/exception-codes
+     *
      * @param errorList List<ObjectError> 错误信息list
      * @author yzl
-     * @description 传入一个 参数验证的错误信息list，将错误信息拼接成字符串，以供返回给前端
-     * 对于所有的错误信息请参考：resources/config/exception-codes
      */
     private String getMessageStringByValidateExceptionList(List<ObjectError> errorList) {
         return errorList.get(0).getDefaultMessage();

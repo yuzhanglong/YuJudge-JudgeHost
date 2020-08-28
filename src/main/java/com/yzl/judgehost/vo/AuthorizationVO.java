@@ -1,8 +1,9 @@
 package com.yzl.judgehost.vo;
 
 /**
+ * 对某次鉴权结果的表现层对象
+ *
  * @author yuzhanglong
- * @description 对某次鉴权结果的表现层对象
  * @date 2020-7-1 23:37
  */
 public class AuthorizationVO {

@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import java.util.concurrent.*;
 
 /**
- * @author yuzhanglong
- * @description 自定义的判题线程池
+ * 判题线程池
+ * <p>
  * 判题虽然有一定的io操作，
  * 但是主要还是cpu密集型的操作，
  * 经并发检测执行时cpu的占用几乎都在百分之百
@@ -18,6 +18,8 @@ import java.util.concurrent.*;
  * CORE_POOL_SIZE 保留在池中的线程数，即使处于空闲状态
  * BLOCKING_QUEUE_CAPACITY 允许排队的用户（请求）数量
  * 这些值应该根据用户容忍的等待时间以及测试时单机任务执行平均时长来获取自定义的判题线程池的相关配置
+ *
+ * @author yuzhanglong
  * @date 2020-7-8 21:58
  */
 

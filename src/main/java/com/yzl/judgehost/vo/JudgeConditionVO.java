@@ -5,9 +5,10 @@ import com.yzl.judgehost.dto.SingleJudgeResultDTO;
 import java.util.List;
 
 /**
+ * 对某次判题最终结果的表现层对象
+ *
  * @author yuzhanglong
  * @date 2020-6-29 22:41:12
- * @description 对某次判题最终结果的表现层对象
  */
 public class JudgeConditionVO {
     private final List<SingleJudgeResultDTO> judgeResults;

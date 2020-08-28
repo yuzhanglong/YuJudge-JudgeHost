@@ -6,8 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 标示请求是否需要认证的注解
+ *
  * @author yuzhanglong
- * @description 标示请求是否需要认证的注解
  * @date 2020-7-2 8:38
  */
 

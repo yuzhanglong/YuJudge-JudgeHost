@@ -9,9 +9,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
+ * 判题环境配置类
+ *
  * @author yuzhanglong
  * @date 2020-6-30 11:24:04
- * @description 判题环境配置类
  */
 
 @ConfigurationProperties(prefix = "judge-environment")
@@ -28,9 +29,10 @@ public class JudgeEnvironmentConfiguration {
     }
 
     /**
+     * 判断相关文件依赖是否存在
+     *
      * @throws RuntimeException 项目依赖的文件、文件夹路径不存在
      * @author yuzhanglong
-     * @description 判断相关文件依赖是否存在
      * @date 2020-6-30 11:24:04
      */
     public void checkJudgeEnvironmentBaseFileIn() {

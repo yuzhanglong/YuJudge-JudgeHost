@@ -47,7 +47,7 @@ public enum JudgeResultEnum {
     SET_LIMIT_ERROR("SET_LIMIT_ERROR", 11),
 
     // 非管理员用户
-    UNROOT_USER("UNROOT_USER", 12),
+    NOT_ROOT_USER("NOT_ROOT_USER", 12),
 
     //fork失败
     FORK_ERROR("FORK_ERROR", 13),

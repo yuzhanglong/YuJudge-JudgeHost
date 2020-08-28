@@ -4,8 +4,9 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * 自定义判题线程工厂
+ *
  * @author yuzhanglong
- * @description 自定义判题线程工厂
  * @date 2020-7-6 22:33
  */
 public class JudgeThreadFactory implements ThreadFactory {
