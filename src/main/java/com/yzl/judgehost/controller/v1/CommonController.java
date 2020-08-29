@@ -4,11 +4,11 @@ import com.github.dozermapper.core.Mapper;
 import com.yzl.judgehost.bo.JudgeHostConditionBO;
 import com.yzl.judgehost.bo.JudgeHostConfigurationBO;
 import com.yzl.judgehost.core.common.UnifiedResponse;
+import com.yzl.judgehost.dto.SetWorkingAmountDTO;
 import com.yzl.judgehost.service.CommonService;
 import com.yzl.judgehost.vo.JudgeHostConditionVO;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 一般功能性接口
@@ -44,5 +44,21 @@ public class CommonController {
         conditionVO.setResolutionPath(judgeHostInfo.getResolutionPath());
         conditionVO.setWorkPath(judgeHostInfo.getWorkPath());
         return new UnifiedResponse("judgeHost运行正常", conditionVO);
+    }
+
+
+    /**
+     * 设置判题节点数量
+     *
+     * @author yuzhanglong
+     * @date 2020-8-29 17:14:14
+     */
+    @PutMapping("/set_max_working_amount")
+    private UnifiedResponse setMaxWorkingAmount(@Validated @RequestBody SetWorkingAmountDTO workingAmountDTO) {
+        commonService.setJudgeHostWorkingAmount(
+                workingAmountDTO.getMaxWorkingAmount(),
+                workingAmountDTO.getForceSet()
+        );
+        return new UnifiedResponse("设置判题节点数量成功");
     }
 }

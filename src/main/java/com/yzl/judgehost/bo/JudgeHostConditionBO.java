@@ -12,18 +12,21 @@ public class JudgeHostConditionBO {
     private Integer memoryCostPercentage;
     private Integer cpuCostPercentage;
     private Integer queueAmount;
+    private Integer maxWorkingAmount;
 
     public JudgeHostConditionBO(
             Integer workingAmount,
             Integer cpuCoreAmount,
             Integer memoryCostPercentage,
             Integer cpuCostPercentage,
-            Integer queueAmount) {
+            Integer queueAmount,
+            Integer maxWorkingAmount) {
         this.workingAmount = workingAmount;
         this.cpuCoreAmount = cpuCoreAmount;
         this.memoryCostPercentage = memoryCostPercentage;
         this.cpuCostPercentage = cpuCostPercentage;
         this.queueAmount = queueAmount;
+        this.maxWorkingAmount = maxWorkingAmount;
     }
 
     public Integer getQueueAmount() {
@@ -64,6 +67,14 @@ public class JudgeHostConditionBO {
 
     public void setCpuCostPercentage(Integer cpuCostPercentage) {
         this.cpuCostPercentage = cpuCostPercentage;
+    }
+
+    public Integer getMaxWorkingAmount() {
+        return maxWorkingAmount;
+    }
+
+    public void setMaxWorkingAmount(Integer maxWorkingAmount) {
+        this.maxWorkingAmount = maxWorkingAmount;
     }
 
     @Override

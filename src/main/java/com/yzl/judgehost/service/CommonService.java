@@ -6,14 +6,16 @@ import com.yzl.judgehost.bo.JudgeHostConditionBO;
 import com.yzl.judgehost.bo.JudgeHostConfigurationBO;
 import com.yzl.judgehost.core.configuration.JudgeEnvironmentConfiguration;
 import com.yzl.judgehost.core.configuration.JudgeExecutorConfiguration;
+import com.yzl.judgehost.exception.http.ForbiddenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.management.ManagementFactory;
 
 /**
+ * 一般功能性业务逻辑
+ *
  * @author yuzhanglong
- * @description 一般功能性业务逻辑
  * @date 2020-7-30 20:03
  */
 
@@ -37,8 +39,9 @@ public class CommonService {
     }
 
     /**
+     * 获取判题机状态
+     *
      * @author yuzhanglong
-     * @description 获取判题机状态
      * @date 2020-8-17 19:25:11
      */
     public JudgeHostConfigurationBO getJudgeHostConfiguration() {
@@ -48,8 +51,9 @@ public class CommonService {
     }
 
     /**
+     * 获取判题机线程池状态
+     *
      * @author yuzhanglong
-     * @description 获取判题机线程池状态
      * @date 2020-8-17 19:46:55
      */
     public JudgeHostConditionBO getJudgeHostCondition() {
@@ -58,12 +62,14 @@ public class CommonService {
         Integer queueAmount = judgeExecutorConfiguration.judgeHostServiceExecutor().getQueue().size();
         Integer cpu = getCpuCostPercentage();
         Integer memory = getMemoryCostPercentage();
-        return new JudgeHostConditionBO(workingAmount, cpuCoreAmount, memory, cpu, queueAmount);
+        Integer maxWorkingAmount = judgeExecutorConfiguration.judgeHostServiceExecutor().getMaximumPoolSize();
+        return new JudgeHostConditionBO(workingAmount, cpuCoreAmount, memory, cpu, queueAmount, maxWorkingAmount);
     }
 
     /**
+     * 获取cpu占用率
+     *
      * @author yuzhanglong
-     * @description 获取cpu占用率
      * @date 2020-8-17 20:05:18
      */
     private Integer getCpuCostPercentage() {
@@ -73,8 +79,9 @@ public class CommonService {
     }
 
     /**
+     * 获取系统内存占用率
+     *
      * @author yuzhanglong
-     * @description 获取系统内存占用率
      * @date 2020-8-17 20:05:18
      */
     private Integer getMemoryCostPercentage() {
@@ -83,5 +90,25 @@ public class CommonService {
         double freePhysicalMemorySize = system.getFreePhysicalMemorySize();
         double value = freePhysicalMemorySize / totalVirtualMemory;
         return (int) ((1 - value) * 100);
+    }
+
+    /**
+     * 设置判题节点数量
+     *
+     * @author yuzhanglong
+     * @date 2020-8-29 17:14:25
+     */
+    public void setJudgeHostWorkingAmount(Integer corePoolSize, Boolean isForceSet) {
+        //TODO: 这里需要对设置的值作出范围类的限制，防止运行节点过多导致崩溃
+        if (isForceSet == null) {
+            isForceSet = false;
+        }
+        boolean isHavingWorkingNode = judgeExecutorConfiguration.judgeHostServiceExecutor().getActiveCount() != 0;
+        if (!isForceSet && isHavingWorkingNode) {
+            // 如果不是强制修改，且有任务进行中，则拒绝修改
+            throw new ForbiddenException("B1006");
+        }
+        judgeExecutorConfiguration.judgeHostServiceExecutor().setCorePoolSize(corePoolSize);
+        judgeExecutorConfiguration.judgeHostServiceExecutor().setMaximumPoolSize(corePoolSize);
     }
 }
