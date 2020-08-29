@@ -17,7 +17,7 @@ import java.util.Map;
  */
 
 @Component
-@ConfigurationProperties(prefix = "judgehost-exceptions")
+@ConfigurationProperties(prefix = "judge-host-exceptions")
 @PropertySource(value = "classpath:config/exception-codes.yml", factory = YamlPropertySourceFactory.class)
 
 public class ExceptionCodeConfiguration {

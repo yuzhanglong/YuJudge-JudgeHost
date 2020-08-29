@@ -9,15 +9,23 @@ import java.util.concurrent.*;
 
 /**
  * 判题线程池
+ *
  * <p>
- * 判题虽然有一定的io操作，
- * 但是主要还是cpu密集型的操作，
- * 经并发检测执行时cpu的占用几乎都在百分之百
- * 其中：
- * KEEP_ALIVE_TIME 当线程数大于核心时，这是多余的空闲线程在终止之前等待新任务的最长时间。
- * CORE_POOL_SIZE 保留在池中的线程数，即使处于空闲状态
- * BLOCKING_QUEUE_CAPACITY 允许排队的用户（请求）数量
- * 这些值应该根据用户容忍的等待时间以及测试时单机任务执行平均时长来获取自定义的判题线程池的相关配置
+ * 判题主要是cpu密集型的操作
+ * <p>
+ * 单核CPU上运行的多线程程序, 同一时间只能一个线程在跑
+ * 系统帮你切换线程而已, 系统给每个线程分配时间片来执行
+ * 每个时间片大概10ms左右, 看起来像是同时跑,
+ * 但实际上是每个线程跑一点点就换到其它线程继续跑，
+ * 多核并行量超过核心数目也有类似的道理
+ * <p>
+ * 所以, MAXIMUM_POOL_SIZE 的值改变影响不大，
+ * 但是，由于我们要计算判题时间，所以必须等于cpu核心数目
+ * 否则这个值会出错（例如单核双并行，值就相差了两倍）
+ * <p>
+ * KEEP_ALIVE_TIME           当线程数大于核心时，这是多余的空闲线程在终止之前等待新任务的最长时间。
+ * BLOCKING_QUEUE_CAPACITY   允许排队的用户（请求）数量
+ * 这两个值根据用户容忍的等待时间以及测试时单机任务执行平均时长来获取自定义的判题线程池的相关配置
  *
  * @author yuzhanglong
  * @date 2020-7-8 21:58
@@ -27,16 +35,15 @@ import java.util.concurrent.*;
 @EnableAsync
 public class JudgeExecutorConfiguration {
     public static final long KEEP_ALIVE_TIME = 5L;
-    public static final int BLOCKING_QUEUE_CAPACITY = 4;
     public static final String THREAD_NAME_PREFIX = "judge";
-    public static final int MAXIMUM_POOL_SIZE = Runtime.getRuntime().availableProcessors() + 1;
+    public static final int CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors();
+    public static final int MAXIMUM_POOL_SIZE = Runtime.getRuntime().availableProcessors();
+    public static final int BLOCKING_QUEUE_CAPACITY = 20;
 
     @Bean
     public ThreadPoolExecutor judgeHostServiceExecutor() {
-        // cpu密集型 池中允许的最大线程数
-        // 在判题这样的CPU密集型任务中，我们应该将其设置为 cpu核心数 + 1
         return new ThreadPoolExecutor(
-                MAXIMUM_POOL_SIZE,
+                CORE_POOL_SIZE,
                 MAXIMUM_POOL_SIZE,
                 KEEP_ALIVE_TIME,
                 TimeUnit.SECONDS,

@@ -1,4 +1,4 @@
-judgehost-exceptions:
+judge-host-exceptions:
   codes:
     00000: 一切正常
     A0001: 用户错误
