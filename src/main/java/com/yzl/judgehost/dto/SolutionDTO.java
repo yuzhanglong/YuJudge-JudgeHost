@@ -3,8 +3,7 @@ package com.yzl.judgehost.dto;
 import javax.validation.constraints.NotNull;
 
 /**
- * @author yuzhanglong
- * @description 解决方案数据传输对象
+ * 解决方案数据传输对象
  * 用户需要传入一个或多个解决方案，每一个解决方案包括：
  * 1. 输入文件 stdin --- stdIn
  * 2. 输出文件 stdout --- expectedStdOut
@@ -13,6 +12,8 @@ import javax.validation.constraints.NotNull;
  * "stdIn": "your_download_path",
  * "expectedStdOut":"your_download_path"
  * }
+ *
+ * @author yuzhanglong
  * @date 2020-6-29 18:16:19
  */
 

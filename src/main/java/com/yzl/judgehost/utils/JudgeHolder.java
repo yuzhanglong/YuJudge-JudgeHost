@@ -13,7 +13,11 @@ import com.yzl.judgehost.dto.JudgeDTO;
 public class JudgeHolder {
     public static final String COMPILE_SCRIPT_NAME = "compile.sh";
     public static final String JUDGE_CORE_SCRIPT_NAME = "y_judge";
+    public static final String COMPARE_SCRIPT_NAME = "compare.sh";
     public static final String CODE_FILE_NAME = "Main";
+    public static final String COMPILE_STD_OUT_NAME = "compile.out";
+    public static final String COMPILE_STD_ERR_NAME = "compile.err";
+    public static final String RUNNER_SCRIPT_NAME = "run";
 
     private static final ThreadLocal<JudgeConfigurationBO> JUDGE_HOLDER_THREAD_LOCAL = new ThreadLocal<>();
 
@@ -37,6 +41,13 @@ public class JudgeHolder {
         return getJudgeConfiguration().getScriptPath() + "/" + JUDGE_CORE_SCRIPT_NAME;
     }
 
+    public static String getCompareScriptPath() {
+        return getJudgeConfiguration().getScriptPath() + "/" + COMPARE_SCRIPT_NAME;
+    }
+
+    public static String getRunnerScriptPath() {
+        return getSubmissionWorkingPath() + "/" + RUNNER_SCRIPT_NAME;
+    }
 
     public static JudgeDTO getJudgeConfig() {
         return getJudgeConfiguration().getJudgeConfig();
@@ -58,4 +69,7 @@ public class JudgeHolder {
         return getJudgeConfiguration().getWorkPath() + "/" + getSubmissionId();
     }
 
+    public static String getResolutionPath() {
+        return getJudgeConfiguration().getResolutionPath();
+    }
 }

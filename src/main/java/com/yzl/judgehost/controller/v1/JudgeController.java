@@ -5,14 +5,12 @@ import com.yzl.judgehost.dto.JudgeDTO;
 import com.yzl.judgehost.dto.SingleJudgeResultDTO;
 import com.yzl.judgehost.exception.http.ForbiddenException;
 import com.yzl.judgehost.service.JudgeService;
-import com.yzl.judgehost.utils.JudgeHolder;
 import com.yzl.judgehost.vo.JudgeConditionVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -44,13 +42,15 @@ public class JudgeController {
      */
     @PostMapping("/run")
     @AuthorizationRequired
-    public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) {
+    public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) throws ExecutionException, InterruptedException {
         CompletableFuture<List<SingleJudgeResultDTO>> judgeResults;
         try {
             judgeResults = judgeService.runJudge(judgeDTO);
         } catch (RejectedExecutionException e) {
             throw new ForbiddenException("B1005");
         }
-        return "success!";
+        List<SingleJudgeResultDTO> res = judgeResults.get();
+        List<String> extraResult = new ArrayList<>();
+        return new JudgeConditionVO(res, extraResult, null);
     }
 }

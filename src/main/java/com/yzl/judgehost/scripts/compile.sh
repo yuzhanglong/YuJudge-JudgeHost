@@ -39,4 +39,4 @@ touch run;
 
 chmod 777 ./run;
 
-$JUDGE_CORE_PATH -t 4000 -c 4000 -m 640000 -f 100000 -r "$BUILDING_SCRIPT_PATH"
+$JUDGE_CORE_PATH -t 4000 -c 4000 -m 640000 -f 100000 -r "$BUILDING_SCRIPT_PATH" -o compile.out -e compile.err

@@ -4,33 +4,31 @@ import com.yzl.judgehost.core.enumeration.JudgeResultEnum;
 
 
 /**
+ * 单次判题的数据传输对象
+ *
  * @author yuzhanglong
  * @date 2020-6-30 10:18:40
- * @description 单次判题的数据传输对象
  */
 public class SingleJudgeResultDTO {
     private String realTimeCost;
     private String memoryCost;
     private String cpuTimeCost;
     private Integer condition;
-    private String stdinPath;
-    private String stdoutPath;
-    private String stderrPath;
+    private String stdInPath;
+    private String stdOutPath;
+    private String stdErrPath;
     private String message;
 
     /**
+     * 设置message，根据condition的数值，
+     * 利用枚举类型转换成message以备返回给前端
+     *
      * @author yuzhanglong
      * @date 2020-6-29 22:54:47
-     * @description 设置message，根据condition的数值，
-     * 利用枚举类型转换成message以备返回给前端
      */
     public void setMessageWithCondition() {
         JudgeResultEnum type = JudgeResultEnum.toJudgeResultType(this.condition);
         this.message = type.getMessage();
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public String getRealTimeCost() {
@@ -61,41 +59,40 @@ public class SingleJudgeResultDTO {
         return condition;
     }
 
-    public String getStdinPath() {
-        return stdinPath;
+    public void setCondition(Integer condition) {
+        this.condition = condition;
     }
 
-    public void setStdinPath(String stdinPath) {
-        this.stdinPath = stdinPath;
+    public String getStdInPath() {
+        return stdInPath;
     }
 
-    public void setStdoutPath(String stdoutPath) {
-        this.stdoutPath = stdoutPath;
+    public void setStdInPath(String stdInPath) {
+        this.stdInPath = stdInPath;
     }
 
-    public String getStderrPath() {
-        return stderrPath;
+    public String getStdOutPath() {
+        return stdOutPath;
     }
 
-    public void setStderrPath(String stderrPath) {
-        this.stderrPath = stderrPath;
+    public void setStdOutPath(String stdOutPath) {
+        this.stdOutPath = stdOutPath;
+    }
+
+    public String getStdErrPath() {
+        return stdErrPath;
+    }
+
+    public void setStdErrPath(String stdErrPath) {
+        this.stdErrPath = stdErrPath;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessageWithCondition(String message) {
+    public void setMessage(String message) {
         this.message = message;
-    }
-
-
-    public void setCondition(Integer condition) {
-        this.condition = condition;
-    }
-
-    public String getStdoutPath() {
-        return stdoutPath;
     }
 
     @Override
@@ -105,9 +102,9 @@ public class SingleJudgeResultDTO {
                 ", memoryCost='" + memoryCost + '\'' +
                 ", cpuTimeCost='" + cpuTimeCost + '\'' +
                 ", condition=" + condition +
-                ", stdinPath='" + stdinPath + '\'' +
-                ", stdoutPath='" + stdoutPath + '\'' +
-                ", stderrPath='" + stderrPath + '\'' +
+                ", stdInPath='" + stdInPath + '\'' +
+                ", stdOutPath='" + stdOutPath + '\'' +
+                ", stdErrPath='" + stdErrPath + '\'' +
                 ", message='" + message + '\'' +
                 '}';
     }
