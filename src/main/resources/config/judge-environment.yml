@@ -1,4 +1,4 @@
 judge-environment:
-  work-path: /home/judgeEnvironment
+  submission-path: /home/judgeEnvironment/submissions
   script-path: /home/judgeEnvironment/scripts
   resolution-path: /home/judgeEnvironment/resolutions

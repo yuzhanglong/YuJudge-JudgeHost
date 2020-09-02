@@ -20,13 +20,9 @@ import org.springframework.stereotype.Component;
 @Configuration
 @PropertySource(value = "classpath:config/judge-environment.yml", factory = YamlPropertySourceFactory.class)
 public class JudgeEnvironmentConfiguration {
-    private String workPath;
+    private String submissionPath;
     private String scriptPath;
     private String resolutionPath;
-
-    public String getResolutionPath() {
-        return resolutionPath;
-    }
 
     /**
      * 判断相关文件依赖是否存在
@@ -36,10 +32,11 @@ public class JudgeEnvironmentConfiguration {
      * @date 2020-6-30 11:24:04
      */
     public void checkJudgeEnvironmentBaseFileIn() {
+        // TODO:将它们移到springboot启动类中
         if (!FileUtil.isDirectory(resolutionPath)) {
             throw new NotFoundException("B1002");
         }
-        if (!FileUtil.isDirectory(workPath)) {
+        if (!FileUtil.isDirectory(submissionPath)) {
             throw new NotFoundException("B1002");
         }
         if (!FileUtil.isDirectory(scriptPath)) {
@@ -47,33 +44,36 @@ public class JudgeEnvironmentConfiguration {
         }
     }
 
-
-    public void setResolutionPath(String resolutionPath) {
-        this.resolutionPath = resolutionPath;
+    public String getSubmissionPath() {
+        return submissionPath;
     }
 
-
-    public void setScriptPath(String scriptPath) {
-        this.scriptPath = scriptPath;
-    }
-
-
-    public void setWorkPath(String workPath) {
-        this.workPath = workPath;
+    public void setSubmissionPath(String submissionPath) {
+        this.submissionPath = submissionPath;
     }
 
     public String getScriptPath() {
         return scriptPath;
     }
 
-    public String getWorkPath() {
-        return workPath;
+    public void setScriptPath(String scriptPath) {
+        this.scriptPath = scriptPath;
+    }
+
+    public String getResolutionPath() {
+        return resolutionPath;
+    }
+
+    public void setResolutionPath(String resolutionPath) {
+        this.resolutionPath = resolutionPath;
     }
 
     @Override
     public String toString() {
         return "JudgeEnvironmentConfiguration{" +
-                "path='" + workPath + '\'' +
+                "submissionPath='" + submissionPath + '\'' +
+                ", scriptPath='" + scriptPath + '\'' +
+                ", resolutionPath='" + resolutionPath + '\'' +
                 '}';
     }
 }

@@ -10,8 +10,9 @@ import java.io.*;
 import java.util.UUID;
 
 /**
+ * 文件处理相关业务
+ *
  * @author yuzhanglong
- * @description 文件处理相关业务
  * @date 2020-7-1 12:33
  */
 @Service
@@ -23,9 +24,10 @@ public class FileService {
     }
 
     /**
+     * 读取某次提交的文件夹，将内容压缩过之后返回
+     *
      * @param submissionId 某次提交的id
      * @author yuzhanglong
-     * @description 读取某次提交的文件夹，将内容压缩过之后返回
      * @date 2020-7-1 17:32
      */
     public String getSubmissionDataById(String submissionId) {
@@ -35,19 +37,21 @@ public class FileService {
     }
 
     /**
+     * 获取某次提交的工作目录
+     *
      * @param submissionId 某次提交的id
      * @author yuzhanglong
-     * @description 获取某次提交的工作目录
      * @date 2020-7-1 17:32
      */
     private String getSubmissionPathById(String submissionId) {
-        return this.judgeEnvironmentConfiguration.getWorkPath() + "/submissions/" + submissionId;
+        return this.judgeEnvironmentConfiguration.getSubmissionPath() + "/" + submissionId;
     }
 
     /**
+     * 返回压缩后的压缩包目录
+     *
      * @param submissionPath 提交路径
      * @author yuzhanglong
-     * @description 返回压缩后的压缩包目录
      * @date 2020-7-1 18:11
      */
     private String zipSubmissionFolder(String submissionPath) {
@@ -68,12 +72,13 @@ public class FileService {
     }
 
     /**
+     * 文件转化输出流
+     *
      * @param filePath 文件路径
      * @author yuzhanglong
-     * @description 文件转化输出流
      * @date 2020-8-17 20:51:33
      */
-    public void writeOutputStream(String filePath, HttpServletResponse response){
+    public void writeOutputStream(String filePath, HttpServletResponse response) {
         File file = new File(filePath);
         byte[] buffer = new byte[1024];
         try {

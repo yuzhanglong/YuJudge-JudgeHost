@@ -5,6 +5,7 @@ import com.yzl.judgehost.dto.JudgeDTO;
 import com.yzl.judgehost.dto.SingleJudgeResultDTO;
 import com.yzl.judgehost.exception.http.ForbiddenException;
 import com.yzl.judgehost.service.JudgeService;
+import com.yzl.judgehost.utils.JudgeHolder;
 import com.yzl.judgehost.vo.JudgeConditionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -26,7 +27,6 @@ import java.util.concurrent.RejectedExecutionException;
 @RestController
 @RequestMapping("/judge")
 
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JudgeController {
     private final JudgeService judgeService;
 
@@ -44,30 +44,13 @@ public class JudgeController {
      */
     @PostMapping("/run")
     @AuthorizationRequired
-    public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) throws ExecutionException, InterruptedException {
+    public Object runJudge(@RequestBody @Validated JudgeDTO judgeDTO) {
         CompletableFuture<List<SingleJudgeResultDTO>> judgeResults;
         try {
             judgeResults = judgeService.runJudge(judgeDTO);
         } catch (RejectedExecutionException e) {
             throw new ForbiddenException("B1005");
         }
-        List<SingleJudgeResultDTO> res = judgeResults.get();
-        List<String> extraResult = judgeService.getExtraInfo();
-        return new JudgeConditionVO(res, extraResult, judgeService.getSubmissionId());
-    }
-
-    /**
-     * 执行判题(测试模式)
-     *
-     * @param judgeDTO 判题相关数据传输对象
-     * @author yuzhanglong
-     * @date 2020-7-6 23:57
-     */
-    @PostMapping("/run_for_test")
-    @AuthorizationRequired
-    public Object runJudgeWithoutThreadPoolForTest(@RequestBody @Validated JudgeDTO judgeDTO) {
-        List<SingleJudgeResultDTO> judgeResults = judgeService.judgeWithoutThreadPoolForTest(judgeDTO);
-        List<String> extraResult = judgeService.getExtraInfo();
-        return new JudgeConditionVO(judgeResults, extraResult, judgeService.getSubmissionId());
+        return "success!";
     }
 }
