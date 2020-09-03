@@ -72,6 +72,7 @@ public class JudgeService {
 
         // 对应语言的编译脚本
         String buildScript = language.getBuildScriptByRunningPath(submissionWorkingPath, codePath);
+
         // 执行编译脚本
         try {
             Process process = JudgeHolder.getRunner().exec(
@@ -81,7 +82,8 @@ public class JudgeService {
                             codePath,
                             judgeDTO.getSubmissionCode(),
                             buildScript,
-                            judgeCoreScript
+                            judgeCoreScript,
+                            language == LanguageScriptEnum.JAVA ? "0" : "2000"
                     });
             process.waitFor();
         } catch (IOException | InterruptedException ioException) {
@@ -305,9 +307,6 @@ public class JudgeService {
                 "-i", stdInPath,
                 "-g", String.valueOf(USE_JUDGE_CORE_GUARD)
         };
-        for (String s : command) {
-            System.out.println(s + " ");
-        }
         List<String> result = new ArrayList<>();
         try {
             Process process = JudgeHolder.getRunner().exec(command);
