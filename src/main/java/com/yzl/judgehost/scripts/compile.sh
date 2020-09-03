@@ -12,6 +12,7 @@ CODE="$3";
 BUILDING_SCRIPT="$4";
 JUDGE_CORE_PATH="$5";
 USER_ID="$6";
+COMPILE_INFO_OUT_MAX_SIZE="$7"
 
 # 创建提交工作目录
 mkdir "$SUBMISSION_PATH";
@@ -41,4 +42,4 @@ touch run;
 chmod 777 ./run;
 
 
-$JUDGE_CORE_PATH -t 4000 -c 4000 -m 100000 -f 100000 -u "$USER_ID" -r "$BUILDING_SCRIPT_PATH" -o compile.out -e compile.err
+$JUDGE_CORE_PATH -t 4000 -c 4000 -m 100000 -f "$COMPILE_INFO_OUT_MAX_SIZE" -u "$USER_ID" -r "$BUILDING_SCRIPT_PATH" -o compile.out -e compile.err

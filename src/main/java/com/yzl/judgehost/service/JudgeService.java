@@ -38,7 +38,11 @@ public class JudgeService {
     private final JudgeEnvironmentConfiguration judgeEnvironmentConfiguration;
     public static final String SOLUTION_STD_IN_PATH_KEY = "stdIn";
     public static final String SOLUTION_EXPECTED_STD_OUT_PATH_KEY = "expectedStdOut";
-    public static final int USE_JUDGE_CORE_GUARD = 1;
+    public static final int ENABLE_JUDGE_CORE_GUARD = 1;
+    public static final int DISABLE_JUDGE_CORE_GUARD = 0;
+    public static final int USE_ROOT_UID = 0;
+    public static final int USE_DEFAULT_UID = 6666;
+    public static final int COMPILE_OUT_MAX_SIZE = 2000;
 
     public JudgeService(JudgeEnvironmentConfiguration judgeEnvironmentConfiguration) {
         this.judgeEnvironmentConfiguration = judgeEnvironmentConfiguration;
@@ -84,7 +88,8 @@ public class JudgeService {
                             judgeDTO.getSubmissionCode(),
                             buildScript,
                             judgeCoreScript,
-                            language == LanguageScriptEnum.JAVA ? "0" : "2000"
+                            String.valueOf(language == LanguageScriptEnum.JAVA ? USE_ROOT_UID : USE_DEFAULT_UID),
+                            String.valueOf(COMPILE_OUT_MAX_SIZE)
                     });
             process.waitFor();
         } catch (IOException | InterruptedException ioException) {
@@ -297,6 +302,9 @@ public class JudgeService {
         String judgeCoreScript = JudgeHolder.getJudgeCoreScriptPath();
         JudgeDTO config = JudgeHolder.getJudgeConfig();
         String workingPath = JudgeHolder.getSubmissionWorkingPath();
+        LanguageScriptEnum language = LanguageScriptEnum.toLanguageType(JudgeHolder.getJudgeConfig().getLanguage());
+        // c语言家族（c && cpp）
+        boolean isCppFamily = (language == LanguageScriptEnum.C || language == LanguageScriptEnum.C_PLUS_PLUS);
         String[] command = {
                 judgeCoreScript,
                 "-r", JudgeHolder.getRunnerScriptPath(),
@@ -307,7 +315,7 @@ public class JudgeService {
                 "-f", String.valueOf(config.getOutputLimit()),
                 "-e", workingPath + "/" + name + ".err",
                 "-i", stdInPath,
-                "-g", String.valueOf(USE_JUDGE_CORE_GUARD)
+                "-g", String.valueOf(isCppFamily ? ENABLE_JUDGE_CORE_GUARD : DISABLE_JUDGE_CORE_GUARD)
         };
         List<String> result = new ArrayList<>();
         try {
