@@ -300,6 +300,21 @@
 
 - DELETE 
 
+**下载文件描述**：
+
+```
+result               // 压缩包名称，为submissionId
+├─ build.sh          // 编译脚本
+├─ compile.err       // 编译错误输出
+├─ compile.out       // 编译输出
+├─ Main.c            // 代码文件
+├─ run               // 运行脚本
+├─ running_0.err     // 运行错误输出（表示第0个测试点）
+├─ running_0.out     // 运行输出（表示第0个测试点）
+├─ running_1.err     // 运行错误输出（表示第1个测试点）
+└─ running_1.out     //运行输出（表示第1个测试点）
+```
+
 
 
 ### 获取判题服务器接口调用凭据
