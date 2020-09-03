@@ -1,5 +1,6 @@
-package com.yzl.judgehost.core.authorization;
+package com.yzl.judgehost.core.interceptor;
 
+import com.yzl.judgehost.core.authorization.AuthorizationRequired;
 import com.yzl.judgehost.core.configuration.AuthorizationConfiguration;
 import com.yzl.judgehost.exception.http.ForbiddenException;
 import com.yzl.judgehost.utils.JudgeHolder;
@@ -9,20 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 /**
- * 权限验证器类
+ * 请求拦截器
  *
  * @author yuzhanglong
  * @date 2020-7-2 8:34
  */
 @EnableConfigurationProperties({AuthorizationConfiguration.class})
-public class AuthorizationInterceptor implements HandlerInterceptor {
+public class RequestInterceptor implements HandlerInterceptor {
     @Autowired
     private AuthorizationConfiguration authorizationConfiguration;
 
@@ -54,7 +54,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         JudgeHolder.removeThreadLocal();
     }
 }

@@ -57,7 +57,7 @@ public class CommonService {
      * @date 2020-8-17 19:46:55
      */
     public JudgeHostConditionBO getJudgeHostCondition() {
-        Integer cpuCoreAmount = JudgeExecutorConfiguration.MAXIMUM_POOL_SIZE - 1;
+        Integer cpuCoreAmount = Runtime.getRuntime().availableProcessors();
         Integer workingAmount = judgeExecutorConfiguration.judgeHostServiceExecutor().getActiveCount();
         Integer queueAmount = judgeExecutorConfiguration.judgeHostServiceExecutor().getQueue().size();
         Integer cpu = getCpuCostPercentage();

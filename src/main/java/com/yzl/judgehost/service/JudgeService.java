@@ -13,6 +13,7 @@ import com.yzl.judgehost.dto.SingleJudgeResultDTO;
 import com.yzl.judgehost.utils.DataTransform;
 import com.yzl.judgehost.utils.FileUtil;
 import com.yzl.judgehost.utils.JudgeHolder;
+import com.yzl.judgehost.vo.JudgeConditionVO;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
@@ -102,7 +103,8 @@ public class JudgeService {
      * @date 2020-6-27 12:21:43
      */
     @Async(value = "judgeHostServiceExecutor")
-    public CompletableFuture<List<SingleJudgeResultDTO>> runJudge(JudgeDTO judgeDTO) {
+    public CompletableFuture<JudgeConditionVO> runJudge(JudgeDTO judgeDTO) {
+
         JudgeConfigurationBO judgeConfigurationBO = new JudgeConfigurationBO(
                 judgeDTO,
                 judgeEnvironmentConfiguration.getSubmissionPath(),
@@ -113,9 +115,9 @@ public class JudgeService {
 
         // 编译用户的提交
         List<String> compileResult = compileSubmission();
+        JudgeHolder.setExtraInfo(compileResult);
         List<SingleJudgeResultDTO> result = new ArrayList<>();
         // 编译阶段成功，开始运行用户代码
-
         if (isCompileSuccess(compileResult)) {
             List<SolutionDTO> totalResolution = judgeDTO.getSolutions();
             int solutionIndex = 0;
@@ -136,7 +138,7 @@ public class JudgeService {
             resolution.setMessageWithCondition();
             result.add(resolution);
         }
-        return CompletableFuture.completedFuture(result);
+        return CompletableFuture.completedFuture(new JudgeConditionVO(result, JudgeHolder.getExtraInfo(), JudgeHolder.getSubmissionId()));
     }
 
     /**
@@ -210,7 +212,7 @@ public class JudgeService {
                 singleJudgeResult.setCondition(JudgeResultEnum.ACCEPTED.getNumber());
             }
         } else {
-//            this.extraInfo = judgeCoreStderr;
+            JudgeHolder.setExtraInfo(judgeCoreStdErr);
             singleJudgeResult.setCondition(JudgeResultEnum.RUNTIME_ERROR.getNumber());
         }
         singleJudgeResult.setMessageWithCondition();

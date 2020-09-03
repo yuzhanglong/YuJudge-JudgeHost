@@ -3,6 +3,8 @@ package com.yzl.judgehost.utils;
 import com.yzl.judgehost.bo.JudgeConfigurationBO;
 import com.yzl.judgehost.dto.JudgeDTO;
 
+import java.util.List;
+
 
 /**
  * 判题全局变量（线程隔离）
@@ -71,5 +73,14 @@ public class JudgeHolder {
 
     public static String getResolutionPath() {
         return getJudgeConfiguration().getResolutionPath();
+    }
+
+    public static List<String> getExtraInfo() {
+        return getJudgeConfiguration().getExtraInfo();
+    }
+
+    public static void setExtraInfo(List<String> extraInfo) {
+        JudgeConfigurationBO configurationBO = getJudgeConfiguration();
+        configurationBO.setExtraInfo(extraInfo);
     }
 }
