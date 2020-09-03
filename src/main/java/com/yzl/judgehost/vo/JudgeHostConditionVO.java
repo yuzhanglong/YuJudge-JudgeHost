@@ -18,6 +18,15 @@ public class JudgeHostConditionVO {
     private Integer cpuCostPercentage;
     private Integer queueAmount;
     private Integer maxWorkingAmount;
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public Integer getQueueAmount() {
         return queueAmount;

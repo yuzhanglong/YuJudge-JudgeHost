@@ -12,3 +12,6 @@ judge-authorization:
   user-secret: yzl
   expired-in: 14400
   secret-key: secret
+
+application:
+  version: V1.0.0

@@ -11,6 +11,15 @@ public class JudgeHostConfigurationBO {
     private String scriptPath;
     private String resolutionPath;
     private Integer port;
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public String getWorkPath() {
         return workPath;

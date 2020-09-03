@@ -37,7 +37,7 @@ public class JudgeController {
      * @author yuzhanglong
      * @date 2020-7-1 21:00
      */
-    @PostMapping("/run")
+    @PostMapping("/result")
     @AuthorizationRequired
     public JudgeConditionVO runJudge(@RequestBody @Validated JudgeDTO judgeDTO) throws ExecutionException, InterruptedException {
         CompletableFuture<JudgeConditionVO> judgeResults;

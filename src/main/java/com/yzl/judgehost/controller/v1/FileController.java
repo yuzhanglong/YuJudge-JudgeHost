@@ -30,7 +30,7 @@ public class FileController {
      * @author yuzhanglong
      * @date 2020-8-17 20:48:17
      */
-    @GetMapping("/download_submission/{submissionId}")
+    @GetMapping("/submission/{submissionId}")
     public void downloadSubmissionById(@PathVariable String submissionId, HttpServletResponse response) {
         String zippedPath = fileService.getSubmissionDataById(submissionId);
         response.setContentType("application/octet-stream");
@@ -46,7 +46,7 @@ public class FileController {
      * @author yuzhanglong
      * @date 2020-09-03 18:12:32
      */
-    @DeleteMapping("/clear_submission_path")
+    @DeleteMapping("/submission_path")
     private UnifiedResponse clearSubmissionFiles() {
         fileService.clearSubmissionPath();
         return new UnifiedResponse("删除成功");
@@ -59,7 +59,7 @@ public class FileController {
      * @author yuzhanglong
      * @date 2020-09-03 18:12:32
      */
-    @DeleteMapping("/clear_solution_path")
+    @DeleteMapping("/solution_path")
     private UnifiedResponse clearSolutionPath() {
         fileService.clearSolutionPath();
         return new UnifiedResponse("删除成功");

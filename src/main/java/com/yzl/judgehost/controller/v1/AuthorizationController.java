@@ -33,7 +33,7 @@ public class AuthorizationController {
      * @author yuzhanglong
      * @date 2020-7-1 11:24
      */
-    @PostMapping("/get_access_token")
+    @PostMapping("/access_token")
     public AuthorizationVO getAccessToken(@RequestBody @Validated AuthorizationDTO authorizationDTO) {
         String accessToken = authorizationService.getAccessToken(authorizationDTO);
         return new AuthorizationVO(accessToken, authorizationService.getExpiredTime());
@@ -45,7 +45,7 @@ public class AuthorizationController {
      * @author yuzhanglong
      * @date 2020-7-1 11:24
      */
-    @PostMapping("/check")
+    @PostMapping("/examination")
     public UnifiedResponse checkAuthToken(@RequestBody AccessTokenDTO accessTokenDTO) {
         Boolean isPass = authorizationService.checkAccessToken(accessTokenDTO);
         if (!isPass) {

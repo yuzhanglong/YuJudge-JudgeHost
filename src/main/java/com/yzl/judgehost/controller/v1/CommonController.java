@@ -36,12 +36,13 @@ public class CommonController {
      * @author yuzhanglong
      * @date 2020-8-17 19:40:42
      */
-    @GetMapping("/test_connection")
+    @GetMapping("/connection_test")
     private UnifiedResponse testConnection() {
         JudgeHostConfigurationBO judgeHostInfo = commonService.getJudgeHostConfiguration();
         JudgeHostConditionBO conditionBO = commonService.getJudgeHostCondition();
         JudgeHostConditionVO conditionVO = mapper.map(conditionBO, JudgeHostConditionVO.class);
         conditionVO.setPort(judgeHostInfo.getPort());
+        conditionVO.setVersion(judgeHostInfo.getVersion());
         conditionVO.setScriptPath(judgeHostInfo.getScriptPath());
         conditionVO.setResolutionPath(judgeHostInfo.getResolutionPath());
         conditionVO.setWorkPath(judgeHostInfo.getWorkPath());
@@ -54,8 +55,9 @@ public class CommonController {
      *
      * @author yuzhanglong
      * @date 2020-8-29 17:14:14
+     * @deprecated 将被废弃
      */
-    @PutMapping("/set_max_working_amount")
+    @PutMapping("/max_working_amount")
     private UnifiedResponse setMaxWorkingAmount(@Validated @RequestBody SetWorkingAmountDTO workingAmountDTO) {
         commonService.setJudgeHostWorkingAmount(
                 workingAmountDTO.getMaxWorkingAmount(),

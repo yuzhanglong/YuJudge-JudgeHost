@@ -30,6 +30,9 @@ public class CommonService {
     @Value("${server.port}")
     private Integer port;
 
+    @Value("${application.version}")
+    private String version;
+
 
     public CommonService(
             JudgeEnvironmentConfiguration judgeEnvironmentConfiguration,
@@ -49,6 +52,7 @@ public class CommonService {
     public JudgeHostConfigurationBO getJudgeHostConfiguration() {
         JudgeHostConfigurationBO configuration = mapper.map(judgeEnvironmentConfiguration, JudgeHostConfigurationBO.class);
         configuration.setPort(port);
+        configuration.setVersion(version);
         return configuration;
     }
 
