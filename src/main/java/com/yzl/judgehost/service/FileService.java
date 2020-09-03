@@ -94,4 +94,31 @@ public class FileService {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 清空提交目录
+     *
+     * @author yuzhanglong
+     * @date 2020-09-03 18:18:35
+     */
+    public void clearSubmissionPath() {
+        String submissionPath = judgeEnvironmentConfiguration.getSubmissionPath();
+        if (!FileUtil.clearFileByFolderName(submissionPath)) {
+            throw new NotFoundException("B1007");
+        }
+    }
+
+    /**
+     * 清空期望输入、输出目录
+     *
+     * @author yuzhanglong
+     * @date 2020-09-03 18:19:59
+     */
+    public void clearSolutionPath() {
+        String submissionPath = judgeEnvironmentConfiguration.getResolutionPath();
+        FileUtil.clearFileByFolderName(submissionPath);
+        if (!FileUtil.clearFileByFolderName(submissionPath)) {
+            throw new NotFoundException("B1007");
+        }
+    }
 }

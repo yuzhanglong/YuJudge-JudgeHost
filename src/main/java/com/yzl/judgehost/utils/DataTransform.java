@@ -12,7 +12,6 @@ public class DataTransform {
     public static String stringListToString(List<String> stringList) {
         StringBuilder result = new StringBuilder();
         stringList.forEach(result::append);
-        System.out.println("=" + result);
         return result.toString();
     }
 }

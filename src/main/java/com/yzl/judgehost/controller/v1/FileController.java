@@ -1,10 +1,8 @@
 package com.yzl.judgehost.controller.v1;
 
+import com.yzl.judgehost.core.common.UnifiedResponse;
 import com.yzl.judgehost.service.FileService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,5 +37,31 @@ public class FileController {
         response.setHeader("content-type", "application/octet-stream");
         response.setHeader("Content-Disposition", "attachment;fileName=" + submissionId + ".zip");
         fileService.writeOutputStream(zippedPath, response);
+    }
+
+    /**
+     * 删除所有用户提交的代码文件
+     * 即 submission-path: 默认为/home/judgeEnvironment/submissions
+     *
+     * @author yuzhanglong
+     * @date 2020-09-03 18:12:32
+     */
+    @DeleteMapping("/clear_submission_path")
+    private UnifiedResponse clearSubmissionFiles() {
+        fileService.clearSubmissionPath();
+        return new UnifiedResponse("删除成功");
+    }
+
+    /**
+     * 删除所有用户提交的代码文件
+     * 即 submission-path: 默认为/home/judgeEnvironment/submissions
+     *
+     * @author yuzhanglong
+     * @date 2020-09-03 18:12:32
+     */
+    @DeleteMapping("/clear_solution_path")
+    private UnifiedResponse clearSolutionPath() {
+        fileService.clearSolutionPath();
+        return new UnifiedResponse("删除成功");
     }
 }

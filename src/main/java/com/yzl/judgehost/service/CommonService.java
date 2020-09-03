@@ -7,9 +7,11 @@ import com.yzl.judgehost.bo.JudgeHostConfigurationBO;
 import com.yzl.judgehost.core.configuration.JudgeEnvironmentConfiguration;
 import com.yzl.judgehost.core.configuration.JudgeExecutorConfiguration;
 import com.yzl.judgehost.exception.http.ForbiddenException;
+import com.yzl.judgehost.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 /**
