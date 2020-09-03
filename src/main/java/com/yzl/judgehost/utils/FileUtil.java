@@ -120,9 +120,6 @@ public class FileUtil {
         //遍历该目录下的文件对象
         if (files != null) {
             for (File f : files) {
-                //打印文件名
-                String name = file.getName();
-                System.out.println(name);
                 //判断子目录是否存在子目录,如果是文件则删除
                 if (f.isDirectory()) {
                     deleteFile(f, true);

@@ -10,6 +10,7 @@ import com.yzl.judgehost.dto.SolutionDTO;
 import com.yzl.judgehost.exception.http.NotFoundException;
 import com.yzl.judgehost.network.HttpRequest;
 import com.yzl.judgehost.dto.SingleJudgeResultDTO;
+import com.yzl.judgehost.store.redis.JudgeCache;
 import com.yzl.judgehost.utils.DataTransform;
 import com.yzl.judgehost.utils.FileUtil;
 import com.yzl.judgehost.utils.JudgeHolder;
@@ -36,16 +37,19 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class JudgeService {
     private final JudgeEnvironmentConfiguration judgeEnvironmentConfiguration;
+    private final JudgeCache judgeCache;
     public static final String SOLUTION_STD_IN_PATH_KEY = "stdIn";
     public static final String SOLUTION_EXPECTED_STD_OUT_PATH_KEY = "expectedStdOut";
     public static final int ENABLE_JUDGE_CORE_GUARD = 1;
     public static final int DISABLE_JUDGE_CORE_GUARD = 0;
     public static final int USE_ROOT_UID = 0;
     public static final int USE_DEFAULT_UID = 6666;
-    public static final int COMPILE_OUT_MAX_SIZE = 2000;
+    public static final int COMPILE_OUT_MAX_SIZE = 100000;
 
-    public JudgeService(JudgeEnvironmentConfiguration judgeEnvironmentConfiguration) {
+
+    public JudgeService(JudgeEnvironmentConfiguration judgeEnvironmentConfiguration, JudgeCache judgeCache) {
         this.judgeEnvironmentConfiguration = judgeEnvironmentConfiguration;
+        this.judgeCache = judgeCache;
     }
 
     /**
@@ -203,7 +207,7 @@ public class JudgeService {
      */
     private SingleJudgeResultDTO runForSingleJudge(SolutionDTO singleResolution, Integer index) {
         String singleJudgeRunningName = "running_" + index.toString();
-        Map<String, String> resolution = getResolutionInputAndOutputFile(singleResolution, "solution");
+        Map<String, String> resolution = getResolutionInputAndOutputFile(singleResolution);
         SingleJudgeResultDTO singleJudgeResult = startJudging(resolution.get(SOLUTION_STD_IN_PATH_KEY), singleJudgeRunningName);
         List<String> judgeCoreStdErr = readFile(singleJudgeResult.getStdErrPath());
 
@@ -228,36 +232,50 @@ public class JudgeService {
      * 获取输入文件和期望的输出文件，供后续判题使用
      *
      * @param resolution 解决方案数据传输对象
-     * @param name       输出文件名称
      * @return 保存了输入文件、输出文件本地地址的hashMap
      * @author yuzhanglong
      * @date 2020-6-27 12:21:43
      */
-    private Map<String, String> getResolutionInputAndOutputFile(SolutionDTO resolution, String name) {
+    private Map<String, String> getResolutionInputAndOutputFile(SolutionDTO resolution) {
+        // 获取远程地址
         String inputFile = resolution.getStdIn();
         String outputFile = resolution.getExpectedStdOut();
 
-        // 下载、获取输入和期望输出
-        // TODO: 使用redis缓存url到本地路径的映射, 减少请求次数
-        Resource inputFileResource = HttpRequest.getFile(inputFile);
-        Resource outputFileResource = HttpRequest.getFile(outputFile);
-        UUID p = UUID.randomUUID();
-        String inPath = JudgeHolder.getResolutionPath() + "/" + p + "/" + name + ".in";
-        String outPath = JudgeHolder.getResolutionPath() + "/" + p + "/" + name + ".out";
+        // 从缓存中查询是否已经有相关的本地路径
+        Map<String, String> cachePathReflect = judgeCache.getSolutionLocalPathByRemoteUrl(inputFile);
+        if (cachePathReflect == null) {
+            // 不存在，我们从远程资源服务器下载、获取输入和期望输出
+            Resource inputFileResource = HttpRequest.getFile(inputFile);
+            Resource outputFileResource = HttpRequest.getFile(outputFile);
+            UUID p = UUID.randomUUID();
+            String inPath = JudgeHolder.getResolutionPath() + "/" + p + "/" + "solution.in";
+            String outPath = JudgeHolder.getResolutionPath() + "/" + p + "/" + "solution.out";
 
-        try {
-            File inFile = new File(inPath);
-            FileUtils.copyInputStreamToFile(inputFileResource.getInputStream(), inFile);
-            File outFile = new File(outPath);
-            FileUtils.copyInputStreamToFile(outputFileResource.getInputStream(), outFile);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+            try {
+                File inFile = new File(inPath);
+                FileUtils.copyInputStreamToFile(inputFileResource.getInputStream(), inFile);
+                File outFile = new File(outPath);
+                FileUtils.copyInputStreamToFile(outputFileResource.getInputStream(), outFile);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            // 保存它们
+            Map<String, String> map = new HashMap<>(2);
+            map.put(SOLUTION_STD_IN_PATH_KEY, inPath);
+            map.put(SOLUTION_EXPECTED_STD_OUT_PATH_KEY, outPath);
+            // 使用redis缓存url到本地路径的映射, 减少请求次数
+            judgeCache.addSolutionRemoteUrlToLocalMap(inputFile, map);
+            return map;
         }
-        Map<String, String> map = new HashMap<>(2);
-        map.put(SOLUTION_STD_IN_PATH_KEY, inPath);
-        map.put(SOLUTION_EXPECTED_STD_OUT_PATH_KEY, outPath);
-        return map;
+        boolean isStdInHave = FileUtil.isFileIn(cachePathReflect.get(SOLUTION_STD_IN_PATH_KEY));
+        if (isStdInHave) {
+            // 如果本地的输入存在（输入输出要么共存要么同时不再，只判断一个即可）
+            return cachePathReflect;
+        }
+        judgeCache.removeRemotePathToLocalPathMapItem(inputFile);
+        return getResolutionInputAndOutputFile(resolution);
     }
+
 
     /**
      * 比较用户输出和期望输出

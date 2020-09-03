@@ -1,6 +1,11 @@
 server:
   port: 8080
 
+spring:
+  redis:
+    port: 6379
+    host: 47.106.202.255
+    database: 0
 
 judge-authorization:
   user-id: yzl
