@@ -1,14 +1,13 @@
 version: '3'
 services:
   judge-host:
-    build:
-      context: .
+    image: "registry.cn-shenzhen.aliyuncs.com/coderyzl/judge-host:1.0"
     ports:
       - "8080:8080"
     depends_on:
       - redis
     environment:
-      REDIS_HOST: 172.17.0.1
+      REDIS_HOST: redis
       REDIS_PORT: 6379
       JUDGE_HOST_USER_ID: yzl
       JUDGE_HOST_USER_SECRET: yzl
