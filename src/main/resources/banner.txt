@@ -1,0 +1,22 @@
+__   __         _           _
+\ \ / /   _    | |_   _  __| | __ _  ___
+ \ V / | | |_  | | | | |/ _` |/ _` |/ _ \
+  | || |_| | |_| | |_| | (_| | (_| |  __/
+  |_| \__,_|\___/ \__,_|\__,_|\__, |\___|
+                              |___/
+[BASIC]
+${AnsiColor.GREEN}-> Spring-Boot Version: ${AnsiColor.BLUE}${spring-boot.version}
+${AnsiColor.GREEN}-> JudgeHost Version: ${AnsiColor.BLUE}${application.version}
+${AnsiColor.GREEN}-> JudgeHost Started: ${AnsiColor.BLUE}${server.port}
+
+[REDIS]
+${AnsiColor.GREEN}-> Redis Host: ${AnsiColor.BLUE}${spring.redis.host}
+${AnsiColor.GREEN}-> Redis Port: ${AnsiColor.BLUE}${spring.redis.port}
+${AnsiColor.GREEN}-> Redis Database: ${AnsiColor.BLUE}${spring.redis.database}
+
+[SECRET]
+${AnsiColor.GREEN} -> User Id: ${AnsiColor.BLUE}${judge-authorization.user-id}
+${AnsiColor.GREEN} -> User Secret: ${AnsiColor.BLUE}${judge-authorization.user-secret}
+${AnsiColor.GREEN} -> Secret Key: ${AnsiColor.BLUE}${judge-authorization.secret-key}
+
+${AnsiColor.BRIGHT_WHITE}

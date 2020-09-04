@@ -1,8 +1,7 @@
 FROM centos:7
 WORKDIR .
 
-
-COPY .. .
+COPY  . .
 
 # 安装运行依赖 以及运行环境的初始化
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -18,8 +17,10 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && cmake CMakeLists.txt \
     && make \
     && cp y_judge /home/judgeEnvironment/scripts \
-    && chmod 777 -R /home/judgeEnvironment/scripts
+    && chmod 777 -R /home/judgeEnvironment/scripts \
+    && chmod 777 /entrypoint.sh
+
 
 # 暴露8080端口
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["./entrypoint.sh"]
