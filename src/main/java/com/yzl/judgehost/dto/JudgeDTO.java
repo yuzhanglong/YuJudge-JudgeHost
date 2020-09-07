@@ -39,7 +39,7 @@ public class JudgeDTO {
     @DecimalMax(value = "65536", message = "内存限制最大为65536kb")
     private Integer memoryLimit;
 
-    @DecimalMin(value = "10字节", message = "输出限制最小为10Byte")
+    @DecimalMin(value = "10", message = "输出限制最小为10Byte")
     private Integer outputLimit;
 
 

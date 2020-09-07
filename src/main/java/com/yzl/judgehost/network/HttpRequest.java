@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
  * @date 2020-6-29 19:52:26
  */
 public class HttpRequest {
-    private static final int MAX_IN_MEMORY_SIZE = 16 * 1024 * 1024;
+    private static final int MAX_IN_MEMORY_SIZE = 500 * 1024 * 1024;
 
     public static Resource getFile(String url) {
         Mono<ClientResponse> responseMono = createWebClient()
