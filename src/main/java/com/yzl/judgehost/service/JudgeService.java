@@ -269,7 +269,7 @@ public class JudgeService {
         }
         boolean isStdInHave = FileUtil.isFileIn(cachePathReflect.get(SOLUTION_STD_IN_PATH_KEY));
         if (isStdInHave) {
-            // 如果本地的输入存在（输入输出要么共存要么同时不再，只判断一个即可）
+            // 如果本地的输入存在（输入输出要么共存要么同时不在，只判断一个即可）
             return cachePathReflect;
         }
         judgeCache.removeRemotePathToLocalPathMapItem(inputFile);
@@ -369,5 +369,18 @@ public class JudgeService {
             stringList.add(temp);
         }
         return stringList;
+    }
+
+    /**
+     * 将用户代码写到相应工作目录中
+     *
+     * @param code      代码
+     * @param extension 代码扩展名
+     * @author yuzhanglong
+     * @date 2020-9-8 01:08:20
+     */
+    private Boolean writeCodeToWorkingPath(String code, String extension) {
+        String path = JudgeHolder.getCodePath(extension);
+        return FileUtil.writeDataToFilePath(code, new File(path));
     }
 }

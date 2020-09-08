@@ -20,7 +20,7 @@ mkdir "$SUBMISSION_PATH";
 # 创建代码路径，写入用户代码
 touch "$CODE_PATH";
 
-echo -e "$CODE" >> "$CODE_PATH";
+echo "$CODE" >> "$CODE_PATH";
 
 BUILDING_SCRIPT_PATH="$SUBMISSION_PATH/build.sh"
 

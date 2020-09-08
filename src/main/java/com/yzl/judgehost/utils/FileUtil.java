@@ -110,7 +110,7 @@ public class FileUtil {
      * @author yuzhanglong
      * @date 2020-9-3 11:06:25
      */
-    private static Boolean deleteFile(File file, Boolean deleteSelf) {
+    public static Boolean deleteFile(File file, Boolean deleteSelf) {
         //判断文件不为null或文件目录存在
         if (!file.exists()) {
             throw new NotFoundException("B1007");
@@ -130,6 +130,34 @@ public class FileUtil {
         }
         if (deleteSelf) {
             return file.delete();
+        }
+        return true;
+    }
+
+    /**
+     * 将内容写文件到某个路径下
+     *
+     * @param data 文本内容
+     * @param file 文件(路径)对象
+     * @return 是否写入成功
+     * @author yuzhanglong
+     * @date 2020-9-8 01:00:22
+     */
+    public static Boolean writeDataToFilePath(String data, File file) {
+        // 如果文件不存在，创建之
+        if (!file.exists()) {
+            try {
+                boolean isSuccess = file.createNewFile();
+                if (!isSuccess) {
+                    return false;
+                }
+                FileWriter writer = new FileWriter(file.getName(), true);
+                BufferedWriter bufferWriter = new BufferedWriter(writer);
+                bufferWriter.write(data);
+                bufferWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
