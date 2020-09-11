@@ -4,6 +4,9 @@ services:
     image: "registry.cn-shenzhen.aliyuncs.com/coderyzl/judge-host:1.0"
     ports:
       - "8080:8080"
+    volumes:
+      - /home/YuJudge/Judge-Host/judgeEnvironment/resolutions:/home/judgeEnvironment/resolutions
+      - /home/YuJudge/Judge-Host/judgeEnvironment/submissions:/home/judgeEnvironment/resolutions
     depends_on:
       - redis
     environment:
@@ -14,3 +17,7 @@ services:
       JUDGE_HOST_SECRET_KEY: secret
   redis:
     image: "redis"
+    command:
+      redis-server --port 6379 --appendonly yes
+    volumes:
+      - /home/YuJudge/Judge-Host/redis:/data
