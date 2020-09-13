@@ -36,7 +36,7 @@ public class JudgeCache {
     public void addSolutionRemoteUrlToLocalMap(String remotePath, Map<String, String> localPaths) {
         // 写数据时我们不允许读，更不允许写，因此我们使用读写锁
         readWriteLock.writeLock().lock();
-        redisOperations.setHashMap(SOLUTION_REMOTE_URL_TO_LOCAL_MAP_REDIS_SAVE_PREFIX, remotePath, localPaths);
+        boolean isSet = redisOperations.setHashMap(SOLUTION_REMOTE_URL_TO_LOCAL_MAP_REDIS_SAVE_PREFIX, remotePath, localPaths);
         readWriteLock.writeLock().unlock();
     }
 

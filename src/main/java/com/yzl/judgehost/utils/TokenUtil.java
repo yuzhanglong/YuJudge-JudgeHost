@@ -44,7 +44,7 @@ public class TokenUtil {
      * now: 当前时间
      * expiredIn: 过期时间
      *
-     * @return map 返回一系列kv对，具体内容查看 @description
+     * @return map 返回一系列kv对，具体内容查看
      * @author yuzhanglong
      */
     public static Map<String, Date> calculateExpiredInfo(Integer expiredIn) {

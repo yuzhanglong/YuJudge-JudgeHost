@@ -1,6 +1,5 @@
 package com.yzl.judgehost.controller.v1;
 
-import com.yzl.judgehost.core.authorization.AuthorizationRequired;
 import com.yzl.judgehost.dto.JudgeDTO;
 import com.yzl.judgehost.exception.http.ForbiddenException;
 import com.yzl.judgehost.service.JudgeService;
@@ -38,7 +37,6 @@ public class JudgeController {
      * @date 2020-7-1 21:00
      */
     @PostMapping("/result")
-    @AuthorizationRequired
     public JudgeConditionVO runJudge(@RequestBody @Validated JudgeDTO judgeDTO) throws ExecutionException, InterruptedException {
         CompletableFuture<JudgeConditionVO> judgeResults;
         try {

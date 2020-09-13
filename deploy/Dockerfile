@@ -20,7 +20,6 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && chmod 777 -R /home/judgeEnvironment/scripts \
     && chmod 777 /entrypoint.sh
 
-
 # 暴露8080端口
 EXPOSE 8080
 ENTRYPOINT ["./entrypoint.sh"]
