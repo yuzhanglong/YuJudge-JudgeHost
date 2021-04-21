@@ -1,8 +1,9 @@
 <p align="center">
   <a href="">
-    <img src="https://github.com/yuzhanglong/YuJudge/blob/master/public/logo/logo-text-with-version.svg" width="240px">
+    <img src="http://cdn.yuzzl.top/logo-text.svg" width="240px">
   </a>
 </p>
+
 
 <p align="center">
   <a href="#快速上手">快速上手</a> |&nbsp;<a href="#版本日志">版本日志</a>
