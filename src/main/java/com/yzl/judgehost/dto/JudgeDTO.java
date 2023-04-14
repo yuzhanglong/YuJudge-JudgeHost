@@ -49,8 +49,8 @@ public class JudgeDTO {
     private String judgePreference;
 
 
-    @NotNull(message = "期望输入、输出不得为空")
-    @Size(message = "期望输入、输出长度最小为1、最大为10", min = 1, max = 10)
+    @NotNull(message = "测试点列表不得为空")
+    @Size(message = "测试点列表长度最小为1、最大为10", min = 1, max = 10)
     @Valid
     private List<SolutionDTO> solutions;
 
