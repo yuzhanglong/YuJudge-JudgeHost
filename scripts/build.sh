@@ -8,6 +8,7 @@ mkdir dist/scripts
 # 保存运行时脚本
 cp ./scripts/compile.sh dist/scripts/compile.sh || exit
 cp ./scripts/compare.sh dist/scripts/compare.sh || exit
+cp ./scripts/entrypoint.sh dist/scripts/entrypoint.sh || exit
 
 # 安装依赖、构建 Java 项目
 mvn package
@@ -21,8 +22,7 @@ chmod 777 ./build.sh && ./build.sh
 cp build/y_judge /dist/scripts/y_judge || exit
 rm -rf YuJudge-Core
 
-
-# 初始化临时目录，并将构建产物移动到构建产物目录
+# 初始化临时目录，并将相关文件移动到临时目录
 mkdir -p /home/judgeEnvironment/resolutions
 mkdir -p /home/judgeEnvironment/submissions
 mkdir -p /home/judgeEnvironment/scripts
