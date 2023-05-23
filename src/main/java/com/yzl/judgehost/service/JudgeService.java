@@ -84,6 +84,7 @@ public class JudgeService {
 
         // 执行编译脚本
         try {
+            String[] envp = {"LANG=UTF-8"};
             Process process = JudgeHolder.getRunner().exec(
                     new String[]{
                             compileScript,
@@ -94,7 +95,7 @@ public class JudgeService {
                             judgeCoreScript,
                             String.valueOf(language == LanguageScriptEnum.JAVA ? USE_ROOT_UID : USE_DEFAULT_UID),
                             String.valueOf(COMPILE_OUT_MAX_SIZE)
-                    });
+                    },envp,null);
             process.waitFor();
         } catch (IOException | InterruptedException ioException) {
             // TODO：异常处理
@@ -131,6 +132,7 @@ public class JudgeService {
             List<SolutionDTO> totalResolution = judgeDTO.getSolutions();
             int solutionIndex = 0;
             for (SolutionDTO solutionDTO : totalResolution) {
+                //这里传入输入输出
                 SingleJudgeResultDTO singleJudgeResult = runForSingleJudge(solutionDTO, solutionIndex);
                 boolean isAccept = singleJudgeResult.getCondition().equals(JudgeResultEnum.ACCEPTED.getNumber());
                 // 这个测试点没有通过，并且是acm模式
@@ -252,6 +254,7 @@ public class JudgeService {
             String outPath = JudgeHolder.getResolutionPath() + "/" + p + "/" + "solution.out";
 
             try {
+                //TODO(可以设置为数据库) 根据路径创建文件，并且写入输入输出数据
                 File inFile = new File(inPath);
                 FileUtils.copyInputStreamToFile(inputFileResource.getInputStream(), inFile);
                 File outFile = new File(outPath);
