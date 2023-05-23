@@ -1,0 +1,27 @@
+# 构建项目
+
+# 初始化构建产物目录
+mkdir dist
+
+# 保存运行时脚本
+cp ./scripts/compile.sh dist/scripts || exit
+cp ./scripts/compare.sh dist/scripts || exit
+
+# 安装依赖、构建 Java 项目
+mvn package
+cp target/YuJudge-JudgeHost-1.0.jar dist/app.jar
+
+# 拉取、编译、保存判题核心可执行文件
+rm -rf YuJudge-Core
+git clone https://github.com/yuzhanglong/YuJudge-Core.git --depth=1
+cd YuJudge-Core || exit
+chmod 777 ./build.sh && ./build.sh
+cp build/y_judge /dist/scripts/y_judge
+
+
+# 初始化临时目录，并将构建产物移动到构建产物目录
+mkdir -p /home/judgeEnvironment/resolutions
+mkdir -p /home/judgeEnvironment/submissions
+mkdir -p /home/judgeEnvironment/scripts
+cp -r ./dist/scripts/* /home/judgeEnvironment/scripts
+chmod 777 -R /home/judgeEnvironment/scripts
