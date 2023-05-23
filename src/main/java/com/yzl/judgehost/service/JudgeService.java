@@ -84,6 +84,7 @@ public class JudgeService {
 
         // 执行编译脚本
         try {
+            String[] envp = {"LANG=UTF-8"};
             Process process = JudgeHolder.getRunner().exec(
                     new String[]{
                             compileScript,
@@ -94,7 +95,7 @@ public class JudgeService {
                             judgeCoreScript,
                             String.valueOf(language == LanguageScriptEnum.JAVA ? USE_ROOT_UID : USE_DEFAULT_UID),
                             String.valueOf(COMPILE_OUT_MAX_SIZE)
-                    });
+                    },envp,null);
             process.waitFor();
         } catch (IOException | InterruptedException ioException) {
             // TODO：异常处理
