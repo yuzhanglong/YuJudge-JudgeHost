@@ -16,7 +16,7 @@ cp ./scripts/entrypoint.sh dist/entrypoint.sh
 mvn package
 cp target/YuJudge-JudgeHost-1.0.jar dist/app.jar
 
-# 拉取、编译、保存判题核心可执行文件
+# 拉取、编译、保存判题核心
 rm -rf YuJudge-Core
 git clone https://github.com/yuzhanglong/YuJudge-Core.git --depth=1
 cd YuJudge-Core || exit
