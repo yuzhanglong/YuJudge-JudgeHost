@@ -8,7 +8,7 @@ mkdir dist/scripts
 # 保存运行时脚本
 cp ./scripts/compile.sh dist/scripts/compile.sh || exit
 cp ./scripts/compare.sh dist/scripts/compare.sh || exit
-cp ./scripts/entrypoint.sh dist/scripts/entrypoint.sh || exit
+cp ./scripts/entrypoint.sh dist/entrypoint.sh || exit
 
 # 安装依赖、构建 Java 项目
 mvn package
