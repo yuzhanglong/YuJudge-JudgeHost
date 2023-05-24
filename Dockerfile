@@ -22,6 +22,6 @@ RUN ./scripts/build.sh
 ## 暴露8080端口
 EXPOSE 8080
 
-RUN cd dist
+WORKDIR ./dist
 
 ENTRYPOINT ["./entrypoint.sh"]
