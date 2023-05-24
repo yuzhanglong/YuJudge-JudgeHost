@@ -22,4 +22,7 @@ git clone https://github.com/yuzhanglong/YuJudge-Core.git --depth=1
 cd YuJudge-Core || exit
 chmod 777 ./build.sh && ./build.sh
 cp build/y_judge /dist/scripts/y_judge
+
+cd ..
 rm -rf YuJudge-Core
+chmod 777 -R /dist/scripts
