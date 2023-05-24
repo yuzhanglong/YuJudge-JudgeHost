@@ -1,6 +1,9 @@
-name: Build and publish Docker image
+name: Build and publish Docker image (Release Version)
 
-on: pull_request
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   docker:
@@ -23,4 +26,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: yuzhanglong/online-judge-host:${{ github.sha }}
+          tags: yuzhanglong/online-judge-host:latest
