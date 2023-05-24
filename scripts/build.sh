@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # 构建项目
 
 # 初始化构建产物目录
@@ -6,9 +8,9 @@ mkdir dist
 mkdir dist/scripts
 
 # 保存运行时脚本
-cp ./scripts/compile.sh dist/scripts/compile.sh || exit
-cp ./scripts/compare.sh dist/scripts/compare.sh || exit
-cp ./scripts/entrypoint.sh dist/entrypoint.sh || exit
+cp ./scripts/compile.sh dist/scripts/compile.sh
+cp ./scripts/compare.sh dist/scripts/compare.sh
+cp ./scripts/entrypoint.sh dist/entrypoint.sh
 
 # 安装依赖、构建 Java 项目
 mvn package
@@ -19,5 +21,5 @@ rm -rf YuJudge-Core
 git clone https://github.com/yuzhanglong/YuJudge-Core.git --depth=1
 cd YuJudge-Core || exit
 chmod 777 ./build.sh && ./build.sh
-cp build/y_judge /dist/scripts/y_judge || exit
+cp build/y_judge /dist/scripts/y_judge
 rm -rf YuJudge-Core

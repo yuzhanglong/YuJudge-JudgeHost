@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # 初始化临时目录，并将相关文件移动到临时目录
 mkdir -p /home/judgeEnvironment/resolutions
