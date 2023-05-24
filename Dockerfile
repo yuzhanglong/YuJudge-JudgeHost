@@ -24,4 +24,4 @@ EXPOSE 8080
 
 RUN cd dist
 
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
