@@ -25,4 +25,4 @@ cp build/y_judge /dist/scripts/y_judge
 
 cd ..
 rm -rf YuJudge-Core
-chmod 777 -R /dist/scripts
+chmod 777 -R /dist
