@@ -21,10 +21,3 @@ cd YuJudge-Core || exit
 chmod 777 ./build.sh && ./build.sh
 cp build/y_judge /dist/scripts/y_judge || exit
 rm -rf YuJudge-Core
-
-# 初始化临时目录，并将相关文件移动到临时目录
-mkdir -p /home/judgeEnvironment/resolutions
-mkdir -p /home/judgeEnvironment/submissions
-mkdir -p /home/judgeEnvironment/scripts
-cp -r ./dist/scripts/* /home/judgeEnvironment/scripts
-chmod 777 -R /home/judgeEnvironment/scripts
