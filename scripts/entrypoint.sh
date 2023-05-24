@@ -4,7 +4,7 @@
 mkdir -p /home/judgeEnvironment/resolutions
 mkdir -p /home/judgeEnvironment/submissions
 mkdir -p /home/judgeEnvironment/scripts
-cp -r ./dist/scripts/* /home/judgeEnvironment/scripts
+cp -r ./scripts/* /home/judgeEnvironment/scripts
 chmod 777 -R /home/judgeEnvironment/scripts
 
 # 启动服务器
