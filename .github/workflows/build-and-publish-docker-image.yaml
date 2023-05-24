@@ -23,4 +23,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: yuzhanglong/dependency-packager:${{ github.sha }}
+          tags: yuzhanglong/online-judge-host:${{ github.sha }}
