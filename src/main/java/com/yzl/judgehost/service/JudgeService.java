@@ -84,7 +84,7 @@ public class JudgeService {
 
         // 执行编译脚本
         try {
-            String[] envp = {"LANG=UTF-8"};
+            String[] envp = {"LANG=GBK"};
             Process process = JudgeHolder.getRunner().exec(
                     new String[]{
                             compileScript,
