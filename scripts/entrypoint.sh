@@ -8,7 +8,8 @@ cp -r ./scripts/* /home/judgeEnvironment/scripts
 chmod 777 -R /home/judgeEnvironment/scripts
 
 # 启动服务器
-java -jar app.jar \
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+        -jar app.jar \
           --spring.redis.port=$REDIS_PORT \
           --spring.redis.host=$REDIS_HOST \
           --judge-authorization.user-id=$JUDGE_HOST_USER_ID \
