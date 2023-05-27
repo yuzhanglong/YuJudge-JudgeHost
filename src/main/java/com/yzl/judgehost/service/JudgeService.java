@@ -96,6 +96,16 @@ public class JudgeService {
                             String.valueOf(language == LanguageScriptEnum.JAVA ? USE_ROOT_UID : USE_DEFAULT_UID),
                             String.valueOf(COMPILE_OUT_MAX_SIZE)
                     },envp,null);
+            System.out.println(Arrays.toString(new String[]{
+                    compileScript,
+                    submissionWorkingPath,
+                    codePath,
+                    judgeDTO.getSubmissionCode(),
+                    buildScript,
+                    judgeCoreScript,
+                    String.valueOf(language == LanguageScriptEnum.JAVA ? USE_ROOT_UID : USE_DEFAULT_UID),
+                    String.valueOf(COMPILE_OUT_MAX_SIZE)
+            }));
             process.waitFor();
         } catch (IOException | InterruptedException ioException) {
             // TODO：异常处理
